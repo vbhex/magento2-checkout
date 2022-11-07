@@ -88,7 +88,7 @@ class Coinlog extends \Magento\Framework\View\Element\Template
         {
             $pager = $this->getLayout()->createBlock(
                 \Magento\Theme\Block\Html\Pager::class,
-                'vbhexcheckout.general.coinlog.pager'
+                'vc.general.coinlog.pager'
             )->setCollection(
                 $this->getLogs()
             );

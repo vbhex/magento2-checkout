@@ -10,12 +10,12 @@
         <payment>
             <vbhex_checkout>
                 <active>1</active>
-                <title>Pay Using Dservice</title>
+                <title>Pay Using VbhexCheckout</title>
                 <description>
                     <![CDATA[Escrow On BlockChain <br/>
                         If you want gUSD,
                         you can buy VOTE coin with Ether from <a target="_blank" href="https://vbhex.com/">homepage</a>
-                        or vbhexcheckout tab on any product detail page.
+                        or vc tab on any product detail page.
                     ]]>
                 </description>
                 <order_status>complete</order_status>
@@ -23,7 +23,7 @@
                 <app_id>1</app_id>
                 <vote_coin_decm>6</vote_coin_decm>
                 <invoice_expiry>60</invoice_expiry>
-                <model>Vbhex\Checkout\Model\DserviceCheckout</model>
+                <model>Vbhex\Checkout\Model\VbhexCheckout</model>
             </vbhex_checkout>
         </payment>
     </default>

@@ -175,7 +175,7 @@ class SellerPost extends Action
                         $this->messageManager->addError(
                             __('Dispute record not found!')
                         );
-                        $this->dataPersistor->clear('vbhexcheckout_dispute_data');
+                        $this->dataPersistor->clear('vc_dispute_data');
                         return $this->resultRedirectFactory->create()->setPath(
                             '*/*/Sell/order/'.$appOrderId,
                             ['_secure' => $this->getRequest()->isSecure()]
@@ -197,12 +197,12 @@ class SellerPost extends Action
                             foreach ($errors as $message) {
                                 $this->messageManager->addError($message);
                             }
-                            $this->dataPersistor->set('vbhexcheckout_dispute_data', $fields);
+                            $this->dataPersistor->set('vc_dispute_data', $fields);
                         } else {
                             $this->messageManager->addSuccess(
                                 __('Dispute seller reason successfully saved')
                             );
-                            $this->dataPersistor->clear('vbhexcheckout_dispute_data');
+                            $this->dataPersistor->clear('vc_dispute_data');
                         }
 
                         return $this->resultRedirectFactory->create()->setPath(
@@ -224,7 +224,7 @@ class SellerPost extends Action
                     foreach ($errors as $message) {
                         $this->messageManager->addError($message);
                     }
-                    $this->dataPersistor->set('vbhexcheckout_dispute_data', $fields);
+                    $this->dataPersistor->set('vc_dispute_data', $fields);
 
                     return $this->resultRedirectFactory->create()->setPath(
                         '*/*/Sell/order/'.$appOrderId,
@@ -237,7 +237,7 @@ class SellerPost extends Action
                     "Controller_Transaction_SellerPost execute : ".$e->getMessage()
                 );
                 $this->messageManager->addError($e->getMessage());
-                $this->dataPersistor->set('vbhexcheckout_dispute_data', $fields);
+                $this->dataPersistor->set('vc_dispute_data', $fields);
 
                 return $this->resultRedirectFactory->create()->setPath(
                     '*/account/sellertrxs',

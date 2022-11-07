@@ -29,7 +29,7 @@ class Detail extends Action
     }
 
     /**
-     * Dservice Public Dispute Detail page.
+     * VbhexCheckout Public Dispute Detail page.
      *
      * @return \Magento\Framework\View\Result\Page
      */
@@ -45,7 +45,7 @@ class Detail extends Action
                 ) {
                   $resultPage = $this->_resultPageFactory->create();
                   $resultPage->getConfig()->getTitle()->prepend(__('Dispute Detail #'.$order->getIncrementId()));
-                  $block = $resultPage->getLayout()->getBlock('vbhexcheckout_dispute_detail');
+                  $block = $resultPage->getLayout()->getBlock('vc_dispute_detail');
                   $block->setData('order_id', $order_id);
                   return $resultPage;
                }

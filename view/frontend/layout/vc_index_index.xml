@@ -7,7 +7,7 @@
     </head>
     <body>
         <referenceContainer name="content">
-            <block class="Vbhex\Checkout\Block\Dservice" name="vbhex_landing_page" template="Vbhex_Checkout::vbhexcheckout.phtml"/>
+            <block class="Vbhex\Checkout\Block\VbhexCheckout" name="vbhex_landing_page" template="Vbhex_Checkout::vc.phtml"/>
         </referenceContainer>
     </body>
 </page>

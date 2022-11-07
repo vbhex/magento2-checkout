@@ -38,21 +38,21 @@ class Seller extends AbstractModel implements SellerInterface, IdentityInterface
     /**#@-*/
 
     /**
-     * Dservice Seller cache tag.
+     * VbhexCheckout Seller cache tag.
      */
-    const CACHE_TAG = 'vbhexcheckout_seller';
+    const CACHE_TAG = 'vc_seller';
 
     /**
      * @var string
      */
-    protected $_cacheTag = 'vbhexcheckout_seller';
+    protected $_cacheTag = 'vc_seller';
 
     /**
      * Prefix of model events names.
      *
      * @var string
      */
-    protected $_eventPrefix = 'vbhexcheckout_seller';
+    protected $_eventPrefix = 'vc_seller';
 
     /**
      * Initialize resource model.

@@ -178,7 +178,7 @@ $coinLogs = $customParameter['coinLogs'];
                                             <span>Amount : Paid Amount</span>
                                             <p><?php echo $totalAmount; ?> <?php echo $coin_symbol; ?> : <?php echo $paidAmount; ?> <?php echo $coin_symbol; ?></p>
                                             <?php if ($order_status == 0) : ?>
-                                                <input class="btn_order_on_vbhexcheckout" type="button" value="Pay Via Dservice" />
+                                                <input class="btn_order_on_vc" type="button" value="Pay Via VbhexCheckout" />
                                             <?php elseif (($order_status == 1)&&($dispute_status==0||$dispute_status==1||$dispute_status==5)) : ?>
                                                 <input class="btn_confirm_done" type="button" value="Confirm Order Done" />
                                                     <p style="color:red; font-size:12px">(Once confirmed, seller will receive money immediately)</p>
@@ -213,7 +213,7 @@ $coinLogs = $customParameter['coinLogs'];
                                                 <input style="margin-left:0px" class="btn_ask_refund" type="button" value="Request Refund" />
                                             </li>
                                             <li>
-                                                <form action="<?= $block->escapeUrl($block->getUrl('vbhexcheckout/transaction/buyerPost', ["app_order_id" => $order_id, "_secure" => $this->getRequest()->isSecure()])) ?>" enctype="multipart/form-data" method="post" data-role="form-profile-validate" data-mage-init='{"validation":{}}'>
+                                                <form action="<?= $block->escapeUrl($block->getUrl('vc/transaction/buyerPost', ["app_order_id" => $order_id, "_secure" => $this->getRequest()->isSecure()])) ?>" enctype="multipart/form-data" method="post" data-role="form-profile-validate" data-mage-init='{"validation":{}}'>
                                                     <textarea id="buyer_reason" name="buyer_reason" placeholder="put buyer reason here" style="width:80%"></textarea><br />
                                                     <input type="hidden" name="app_order_id" value="<?php echo $order_id; ?>" />
                                                     <?= $block->getBlockHtml('formkey') ?>
@@ -231,7 +231,7 @@ $coinLogs = $customParameter['coinLogs'];
                                                 <div class="cashout_label"></div>
                                             </li>
                                             <li>
-                                                <form action="<?= $block->escapeUrl($block->getUrl('vbhexcheckout/transaction/buyerPost', ["app_order_id" => $order_id, "_secure" => $this->getRequest()->isSecure()])) ?>" enctype="multipart/form-data" method="post" data-role="form-profile-validate" data-mage-init='{"validation":{}}'>
+                                                <form action="<?= $block->escapeUrl($block->getUrl('vc/transaction/buyerPost', ["app_order_id" => $order_id, "_secure" => $this->getRequest()->isSecure()])) ?>" enctype="multipart/form-data" method="post" data-role="form-profile-validate" data-mage-init='{"validation":{}}'>
                                                     <textarea id="buyer_reason" name="buyer_reason" placeholder="put buyer reason here" style="width:80%"></textarea><br />
                                                     <input type="hidden" name="app_order_id" value="<?php echo $order_id; ?>" />
                                                     <?= $block->getBlockHtml('formkey') ?>
@@ -259,7 +259,7 @@ $coinLogs = $customParameter['coinLogs'];
                                             <input style="margin-left:0px; background-color: yellow" class="btn_appeal_dispute" type="button" value="Appeal" />
                                             </li>
                                             <li>
-                                                <form action="<?= $block->escapeUrl($block->getUrl('vbhexcheckout/transaction/buyerPost', ["app_order_id" => $order_id, "_secure" => $this->getRequest()->isSecure()])) ?>" enctype="multipart/form-data" method="post" data-role="form-profile-validate" data-mage-init='{"validation":{}}'>
+                                                <form action="<?= $block->escapeUrl($block->getUrl('vc/transaction/buyerPost', ["app_order_id" => $order_id, "_secure" => $this->getRequest()->isSecure()])) ?>" enctype="multipart/form-data" method="post" data-role="form-profile-validate" data-mage-init='{"validation":{}}'>
                                                     <textarea id="buyer_reason" name="buyer_reason" placeholder="put buyer reason here" style="width:80%"></textarea><br />
                                                     <input type="hidden" name="app_order_id" value="<?php echo $order_id; ?>" />
                                                     <?= $block->getBlockHtml('formkey') ?>
@@ -272,7 +272,7 @@ $coinLogs = $customParameter['coinLogs'];
                                                 <p><?php echo __("Dispute is Under Appealing"); ?></p>
                                             </li>
                                             <li>
-                                                <form action="<?= $block->escapeUrl($block->getUrl('vbhexcheckout/transaction/buyerPost', ["app_order_id" => $order_id, "_secure" => $this->getRequest()->isSecure()])) ?>" enctype="multipart/form-data" method="post" data-role="form-profile-validate" data-mage-init='{"validation":{}}'>
+                                                <form action="<?= $block->escapeUrl($block->getUrl('vc/transaction/buyerPost', ["app_order_id" => $order_id, "_secure" => $this->getRequest()->isSecure()])) ?>" enctype="multipart/form-data" method="post" data-role="form-profile-validate" data-mage-init='{"validation":{}}'>
                                                     <textarea id="buyer_reason" name="buyer_reason" placeholder="put buyer reason here" style="width:80%"></textarea><br />
                                                     <input type="hidden" name="app_order_id" value="<?php echo $order_id; ?>" />
                                                     <?= $block->getBlockHtml('formkey') ?>
@@ -396,7 +396,7 @@ $coinLogs = $customParameter['coinLogs'];
                         });
                     });
                 });
-                $('.btn_order_on_vbhexcheckout').click(function() {
+                $('.btn_order_on_vc').click(function() {
                     //check if the seller wallet correct
                     if (!web3.utils.isAddress("<?php echo strval($seller_wallet); ?>")){
                         alert("Seller wallet is not correct!");
@@ -594,7 +594,7 @@ $coinLogs = $customParameter['coinLogs'];
                     alert("Please install MetaMask to use this dApp!");
                 });
 
-                $('.btn_order_on_vbhexcheckout').click(function() {
+                $('.btn_order_on_vc').click(function() {
                     alert("Please install MetaMask to use this dApp!");
                 });
 
@@ -611,7 +611,7 @@ $coinLogs = $customParameter['coinLogs'];
 
         function updateOrder($entity_id, $order_id, $block) {
             $.ajax({
-                url: BASE_URL + "rest/V1/vbhexcheckout/update",
+                url: BASE_URL + "rest/V1/vc/update",
                 type: "POST",
                 data: {
                     id: $entity_id,

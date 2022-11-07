@@ -11,7 +11,7 @@
 namespace Vbhex\Checkout\Api\Data;
 
 /**
- * Dservice Order interface.
+ * VbhexCheckout Order interface.
  * @api
  */
 interface OrderInterface
@@ -38,7 +38,7 @@ interface OrderInterface
     public function setId($id);
 
     /**
-     * Update Dservice Order as well as Original magento Order
+     * Update VbhexCheckout Order as well as Original magento Order
      *
      * @param int $id
      * @param int $order_id

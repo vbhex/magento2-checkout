@@ -36,10 +36,10 @@ class ConfigProvider implements ConfigProviderInterface
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
         $connection = $resource->getConnection();
-        $tableName = $resource->getTableName('vbhexcheckout_coins');
+        $tableName = $resource->getTableName('vc_coins');
 
         if($connection->tableColumnExists($tableName, 'is_valid') === false){
-            $connection->addColumn('vbhexcheckout_coins', 'is_valid', array(
+            $connection->addColumn('vc_coins', 'is_valid', array(
                 'type'      => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                 'nullable'  => false,
                 'length'    => 1,
@@ -49,8 +49,8 @@ class ConfigProvider implements ConfigProviderInterface
             ));
         }
 
-        //get valid coins for vbhexcheckout
-        $sql = "SELECT `entity_id`,`symbol` FROM vbhexcheckout_coins WHERE `is_valid` = '1' AND `is_currency` = '1'";
+        //get valid coins for vc
+        $sql = "SELECT `entity_id`,`symbol` FROM vc_coins WHERE `is_valid` = '1' AND `is_currency` = '1'";
         $result = $connection->fetchAll($sql);
 
         // get sellers count in one cart

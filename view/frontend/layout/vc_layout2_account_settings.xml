@@ -18,11 +18,11 @@
     <body>
         <referenceBlock name="seller.page.main.title">
             <action method="setPageTitle">
-                <argument translate="true" name="title" xsi:type="string">Dservice Account Settings</argument>
+                <argument translate="true" name="title" xsi:type="string">VbhexCheckout Account Settings</argument>
             </action>
         </referenceBlock>
         <referenceContainer name="seller.content">
-            <block class="Vbhex\Checkout\Block\Account\Settings" name="vbhexcheckout_account_settings" template="account/settings.phtml" cacheable="false"/>
+            <block class="Vbhex\Checkout\Block\Account\Settings" name="vc_account_settings" template="account/settings.phtml" cacheable="false"/>
         </referenceContainer>
     </body>
 </page>

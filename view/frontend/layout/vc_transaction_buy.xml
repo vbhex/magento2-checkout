@@ -5,7 +5,7 @@
 	</head>
     <body>
         <referenceContainer name="content">
-            <block class="Vbhex\Checkout\Block\General\Coinlog" name="vbhexcheckout_general_coinlog" template="Vbhex_Checkout::general/coinlog.phtml" cacheable="false"></block>
+            <block class="Vbhex\Checkout\Block\Transaction\Buy" name="vc_transaction_buy" template="transaction/buy.phtml" cacheable="false"></block>
         </referenceContainer>
     </body>
 </page>

@@ -29,7 +29,7 @@ class Coinlog extends Action
     }
 
     /**
-     * Dservice Public Coin Log Detail page.
+     * VbhexCheckout Public Coin Log Detail page.
      *
      * @return \Magento\Framework\View\Result\Page
      */
@@ -41,7 +41,7 @@ class Coinlog extends Action
         try {
             $resultPage = $this->_resultPageFactory->create();
             $resultPage->getConfig()->getTitle()->set(__('Coin Logs'));
-            $block = $resultPage->getLayout()->getBlock('vbhexcheckout_general_coinlog');
+            $block = $resultPage->getLayout()->getBlock('vc_general_coinlog');
             if(!empty($order_id)) {
                 $block->setData('order_id', $order_id);
             }

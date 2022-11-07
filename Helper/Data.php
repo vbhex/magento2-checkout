@@ -65,7 +65,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     /**
      * @var \Vbhex\Checkout\Model\Seller
      */
-    protected $vbhexcheckoutSeller;
+    protected $vcSeller;
 
     /**
      * @var \Magento\Framework\App\Cache\ManagerFactory
@@ -112,7 +112,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * @param \Magento\Framework\View\Element\BlockFactory $blockFactory
      * @param SellerCollection $sellerCollectionFactory
      * @param \Magento\Framework\App\ResourceConnection $resource
-     * @param \Vbhex\Checkout\Model\Seller $vbhexcheckoutSeller
+     * @param \Vbhex\Checkout\Model\Seller $vcSeller
      * @param \Magento\Framework\Locale\FormatInterface $localeFormat
      * @param \Magento\Customer\Model\CustomerFactory $customerModel
      * @param Visibility $visibility
@@ -135,7 +135,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Framework\App\ResourceConnection $resource,
         \Magento\Framework\Locale\FormatInterface $localeFormat,
         \Magento\Indexer\Model\IndexerFactory $indexerFactory,
-        \Vbhex\Checkout\Model\SellerFactory $vbhexcheckoutSeller,
+        \Vbhex\Checkout\Model\SellerFactory $vcSeller,
         \Magento\Indexer\Model\Indexer\CollectionFactory $indexerCollectionFactory,
         \Magento\Customer\Model\CustomerFactory $customerModel,
         Visibility $visibility,
@@ -158,7 +158,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_resource = $resource;
         $this->_localeFormat = $localeFormat;
         $this->indexerFactory = $indexerFactory;
-        $this->vbhexcheckoutSeller = $vbhexcheckoutSeller;
+        $this->vcSeller = $vcSeller;
         $this->indexerCollectionFactory = $indexerCollectionFactory;
         $this->customerModel = $customerModel;
         $this->visibility = $visibility;
@@ -167,35 +167,35 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $this->customerSession = $customerSession;
     }
 
-    public function getDserviceSettings()
+    public function getVbhexCheckoutSettings()
     {
         $sellerId = $this->getCustomerId();
         $storeId = $this->getCurrentStoreId();
         $autoId = 0;
-        $collection = $this->vbhexcheckoutSeller->create()
+        $collection = $this->vcSeller->create()
                     ->getCollection()
                     ->addFieldToFilter('seller_id', $sellerId)
                     ->addFieldToFilter('store_id', $storeId);
         foreach ($collection as $value) {
             $autoId = $value->getId();
         }
-        $vbhexcheckoutSeller =   $this->vbhexcheckoutSeller->create()->load($autoId);
-        return $vbhexcheckoutSeller;
+        $vcSeller =   $this->vcSeller->create()->load($autoId);
+        return $vcSeller;
     }
 
-    public function getDserviceSettingsBySellerId($sellerId)
+    public function getVbhexCheckoutSettingsBySellerId($sellerId)
     {
         $storeId = $this->getCurrentStoreId();
         $autoId = 0;
-        $collection = $this->vbhexcheckoutSeller->create()
+        $collection = $this->vcSeller->create()
                     ->getCollection()
                     ->addFieldToFilter('seller_id', $sellerId)
                     ->addFieldToFilter('store_id', $storeId);
         foreach ($collection as $value) {
             $autoId = $value->getId();
         }
-        $vbhexcheckoutSeller =   $this->vbhexcheckoutSeller->create()->load($autoId);
-        return $vbhexcheckoutSeller;
+        $vcSeller =   $this->vcSeller->create()->load($autoId);
+        return $vcSeller;
     }
 
     /**

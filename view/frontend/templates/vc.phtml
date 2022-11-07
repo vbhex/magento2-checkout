@@ -12,13 +12,13 @@
     <div class="kg-inner-wrap">
       <div class="kg-balance-info-tab">
         <div class="kg-top-title">
-          <h2>My Balance on Dservice</h2>
+          <h2>My Balance on VbhexCheckout</h2>
           <span class="toggle_icon"><img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/dispute/arrow_up.png'); ?>"/></span>
         </div>
         <div class="kg-tab-wrap">
           <div class="inner-wrap">
             <div class="kg-row">
-            	<div class="message info empty"><span><span>There is no Balance on Dservice.</span></span></div>
+            	<div class="message info empty"><span><span>There is no Balance on VbhexCheckout.</span></span></div>
             </div>
           </div>
           <div class="kg-action-btn kg-action-btn_withdraw" style="display:none"> <input type="button" value="Withdraw" class="btn_withdraw kg-withdraw-btn" /></div>
@@ -118,7 +118,7 @@
 <hr>
 <div>
   <div class="table-caption" style="font-size:x-large"><b>
-    <?= $block->escapeHtml(__('My Balance On Dservice')) ?>
+    <?= $block->escapeHtml(__('My Balance On VbhexCheckout')) ?>
     </b></div>
   <input type="button" value="Withdraw" class="btn_withdraw" />
   <div class="my_balance_list"> </div>
@@ -176,7 +176,7 @@ function selectbalance(id)
                 const mainContract = new window.web3.eth.Contract(abiJson, mainContractAddress);
                 // get coin list
                 $.ajax({
-                    url: window.location.origin + "/rest/V1/vbhexcheckout/coin/list",
+                    url: window.location.origin + "/rest/V1/vc/coin/list",
                     async: true,
                     type: 'get',
                     success: function(result) {
@@ -194,7 +194,7 @@ function selectbalance(id)
                                 var coin_img = coin.logo;
 
                                 coins[i] = coin;
-                                var logUrl = window.location.origin + "/vbhexcheckout/general/coinlog/coin/" + coin.id + "/wallet/"+theAccount+"/";
+                                var logUrl = window.location.origin + "/vc/general/coinlog/coin/" + coin.id + "/wallet/"+theAccount+"/";
                                 if(coin_address=="0x0000000000000000000000000000000000000000"){
                                     text = text + "<tr><td><input type='radio' name='selected_coin' id='balance_with_draw_"+i+"' value='" + coin_address + "' />" +
                                     coin_name + "</td><td><p id='" + coin_address + "'></p></td>" +
@@ -236,7 +236,7 @@ function selectbalance(id)
 
                                     var balance_decm = window.web3.utils.toBN(balance).div(window.web3.utils.toBN(10).pow(window.web3.utils.toBN(item.decm)));
                                     var balance_str = balance_decm.toString()+" "+item.symbol;
-                                    var balance_pro_d = "Dservice:"+balance_decm.toString();
+                                    var balance_pro_d = "VbhexCheckout:"+balance_decm.toString();
 
                                     $(id).html(balance_str);
                                     $(pro_d_id).html(balance_pro_d);

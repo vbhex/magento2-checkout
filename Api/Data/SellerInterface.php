@@ -11,7 +11,7 @@
 namespace Vbhex\Checkout\Api\Data;
 
 /**
- * Dservice Seller interface.
+ * VbhexCheckout Seller interface.
  * @api
  */
 interface SellerInterface

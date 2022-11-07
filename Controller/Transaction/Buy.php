@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 选择vbhexcheckout下单后，进入vbhexcheckout支付界面
+ * 选择vc下单后，进入vc支付界面
  */
 
 namespace Vbhex\Checkout\Controller\Transaction;
@@ -52,7 +52,7 @@ class Buy extends \Magento\Framework\App\Action\Action{
 
                   $resultPage = $this->resultPageFactory->create();
                   $resultPage->getConfig()->getTitle()->prepend(__('Buyer Transaction #'.$order->getIncrementId()));
-                  $block = $resultPage->getLayout()->getBlock('vbhexcheckout_transaction_buy');
+                  $block = $resultPage->getLayout()->getBlock('vc_transaction_buy');
                   $block->setData('order_id', $order_id);
                   return $resultPage;
                }

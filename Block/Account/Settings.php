@@ -50,14 +50,14 @@ class Settings extends \Magento\Framework\View\Element\Template
 
     public function getPersistentData()
     {
-        $partner = $this->helper->getDserviceSettings();
-        // $persistentData = (array)$this->dataPersistor->get('seller_vbhexcheckout_data');
+        $partner = $this->helper->getVbhexCheckoutSettings();
+        // $persistentData = (array)$this->dataPersistor->get('seller_vc_data');
         // foreach ($partner as $key => $value) {
         //     if (empty($persistentData[$key])) {
         //         $persistentData[$key] = $value;
         //     }
         // }
-        // $this->dataPersistor->clear('seller_vbhexcheckout_data');
+        // $this->dataPersistor->clear('seller_vc_data');
         // return $persistentData;
         return $partner;
     }

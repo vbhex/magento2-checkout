@@ -211,7 +211,7 @@ abstract class AbstractCollection extends DbAbstractCollection
         try {
             if (!empty($this->mappedFields)) {
                 $storeId = $this->getStoreId();
-                $sellerTable = $this->getTable('vbhexcheckout_user_wallets');
+                $sellerTable = $this->getTable('vc_user_wallets');
                 foreach ($this->mappedFields as $mappedField) {
                     $condition = "seller.seller_id = main_table.seller_id and store_id = $storeId";
                     $firstExpression = $this->getFieldQuery($mappedField, $sellerTable, "seller", $condition);

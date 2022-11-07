@@ -8,9 +8,9 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 	{
 		$installer = $setup;
 		$installer->startSetup();
-		if (!$installer->tableExists('vbhexcheckout_coins')) {
+		if (!$installer->tableExists('vc_coins')) {
 			$table = $installer->getConnection()->newTable(
-				$installer->getTable('vbhexcheckout_coins')
+				$installer->getTable('vc_coins')
 			)
 				->addColumn(
 					'entity_id',
@@ -101,13 +101,13 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 						['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
 						'Created At'
 				)
-				->setComment('Dservice Coins Table');
+				->setComment('VbhexCheckout Coins Table');
 			$installer->getConnection()->createTable($table);
 
 			$installer->getConnection()->addIndex(
-				$installer->getTable('vbhexcheckout_coins'),
+				$installer->getTable('vc_coins'),
 				$setup->getIdxName(
-					$installer->getTable('vbhexcheckout_coins'),
+					$installer->getTable('vc_coins'),
 					['name','symbol','contract_address'],
 					\Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_FULLTEXT
 				),
@@ -116,9 +116,9 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 			);
 		}
 
-        if (!$installer->tableExists('vbhexcheckout_chain')) {
+        if (!$installer->tableExists('vc_chain')) {
 			$table = $installer->getConnection()->newTable(
-				$installer->getTable('vbhexcheckout_chain')
+				$installer->getTable('vc_chain')
 			)
 				->addColumn(
 					'id',
@@ -153,13 +153,13 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 					['nullable' => false, 'default' => 0],
 					'Buy Vote From Block'
 				)
-				->setComment('Dservice Chain Table');
+				->setComment('VbhexCheckout Chain Table');
 			$installer->getConnection()->createTable($table);
 
 			$installer->getConnection()->addIndex(
-				$installer->getTable('vbhexcheckout_chain'),
+				$installer->getTable('vc_chain'),
 				$setup->getIdxName(
-					$installer->getTable('vbhexcheckout_chain'),
+					$installer->getTable('vc_chain'),
 					['name'],
 					\Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_FULLTEXT
 				),
@@ -168,9 +168,9 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 			);
 		}
 
-        if (!$installer->tableExists('vbhexcheckout_dispute')) {
+        if (!$installer->tableExists('vc_dispute')) {
 			$table = $installer->getConnection()->newTable(
-				$installer->getTable('vbhexcheckout_dispute')
+				$installer->getTable('vc_dispute')
 			)
 				->addColumn(
 					'entity_id',
@@ -199,11 +199,11 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 					'App Order Id'
 				)
 				->addColumn(
-					'vbhexcheckout_order_id',
+					'vc_order_id',
 					\Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
 					null,
 					['nullable' => true, 'default' => 0],
-					'Dservice Order Id'
+					'VbhexCheckout Order Id'
 				)
 				->addColumn(
 					'chain_order_id',
@@ -303,13 +303,13 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 					['nullable' => false,'default' => 0],
 					'0 refund not asked;1 refund asked;2 refund permitted by voters; 3 refund permitted by sellers; 4 refund denied by voters;5 refund refused by seller (Can vote);6 seller not responsed in time & buyer cashout;7 dispute in appealing.'
 				)
-				->setComment('Dservice Dispute Table');
+				->setComment('VbhexCheckout Dispute Table');
 			$installer->getConnection()->createTable($table);
 
 			$installer->getConnection()->addIndex(
-				$installer->getTable('vbhexcheckout_dispute'),
+				$installer->getTable('vc_dispute'),
 				$setup->getIdxName(
-					$installer->getTable('vbhexcheckout_dispute'),
+					$installer->getTable('vc_dispute'),
 					['tx_hash','last_tx_hash'],
 					\Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_FULLTEXT
 				),
@@ -318,9 +318,9 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 			);
 		}
 
-		if (!$installer->tableExists('vbhexcheckout_dispute_discuss')) {
+		if (!$installer->tableExists('vc_dispute_discuss')) {
 			$table = $installer->getConnection()->newTable(
-				$installer->getTable('vbhexcheckout_dispute_discuss')
+				$installer->getTable('vc_dispute_discuss')
 			)
 				->addColumn(
 					'entity_id',
@@ -369,13 +369,13 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 						['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
 						'Created At'
 				)
-				->setComment('Dservice Dispute Discuss Table');
+				->setComment('VbhexCheckout Dispute Discuss Table');
 			$installer->getConnection()->createTable($table);
 
 			$installer->getConnection()->addIndex(
-				$installer->getTable('vbhexcheckout_dispute_discuss'),
+				$installer->getTable('vc_dispute_discuss'),
 				$setup->getIdxName(
-					$installer->getTable('vbhexcheckout_dispute_discuss'),
+					$installer->getTable('vc_dispute_discuss'),
 					['detail'],
 					\Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_FULLTEXT
 				),
@@ -384,9 +384,9 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 			);
 		}
 
-		if (!$installer->tableExists('vbhexcheckout_order')) {
+		if (!$installer->tableExists('vc_order')) {
 			$table = $installer->getConnection()->newTable(
-				$installer->getTable('vbhexcheckout_order')
+				$installer->getTable('vc_order')
 			)
 				->addColumn(
 					'entity_id',
@@ -540,13 +540,13 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 						['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
 						'Created At'
 				)
-				->setComment('Dservice Order Table');
+				->setComment('VbhexCheckout Order Table');
 			$installer->getConnection()->createTable($table);
 
 			$installer->getConnection()->addIndex(
-				$installer->getTable('vbhexcheckout_order'),
+				$installer->getTable('vc_order'),
 				$setup->getIdxName(
-					$installer->getTable('vbhexcheckout_order'),
+					$installer->getTable('vc_order'),
 					['seller_wallet','buyer_wallet','fiat_symbol','coin_address','coin_symbol','tx_hash'],
 					\Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_FULLTEXT
 				),
@@ -555,9 +555,9 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 			);
 		}
 
-		if (!$installer->tableExists('vbhexcheckout_user_coin_log')) {
+		if (!$installer->tableExists('vc_user_coin_log')) {
 			$table = $installer->getConnection()->newTable(
-				$installer->getTable('vbhexcheckout_user_coin_log')
+				$installer->getTable('vc_user_coin_log')
 			)
 				->addColumn(
 					'entity_id',
@@ -669,13 +669,13 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 						['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
 						'Created At'
 				)
-				->setComment('Dservice Users Coins Log Table');
+				->setComment('VbhexCheckout Users Coins Log Table');
 			$installer->getConnection()->createTable($table);
 
 			$installer->getConnection()->addIndex(
-				$installer->getTable('vbhexcheckout_user_coin_log'),
+				$installer->getTable('vc_user_coin_log'),
 				$setup->getIdxName(
-					$installer->getTable('vbhexcheckout_user_coin_log'),
+					$installer->getTable('vc_user_coin_log'),
 					['user_wallet','tx_hash','coin_symbol'],
 					\Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_FULLTEXT
 				),
@@ -684,9 +684,9 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 			);
 		}
 
-		if (!$installer->tableExists('vbhexcheckout_user_wallets')) {
+		if (!$installer->tableExists('vc_user_wallets')) {
 			$table = $installer->getConnection()->newTable(
-				$installer->getTable('vbhexcheckout_user_wallets')
+				$installer->getTable('vc_user_wallets')
 			)
 				->addColumn(
 					'entity_id',
@@ -728,13 +728,13 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 					['nullable => false'],
 					'eth wallet address'
 				)
-				->setComment('Dservice User Wallets Table');
+				->setComment('VbhexCheckout User Wallets Table');
 			$installer->getConnection()->createTable($table);
 
 			$installer->getConnection()->addIndex(
-				$installer->getTable('vbhexcheckout_user_wallets'),
+				$installer->getTable('vc_user_wallets'),
 				$setup->getIdxName(
-					$installer->getTable('vbhexcheckout_user_wallets'),
+					$installer->getTable('vc_user_wallets'),
 					['bsc_wallet_address','eth_wallet_address'],
 					\Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_FULLTEXT
 				),
@@ -743,9 +743,9 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 			);
 		}
 
-		if (!$installer->tableExists('vbhexcheckout_vote')) {
+		if (!$installer->tableExists('vc_vote')) {
 			$table = $installer->getConnection()->newTable(
-				$installer->getTable('vbhexcheckout_vote')
+				$installer->getTable('vc_vote')
 			)
 				->addColumn(
 					'entity_id',
@@ -815,13 +815,13 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 						['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
 						'Created At'
 				)
-				->setComment('Dservice Vote Table');
+				->setComment('VbhexCheckout Vote Table');
 			$installer->getConnection()->createTable($table);
 
 			$installer->getConnection()->addIndex(
-				$installer->getTable('vbhexcheckout_vote'),
+				$installer->getTable('vc_vote'),
 				$setup->getIdxName(
-					$installer->getTable('vbhexcheckout_vote'),
+					$installer->getTable('vc_vote'),
 					['tx_hash'],
 					\Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_FULLTEXT
 				),
@@ -830,9 +830,9 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 			);
 		}
 
-        if (!$installer->tableExists('vbhexcheckout_buy_vote_log')) {
+        if (!$installer->tableExists('vc_buy_vote_log')) {
 			$table = $installer->getConnection()->newTable(
-				$installer->getTable('vbhexcheckout_buy_vote_log')
+				$installer->getTable('vc_buy_vote_log')
 			)
 				->addColumn(
 					'entity_id',
@@ -923,13 +923,13 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 						['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
 						'Created At'
 				)
-				->setComment('Dservice Buy Vote Log Table');
+				->setComment('VbhexCheckout Buy Vote Log Table');
 			$installer->getConnection()->createTable($table);
 
 			$installer->getConnection()->addIndex(
-				$installer->getTable('vbhexcheckout_buy_vote_log'),
+				$installer->getTable('vc_buy_vote_log'),
 				$setup->getIdxName(
-					$installer->getTable('vbhexcheckout_buy_vote_log'),
+					$installer->getTable('vc_buy_vote_log'),
 					['user_wallet','tx_hash','given_gvote_tx_hash','given_gusdt_tx_hash'],
 					\Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_FULLTEXT
 				),

@@ -1,5 +1,5 @@
 <?php
-$blockObj = $block->getLayout()->createBlock('Vbhex\Checkout\Block\Dservice');
+$blockObj = $block->getLayout()->createBlock('Vbhex\Checkout\Block\VbhexCheckout');
 $eth_price =  $blockObj->getETHPrice();
 ?>
 <div>
@@ -14,7 +14,7 @@ $eth_price =  $blockObj->getETHPrice();
                 <input type="hidden" id="eth_amount" />
                 <input type="hidden" id="eth_price" value="<?= $eth_price ?>" />
                 <p>You currently have <b id="vote_balance">0</b> Vote coins</p>
-                <p><b>Dservice Contract on Goerli network : </b>
+                <p><b>VbhexCheckout Contract on Goerli network : </b>
                     <a target="_blank" href="https://goerli.etherscan.io/address/0x7C570a8bd608Ef8bc043319aaca342ff67750E3f">0x7C******750E3f</a>
                 </p>
             </td>
@@ -24,7 +24,7 @@ $eth_price =  $blockObj->getETHPrice();
                     <p>Pay with ETH, you will get gVOTE , gUSDT and VOTE;</p>
                     <p>gVOTE can be used to resolve Disputes on stage 1,</p>
                     <p>gUSDT can be used as currency to buy products on Dcmarket on stage 1.</p>
-                    <p>Dservice will be deployed on Ethereum Mainnet & L2 network on stage 2.</p>
+                    <p>VbhexCheckout will be deployed on Ethereum Mainnet & L2 network on stage 2.</p>
                     <p>VOTE can be used to resolve Disputes on stage 2.</p>
                 </div>
             </td>
@@ -35,13 +35,13 @@ $eth_price =  $blockObj->getETHPrice();
 <br>
 <br>
 <div>
-    <p><b>How Dservice Acts as An Escrow On BlockChain : </b></p>
-    <img src="https://vbhex.com/media/wysiwyg/Dservice-Flow-updated.drawio_2.png" />
+    <p><b>How VbhexCheckout Acts as An Escrow On BlockChain : </b></p>
+    <img src="https://vbhex.com/media/wysiwyg/VbhexCheckout-Flow-updated.drawio_2.png" />
 </div>
 <br>
 <div>
-    <p><b>How Dservice Resolve a Dispute : </b></p>
-    <img src="https://vbhex.com/media/wysiwyg/Dservice_Vote_Rule.drawio-updated_1.png" />
+    <p><b>How VbhexCheckout Resolve a Dispute : </b></p>
+    <img src="https://vbhex.com/media/wysiwyg/VbhexCheckout_Vote_Rule.drawio-updated_1.png" />
 </div>
 <script type="text/javascript">
     //<![CDATA[[

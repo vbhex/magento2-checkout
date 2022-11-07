@@ -14,11 +14,11 @@ namespace Vbhex\Checkout\Controller\Account;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Framework\App\RequestInterface;
-use Vbhex\Checkout\Helper\Data as DserviceHelper;
+use Vbhex\Checkout\Helper\Data as VbhexCheckoutHelper;
 use Magento\Customer\Model\Url as CustomerUrl;
 
 /**
- * Dservice Account Settings Controller.
+ * VbhexCheckout Account Settings Controller.
  */
 class Settings extends \Magento\Customer\Controller\AbstractAccount
 {
@@ -33,9 +33,9 @@ class Settings extends \Magento\Customer\Controller\AbstractAccount
     protected $_resultPageFactory;
 
     /**
-     * @var DserviceHelper
+     * @var VbhexCheckoutHelper
      */
-    protected $vbhexcheckoutHelper;
+    protected $vcHelper;
 
     /**
      * @var CustomerUrl
@@ -45,19 +45,19 @@ class Settings extends \Magento\Customer\Controller\AbstractAccount
     /**
      * @param Context     $context
      * @param PageFactory $resultPageFactory
-     * @param DserviceHelper $vbhexcheckoutHelper
+     * @param VbhexCheckoutHelper $vcHelper
      * @param CustomerUrl $customerUrl
      */
     public function __construct(
         Context $context,
         PageFactory $resultPageFactory,
         \Magento\Customer\Model\Session $customerSession,
-        DserviceHelper $vbhexcheckoutHelper,
+        VbhexCheckoutHelper $vcHelper,
         CustomerUrl $customerUrl
     ) {
         $this->_customerSession = $customerSession;
         $this->_resultPageFactory = $resultPageFactory;
-        $this->vbhexcheckoutHelper = $vbhexcheckoutHelper;
+        $this->vcHelper = $vcHelper;
         $this->customerUrl = $customerUrl;
         parent::__construct($context);
     }
@@ -81,13 +81,13 @@ class Settings extends \Magento\Customer\Controller\AbstractAccount
     }
 
     /**
-     * Setting Seller Dservice page.
+     * Setting Seller VbhexCheckout page.
      *
      * @return \Magento\Framework\View\Result\Page
      */
     public function execute()
     {
-        $helper = $this->vbhexcheckoutHelper;
+        $helper = $this->vcHelper;
         // if (!$helper->getSellerProfileDisplayFlag()) {
         //     $this->getRequest()->initForward();
         //     $this->getRequest()->setActionName('noroute');
@@ -98,7 +98,7 @@ class Settings extends \Magento\Customer\Controller\AbstractAccount
         if ($isPartner == 1) {
             /** @var \Magento\Framework\View\Result\Page $resultPage */
             $resultPage = $this->_resultPageFactory->create();
-            $resultPage->getConfig()->getTitle()->set(__('Dservice Seller Account Settings Page'));
+            $resultPage->getConfig()->getTitle()->set(__('VbhexCheckout Seller Account Settings Page'));
 
             return $resultPage;
         } else {

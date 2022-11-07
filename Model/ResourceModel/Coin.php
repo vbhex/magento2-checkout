@@ -20,7 +20,7 @@ class Coin extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
      */
     protected function _construct()
     {
-        $this->_init('vbhexcheckout_coins', 'entity_id');
+        $this->_init('vc_coins', 'entity_id');
     }
 
     /**

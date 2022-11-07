@@ -29,14 +29,14 @@ class Index extends Action
     }
 
     /**
-     * Dservice Landing page.
+     * VbhexCheckout Landing page.
      *
      * @return \Magento\Framework\View\Result\Page
      */
     public function execute()
     {
         $resultPage = $this->_resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->set('Dservice Landing Page');
+        $resultPage->getConfig()->getTitle()->set('VbhexCheckout Landing Page');
 
         return $resultPage;
     }

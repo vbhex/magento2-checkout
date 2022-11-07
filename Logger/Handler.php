@@ -24,5 +24,5 @@ class Handler extends \Magento\Framework\Logger\Handler\Base
      *
      * @var string
      */
-    protected $fileName = '/var/log/magento_vbhexcheckout.log';
+    protected $fileName = '/var/log/magento_vc.log';
 }

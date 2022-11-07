@@ -11,7 +11,7 @@
 namespace Vbhex\Checkout\Api\Data;
 
 /**
- * Dservice Dispute interface.
+ * VbhexCheckout Dispute interface.
  * @api
  */
 interface DisputeInterface

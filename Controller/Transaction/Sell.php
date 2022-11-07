@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 选择vbhexcheckout下单后，进入vbhexcheckout支付界面
+ * 选择vc下单后，进入vc支付界面
  */
 
 namespace Vbhex\Checkout\Controller\Transaction;
@@ -52,7 +52,7 @@ class Sell extends \Magento\Framework\App\Action\Action{
 
                   $resultPage = $this->resultPageFactory->create();
                   $resultPage->getConfig()->getTitle()->prepend(__('Seller Transaction #'.$order->getIncrementId()));
-                  $block = $resultPage->getLayout()->getBlock('vbhexcheckout_transaction_sell');
+                  $block = $resultPage->getLayout()->getBlock('vc_transaction_sell');
                   $block->setData('order_id', $order_id);
                   return $resultPage;
                }
@@ -72,7 +72,7 @@ class Sell extends \Magento\Framework\App\Action\Action{
          $connection = $resource->getConnection();
          $sql = "SELECT
          do.seller_id
-         FROM vbhexcheckout_order as do WHERE do.order_id= '".$_order_id."'";
+         FROM vc_order as do WHERE do.order_id= '".$_order_id."'";
          $result = $connection->fetchAll($sql);
          if(!empty($result[0]['seller_id']) && is_numeric($result[0]['seller_id'])){
              return $result[0]['seller_id'];

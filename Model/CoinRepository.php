@@ -17,7 +17,7 @@ use Vbhex\Checkout\Api\CoinRepositoryInterface;
 use Vbhex\Checkout\Model\ResourceModel\Coin\CollectionFactory;
 
 /**
- * Dservice Coin Model.
+ * VbhexCheckout Coin Model.
  *
  */
 class CoinRepository implements CoinRepositoryInterface

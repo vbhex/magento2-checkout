@@ -30,36 +30,36 @@ class Dropdown extends \Magento\Framework\View\Element\Html\Link
      }
 	 if($isLoggedIn) {
         if($isPartner) {
-            return '<li class="vbhexcheckout-account-main"><a ' . $this->getLinkAttributes() . ' >' . $this->escapeHtml($this->getLabel()) . '</a>
-            <span class="vbhexcheckout-account-name">
-                   <button type="button" class="vbhexcheckout-button">
+            return '<li class="vc-account-main"><a ' . $this->getLinkAttributes() . ' >' . $this->escapeHtml($this->getLabel()) . '</a>
+            <span class="vc-account-name">
+                   <button type="button" class="vc-button">
                        <span>Change</span>
                    </button>
                </span>
-            <div class="vbhexcheckout-account-menu" data-target="dropdown" aria-hidden="true">
-                       <ul class="vbhexcheckout-account-header">
-                           <li><a href="'.$base_url.'vbhexcheckout/account/settings">Dservice Seller Settings</a></li>
-                           <li><a href="'.$base_url.'vbhexcheckout/account/sellertrxs">Dservice Seller Orders</a></li>
-                           <li><a href="'.$base_url.'vbhexcheckout/account/buyertrxs">Dservice Buyer Orders</a></li></ul>
+            <div class="vc-account-menu" data-target="dropdown" aria-hidden="true">
+                       <ul class="vc-account-header">
+                           <li><a href="'.$base_url.'vc/account/settings">VbhexCheckout Seller Settings</a></li>
+                           <li><a href="'.$base_url.'vc/account/sellertrxs">VbhexCheckout Seller Orders</a></li>
+                           <li><a href="'.$base_url.'vc/account/buyertrxs">VbhexCheckout Buyer Orders</a></li></ul>
                        </div>
             </li>';
         } else {
-            return '<li class="vbhexcheckout-account-main"><a ' . $this->getLinkAttributes() . ' >' . $this->escapeHtml($this->getLabel()) . '</a>
-            <span class="vbhexcheckout-account-name">
-                   <button type="button" class="vbhexcheckout-button">
+            return '<li class="vc-account-main"><a ' . $this->getLinkAttributes() . ' >' . $this->escapeHtml($this->getLabel()) . '</a>
+            <span class="vc-account-name">
+                   <button type="button" class="vc-button">
                        <span>Change</span>
                    </button>
                </span>
-            <div class="vbhexcheckout-account-menu" data-target="dropdown" aria-hidden="true">
-                       <ul class="vbhexcheckout-account-header">
-                           <li><a href="'.$base_url.'vbhexcheckout/account/buyertrxs">Dservice Buyer Orders</a></li></ul>
+            <div class="vc-account-menu" data-target="dropdown" aria-hidden="true">
+                       <ul class="vc-account-header">
+                           <li><a href="'.$base_url.'vc/account/buyertrxs">VbhexCheckout Buyer Orders</a></li></ul>
                        </div>
             </li>';
         }
 
 	 }else
 	 {
-		 return '<li class="vbhexcheckout-account-main"><a ' . $this->getLinkAttributes() . ' >' . $this->escapeHtml($this->getLabel()) . '</a></li>';
+		 return '<li class="vc-account-main"><a ' . $this->getLinkAttributes() . ' >' . $this->escapeHtml($this->getLabel()) . '</a></li>';
 	 }
 
     }

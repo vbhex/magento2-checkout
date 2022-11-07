@@ -11,7 +11,7 @@
 namespace Vbhex\Checkout\Api\Data;
 
 /**
- * Dservice Coin Log interface.
+ * VbhexCheckout Coin Log interface.
  * @api
  */
 interface CoinLogInterface

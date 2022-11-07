@@ -11,7 +11,7 @@
 namespace Vbhex\Checkout\Api\Data;
 
 /**
- * Dservice Coin interface.
+ * VbhexCheckout Coin interface.
  * @api
  */
 interface CoinInterface

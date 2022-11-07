@@ -127,7 +127,7 @@ class BuyerTrxs extends \Magento\Framework\View\Element\Template
         if ($this->getBuyerOrders()) {
             $pager = $this->getLayout()->createBlock(
                 \Magento\Theme\Block\Html\Pager::class,
-                'vbhexcheckout.account.buyertrxs.pager'
+                'vc.account.buyertrxs.pager'
             )->setCollection(
                 $this->getBuyerOrders()
             );
@@ -155,7 +155,7 @@ class BuyerTrxs extends \Magento\Framework\View\Element\Template
      */
     public function getTrxUrl($order)
     {
-        return $this->getUrl('vbhexcheckout/transaction/Buy', ['order' => $order->getOrderId()]);
+        return $this->getUrl('vc/transaction/Buy', ['order' => $order->getOrderId()]);
     }
 
     /**

@@ -190,12 +190,12 @@ class SettingsPost extends Action
                             foreach ($errors as $message) {
                                 $this->messageManager->addError($message);
                             }
-                            $this->dataPersistor->set('vbhexcheckout_wallet_data', $fields);
+                            $this->dataPersistor->set('vc_wallet_data', $fields);
                         } else {
                             $this->messageManager->addSuccess(
-                                __('Dservice wallet information was successfully saved')
+                                __('VbhexCheckout wallet information was successfully saved')
                             );
-                            $this->dataPersistor->clear('vbhexcheckout_wallet_data');
+                            $this->dataPersistor->clear('vc_wallet_data');
                         }
 
                         return $this->resultRedirectFactory->create()->setPath(
@@ -217,7 +217,7 @@ class SettingsPost extends Action
                     foreach ($errors as $message) {
                         $this->messageManager->addError($message);
                     }
-                    $this->dataPersistor->set('vbhexcheckout_wallet_data', $fields);
+                    $this->dataPersistor->set('vc_wallet_data', $fields);
 
                     return $this->resultRedirectFactory->create()->setPath(
                         '*/*/settings',
@@ -229,7 +229,7 @@ class SettingsPost extends Action
                     "Controller_Account_Settings execute : ".$e->getMessage()
                 );
                 $this->messageManager->addError($e->getMessage());
-                $this->dataPersistor->set('vbhexcheckout_wallet_data', $fields);
+                $this->dataPersistor->set('vc_wallet_data', $fields);
 
                 return $this->resultRedirectFactory->create()->setPath(
                     '*/*/settings',

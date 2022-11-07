@@ -11,7 +11,7 @@ use Magento\Quote\Api\Data\PaymentInterface;
 /**
  * Pay In Store payment method model
  */
-class DserviceCheckout extends \Magento\Payment\Model\Method\AbstractMethod
+class VbhexCheckout extends \Magento\Payment\Model\Method\AbstractMethod
 {
     const PAYMENT_METHOD_WALLET_CODE = 'vbhex_checkout';
     /**

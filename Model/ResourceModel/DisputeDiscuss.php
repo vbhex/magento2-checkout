@@ -19,7 +19,7 @@ class DisputeDiscuss extends \Magento\Framework\Model\ResourceModel\Db\AbstractD
      */
     protected function _construct()
     {
-        $this->_init('vbhexcheckout_dispute_discuss', 'entity_id');
+        $this->_init('vc_dispute_discuss', 'entity_id');
     }
 
     /**

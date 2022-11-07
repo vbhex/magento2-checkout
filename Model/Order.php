@@ -16,7 +16,7 @@ use Vbhex\Checkout\Api\Data\OrderInterface;
 use Magento\Framework\DataObject\IdentityInterface;
 
 /**
- * Dservice Order Model.
+ * VbhexCheckout Order Model.
  *
  * @method \Vbhex\CheckoutModel\ResourceModel\Order _getResource()
  * @method \Vbhex\Checkout\Model\ResourceModel\Order getResource()
@@ -38,21 +38,21 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     /**#@-*/
 
     /**
-     * Dservice Order cache tag.
+     * VbhexCheckout Order cache tag.
      */
-    const CACHE_TAG = 'vbhexcheckout_order';
+    const CACHE_TAG = 'vc_order';
 
     /**
      * @var string
      */
-    protected $_cacheTag = 'vbhexcheckout_order';
+    protected $_cacheTag = 'vc_order';
 
     /**
      * Prefix of model events names.
      *
      * @var string
      */
-    protected $_eventPrefix = 'vbhexcheckout_order';
+    protected $_eventPrefix = 'vc_order';
 
     /**
      * Initialize resource model.
@@ -124,7 +124,7 @@ class Order extends AbstractModel implements OrderInterface, IdentityInterface
     }
 
     /**
-     * Update Dservice Order.
+     * Update VbhexCheckout Order.
      *
      * @param int $id
      * @param int $order_id

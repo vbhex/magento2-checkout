@@ -6,7 +6,7 @@ namespace Vbhex\Checkout\Block\Product;
  * Vbhex Checkout Product Detail Page Block
  */
 
-class Dservice extends \Magento\Framework\View\Element\Template
+class VbhexCheckout extends \Magento\Framework\View\Element\Template
 {
 
     public function __construct(

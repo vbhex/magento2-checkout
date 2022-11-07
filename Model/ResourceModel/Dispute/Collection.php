@@ -112,12 +112,12 @@ class Collection extends AbstractCollection
     }
 
     /**
-     * Join with Dservice Order Grid Flat Table
+     * Join with VbhexCheckout Order Grid Flat Table
      */
-    public function joinDserviceOrder()
+    public function joinVbhexCheckoutOrder()
     {
-        $joinTable = $this->getTable('vbhexcheckout_order');
-        $this->getSelect()->join($joinTable.' as cgf', 'main_table.vbhexcheckout_order_id = cgf.entity_id');
+        $joinTable = $this->getTable('vc_order');
+        $this->getSelect()->join($joinTable.' as cgf', 'main_table.vc_order_id = cgf.entity_id');
     }
 
 }

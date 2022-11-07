@@ -16,7 +16,7 @@ use Vbhex\Checkout\Api\Data\CoinLogInterface;
 use Magento\Framework\DataObject\IdentityInterface;
 
 /**
- * Dservice Coin Log Model.
+ * VbhexCheckout Coin Log Model.
  *
  * @method \Vbhex\CheckoutModel\ResourceModel\CoinLog _getResource()
  * @method \Vbhex\Checkout\Model\ResourceModel\CoinLog getResource()
@@ -31,21 +31,21 @@ class CoinLog extends AbstractModel implements CoinLogInterface, IdentityInterfa
 
 
     /**
-     * Dservice Coin cache tag.
+     * VbhexCheckout Coin cache tag.
      */
-    const CACHE_TAG = 'vbhexcheckout_coin_logs';
+    const CACHE_TAG = 'vc_coin_logs';
 
     /**
      * @var string
      */
-    protected $_cacheTag = 'vbhexcheckout_coin_logs';
+    protected $_cacheTag = 'vc_coin_logs';
 
     /**
      * Prefix of model events names.
      *
      * @var string
      */
-    protected $_eventPrefix = 'vbhexcheckout_coin_logs';
+    protected $_eventPrefix = 'vc_coin_logs';
 
     /**
      * Initialize resource model.

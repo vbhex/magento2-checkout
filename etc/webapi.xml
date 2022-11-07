@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
-	<route url="/V1/vbhexcheckout/update/id/:id/order_id/:order_id/block/:block" method="POST">
+	<route url="/V1/vc/update/id/:id/order_id/:order_id/block/:block" method="POST">
         <service class="Vbhex\Checkout\Api\Data\OrderInterface" method="updateOrder"/>
         <resources>
             <resource ref="self" />
         </resources>
     </route>
-    <route url="/V1/vbhexcheckout/coin/list/" method="GET">
+    <route url="/V1/vc/coin/list/" method="GET">
         <service class="Vbhex\Checkout\Api\CoinRepositoryInterface" method="getActiveCoins"/>
         <resources>
             <resource ref="anonymous" />

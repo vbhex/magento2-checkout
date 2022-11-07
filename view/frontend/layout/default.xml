@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Dservice Software.
+ * VbhexCheckout Software.
  *
- * @category  Dservice
+ * @category  VbhexCheckout
  * @package   Vbhex_Checkout
  * @author    Vbhex
  * @copyright Copyright (c) Vbhex Software Private Limited (https://Vbhex.com)
@@ -16,21 +16,21 @@
   </head>
   <body>
     <referenceContainer name="header.container">
-      <block class="Magento\Framework\View\Element\Template" name="custom_header" as="custom_header" template="Vbhex_Checkout::vbhexcheckout_mis.phtml"/>
+      <block class="Magento\Framework\View\Element\Template" name="custom_header" as="custom_header" template="Vbhex_Checkout::vc_mis.phtml"/>
     </referenceContainer>
     <referenceBlock name="header.links">
-      <block class="Vbhex\Checkout\Block\Html\Dropdown" name="vbhexcheckout-top-link" >
+      <block class="Vbhex\Checkout\Block\Html\Dropdown" name="vc-top-link" >
         <arguments>
-          <argument name="label" xsi:type="string" translate="true">Dservice</argument>
-          <argument name="path" xsi:type="string">vbhexcheckout</argument>
+          <argument name="label" xsi:type="string" translate="true">VbhexCheckout</argument>
+          <argument name="path" xsi:type="string">vc</argument>
         </arguments>
       </block>
     </referenceBlock>
     <referenceBlock name="footer_links">
-      <block class="Magento\Framework\View\Element\Html\Link" name="vbhexcheckout-foot-link" >
+      <block class="Magento\Framework\View\Element\Html\Link" name="vc-foot-link" >
         <arguments>
-          <argument name="label" xsi:type="string" translate="true">Dservice</argument>
-          <argument name="path" xsi:type="string">vbhexcheckout</argument>
+          <argument name="label" xsi:type="string" translate="true">VbhexCheckout</argument>
+          <argument name="path" xsi:type="string">vc</argument>
         </arguments>
       </block>
     </referenceBlock>

@@ -81,8 +81,8 @@ class Lists extends \Magento\Framework\View\Element\Template
                 $collection->addFieldToFilter('main_table.status', $status);
             }
             $collection->join(
-                ['order' => 'vbhexcheckout_order'],
-                'order.entity_id = main_table.vbhexcheckout_order_id'
+                ['order' => 'vc_order'],
+                'order.entity_id = main_table.vc_order_id'
             );
             $collection->setOrder(
                 'entity_id',
@@ -135,7 +135,7 @@ class Lists extends \Magento\Framework\View\Element\Template
         if ($this->getList()) {
             $pager = $this->getLayout()->createBlock(
                 \Magento\Theme\Block\Html\Pager::class,
-                'vbhexcheckout.dispute.lists.pager'
+                'vc.dispute.lists.pager'
             )->setCollection(
                 $this->getList()
             );
@@ -163,7 +163,7 @@ class Lists extends \Magento\Framework\View\Element\Template
      */
     public function getTrxUrl($orderId)
     {
-        return $this->getUrl('vbhexcheckout/dispute/detail', ['order' => $orderId]);
+        return $this->getUrl('vc/dispute/detail', ['order' => $orderId]);
     }
 
     /**

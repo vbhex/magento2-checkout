@@ -16,7 +16,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
 
 /**
- * Dservice Public Dispute Lists Controller.
+ * VbhexCheckout Public Dispute Lists Controller.
  */
 class Lists extends Action
 {
@@ -37,7 +37,7 @@ class Lists extends Action
     }
 
     /**
-     * Setting Seller Dservice page.
+     * Setting Seller VbhexCheckout page.
      *
      * @return \Magento\Framework\View\Result\Page
      */
@@ -45,7 +45,7 @@ class Lists extends Action
     {
         /** @var \Magento\Framework\View\Result\Page $resultPage */
         $resultPage = $this->_resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->set(__('Dservice Public Dispute Lists Page'));
+        $resultPage->getConfig()->getTitle()->set(__('VbhexCheckout Public Dispute Lists Page'));
 
         return $resultPage;
     }

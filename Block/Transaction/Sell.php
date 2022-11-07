@@ -49,7 +49,7 @@ class Sell extends \Magento\Framework\View\Element\Template
          do.chain_order_id,
          do.tx_hash,
          do.status
-         FROM vbhexcheckout_order as do WHERE do.order_id= '".$order_id."'";
+         FROM vc_order as do WHERE do.order_id= '".$order_id."'";
          $result = $connection->fetchAll($sql);
 
          if (!empty($result)) {
@@ -104,7 +104,7 @@ class Sell extends \Magento\Framework\View\Element\Template
             dd.disagree,
             dd.tx_hash,
             dd.status
-            FROM vbhexcheckout_dispute as dd WHERE dd.chain_order_id= ".$orderData['chain_order_id']." AND dd.app_id = ".$resultData['app_id']." ";
+            FROM vc_dispute as dd WHERE dd.chain_order_id= ".$orderData['chain_order_id']." AND dd.app_id = ".$resultData['app_id']." ";
             $result_dispute = $connection->fetchAll($sql_dispute);
             if(!empty($result_dispute)) {
                 $orderDispute = $result_dispute[0];
@@ -127,7 +127,7 @@ class Sell extends \Magento\Framework\View\Element\Template
         ddd.author_type,
         ddd.detail,
         ddd.created_at
-        FROM vbhexcheckout_dispute_discuss as ddd WHERE ddd.dispute_id= " . $orderDispute['entity_id'];
+        FROM vc_dispute_discuss as ddd WHERE ddd.dispute_id= " . $orderDispute['entity_id'];
                 $result_dispute_discuss = $connection->fetchAll($sql_dispute);
                 $resultData['dispute_discuss'] = $result_dispute_discuss;
             } else {
@@ -258,7 +258,7 @@ class Sell extends \Magento\Framework\View\Element\Template
     public function getLogUrl()
     {
         $order_id = $this->getData('order_id');
-        return $this->getUrl('vbhexcheckout/general/coinlog', ['order' => $order_id]);
+        return $this->getUrl('vc/general/coinlog', ['order' => $order_id]);
     }
 
    public function getRegionName($_region_code, $_country_id){

@@ -6,7 +6,7 @@ namespace Vbhex\Checkout\Block;
  * Vbhex Checkout Landing Page Block
  */
 
-class Dservice extends \Magento\Framework\View\Element\Template
+class VbhexCheckout extends \Magento\Framework\View\Element\Template
 {
 
     public function __construct(
@@ -35,7 +35,7 @@ class Dservice extends \Magento\Framework\View\Element\Template
                 dd.entity_id as dd_entity_id,
                 dd.app_id,
                 dd.app_order_id,
-                dd.vbhexcheckout_order_id,
+                dd.vc_order_id,
                 dd.chain_order_id,
                 dd.order_refund,
                 dd.order_refund_decm,
@@ -48,9 +48,9 @@ class Dservice extends \Magento\Framework\View\Element\Template
                 do.paid_amount,
                 do.coin_symbol,
                 do.coin_decm
-                from vbhexcheckout_dispute as dd
-                left join vbhexcheckout_order as do
-                on dd.vbhexcheckout_order_id = do.entity_id
+                from vc_dispute as dd
+                left join vc_order as do
+                on dd.vc_order_id = do.entity_id
                 where dd.status = 7
                 order by do.created_at asc
                 limit 10";
@@ -66,7 +66,7 @@ class Dservice extends \Magento\Framework\View\Element\Template
         $connection = $resource->getConnection();
         $sql = "select
                 price
-                from vbhexcheckout_coins
+                from vc_coins
                 where symbol = 'ETH'";
         $result = $connection->fetchAll($sql);
         $price = 10000;
@@ -84,12 +84,12 @@ class Dservice extends \Magento\Framework\View\Element\Template
      */
     public function getDetailUrl($orderId)
     {
-        return $this->getUrl('vbhexcheckout/dispute/detail', ['order' => $orderId]);
+        return $this->getUrl('vc/dispute/detail', ['order' => $orderId]);
     }
 
     public function getMoreUrl()
     {
-        return $this->getUrl('vbhexcheckout/dispute/lists', ['status' => 7]);
+        return $this->getUrl('vc/dispute/lists', ['status' => 7]);
     }
 
     /**

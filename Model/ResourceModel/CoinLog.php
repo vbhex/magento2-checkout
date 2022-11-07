@@ -20,7 +20,7 @@ class CoinLog extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
      */
     protected function _construct()
     {
-        $this->_init('vbhexcheckout_user_coin_log', 'entity_id');
+        $this->_init('vc_user_coin_log', 'entity_id');
     }
 
     /**

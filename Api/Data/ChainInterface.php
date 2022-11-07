@@ -11,7 +11,7 @@
 namespace Vbhex\Checkout\Api\Data;
 
 /**
- * Dservice Chain interface.
+ * VbhexCheckout Chain interface.
  * @api
  */
 interface ChainInterface

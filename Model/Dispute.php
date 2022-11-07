@@ -16,7 +16,7 @@ use Vbhex\Checkout\Api\Data\DisputeInterface;
 use Magento\Framework\DataObject\IdentityInterface;
 
 /**
- * Dservice Dispute Model.
+ * VbhexCheckout Dispute Model.
  *
  * @method \Vbhex\CheckoutModel\ResourceModel\Dispute _getResource()
  * @method \Vbhex\Checkout\Model\ResourceModel\Dispute getResource()
@@ -38,21 +38,21 @@ class Dispute extends AbstractModel implements DisputeInterface, IdentityInterfa
     /**#@-*/
 
     /**
-     * Dservice Dispute cache tag.
+     * VbhexCheckout Dispute cache tag.
      */
-    const CACHE_TAG = 'vbhexcheckout_dispute';
+    const CACHE_TAG = 'vc_dispute';
 
     /**
      * @var string
      */
-    protected $_cacheTag = 'vbhexcheckout_dispute';
+    protected $_cacheTag = 'vc_dispute';
 
     /**
      * Prefix of model events names.
      *
      * @var string
      */
-    protected $_eventPrefix = 'vbhexcheckout_dispute';
+    protected $_eventPrefix = 'vc_dispute';
 
     /**
      * Initialize resource model.

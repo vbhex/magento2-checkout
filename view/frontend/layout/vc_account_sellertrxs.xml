@@ -23,7 +23,7 @@
             </action>
         </referenceBlock>
         <referenceContainer name="content">
-            <block class="Vbhex\Checkout\Block\Account\SellerTrxs" name="vbhexcheckout_account_sellertrxs" template="account/sellertrxs.phtml" cacheable="false"/>
+            <block class="Vbhex\Checkout\Block\Account\SellerTrxs" name="vc_account_sellertrxs" template="account/sellertrxs.phtml" cacheable="false"/>
         </referenceContainer>
     </body>
 </page>

@@ -14,16 +14,16 @@
     <update handle="marketplace_styles"/>
     <update handle="customer_account"/>
     <head>
-        <css src="https://vbhex.com/static/version1651059115/frontend/Magento/luma/en_US/css/styles-m.css"/>
+        <css src="Webkul_Marketplace::colorpicker/css/colorpicker.css"/>
     </head>
     <body>
         <referenceBlock name="page.main.title">
             <action method="setPageTitle">
-                <argument translate="true" name="title" xsi:type="string">Buyer Transactions</argument>
+                <argument translate="true" name="title" xsi:type="string">VbhexCheckout Setting Account</argument>
             </action>
         </referenceBlock>
         <referenceContainer name="content">
-            <block class="Vbhex\Checkout\Block\Account\BuyerTrxs" name="vbhexcheckout_account_buyertrxs" template="account/buyertrxs.phtml" cacheable="false"/>
+            <block class="Vbhex\Checkout\Block\Account\Settings" name="vc_account_settings" template="account/settings.phtml" cacheable="false"/>
         </referenceContainer>
     </body>
 </page>

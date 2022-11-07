@@ -1,5 +1,5 @@
 <div>
-    <input class="btn_order_on_vbhexcheckout" type="button" value="Order On Dservice" />
+    <input class="btn_order_on_vc" type="button" value="Order On VbhexCheckout" />
 </div>
 <div style="display:none">
 
@@ -15,7 +15,7 @@
                 });
                 const theAccount = accounts[0];
                 var html = "Wallet Address:" + theAccount + " ; ";
-                html += "Please Add this product to Cart, and then choose Dservice Payment when Place Order";
+                html += "Please Add this product to Cart, and then choose VbhexCheckout Payment when Place Order";
                 alert(html);
                 window.web3 = new web3(window.ethereum);
                 if (window.ethereum.networkVersion !== 5) {
@@ -53,7 +53,7 @@
             return false;
         }
 
-        $('.btn_order_on_vbhexcheckout').click(function() {
+        $('.btn_order_on_vc').click(function() {
             connectWallet();
         });
     });

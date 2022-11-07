@@ -16,7 +16,7 @@ use Vbhex\Checkout\Api\Data\ChainInterface;
 use Magento\Framework\DataObject\IdentityInterface;
 
 /**
- * Dservice Chain Model.
+ * VbhexCheckout Chain Model.
  *
  * @method \Vbhex\CheckoutModel\ResourceModel\Chain _getResource()
  * @method \Vbhex\Checkout\Model\ResourceModel\Chain getResource()
@@ -38,21 +38,21 @@ class Chain extends AbstractModel implements ChainInterface, IdentityInterface
     /**#@-*/
 
     /**
-     * Dservice Coin cache tag.
+     * VbhexCheckout Coin cache tag.
      */
-    const CACHE_TAG = 'vbhexcheckout_chain';
+    const CACHE_TAG = 'vc_chain';
 
     /**
      * @var string
      */
-    protected $_cacheTag = 'vbhexcheckout_chain';
+    protected $_cacheTag = 'vc_chain';
 
     /**
      * Prefix of model events names.
      *
      * @var string
      */
-    protected $_eventPrefix = 'vbhexcheckout_chain';
+    protected $_eventPrefix = 'vc_chain';
 
     /**
      * Initialize resource model.

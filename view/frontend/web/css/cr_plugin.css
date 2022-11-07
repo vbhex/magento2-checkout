@@ -199,7 +199,7 @@ img {
     box-sizing: border-box;
     vertical-align: middle;
 }
-.cr-plugin-billing-box .cr-plugin-billing-amount ul li .btn_order_on_vbhexcheckout {
+.cr-plugin-billing-box .cr-plugin-billing-amount ul li .btn_order_on_vc {
     background: #1979c3;
     border: 1px solid #1979c3;
     color: #ffffff;

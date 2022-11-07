@@ -2,7 +2,7 @@
 namespace Vbhex\Checkout\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
-class DserviceRedirect implements ObserverInterface
+class VbhexCheckoutRedirect implements ObserverInterface
 {
     protected $_redirect;
     protected $_response;
@@ -25,7 +25,7 @@ class DserviceRedirect implements ObserverInterface
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \Magento\Sales\Model\Service\InvoiceService $invoiceService,
         \Webkul\Marketplace\Model\OrdersFactory $ordersFactory,
-        \Vbhex\Checkout\Helper\Data $vbhexcheckout_helper
+        \Vbhex\Checkout\Helper\Data $vc_helper
     ) {
          $this->_logger = $logger;
          $this->_redirect = $redirect;
@@ -37,7 +37,7 @@ class DserviceRedirect implements ObserverInterface
          $this->productRepository = $productRepository;
          $this->_invoiceService = $invoiceService;
          $this->ordersFactory = $ordersFactory;
-         $this->helper = $vbhexcheckout_helper;
+         $this->helper = $vc_helper;
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer)
@@ -59,7 +59,7 @@ class DserviceRedirect implements ObserverInterface
             foreach($sellerOrder as $info) {
                 $seller_id = $info['seller_id'];
             }
-            $partner = $this->helper->getDserviceSettingsBySellerId($seller_id);
+            $partner = $this->helper->getVbhexCheckoutSettingsBySellerId($seller_id);
             $seller_address = $partner["bsc_wallet_address"] ?? "";
 
 
@@ -67,13 +67,13 @@ class DserviceRedirect implements ObserverInterface
          $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
          $resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
          $connection = $resource->getConnection();
-         $sql = "SELECT * FROM vbhexcheckout_order WHERE order_id= '".$order_id."'";
+         $sql = "SELECT * FROM vc_order WHERE order_id= '".$order_id."'";
          $result = $connection->fetchAll($sql);
          $this->_logger->info("vbhex_checkout_log selected coin : ".$selectcoin);
 
          if(!$result){
 
-            $sql = "SELECT * FROM vbhexcheckout_coins WHERE entity_id = '".$selectcoin."'";
+            $sql = "SELECT * FROM vc_coins WHERE entity_id = '".$selectcoin."'";
             $result = $connection->fetchAll($sql);
 
             if (!empty($result)) {
@@ -110,8 +110,8 @@ class DserviceRedirect implements ObserverInterface
                         'coin_price'        =>  $coin_price,
                         'order_id'          =>  $order_id
                   ];
-                  $this->dataInsertDB('vbhexcheckout_order',$db_order);
-                  $redirectUrl = $this->getBaseUrl().'vbhexcheckout/transaction/Buy/order/'.$order_id;
+                  $this->dataInsertDB('vc_order',$db_order);
+                  $redirectUrl = $this->getBaseUrl().'vc/transaction/Buy/order/'.$order_id;
                   return $this->_redirect->redirect($this->_response, $redirectUrl);
                } else {
                   $msg="Get invalid coin";
@@ -143,7 +143,7 @@ class DserviceRedirect implements ObserverInterface
             }
          }
         } else{
-            $msg = "You can only make orders for one seller if you choose Dservice payment";
+            $msg = "You can only make orders for one seller if you choose VbhexCheckout payment";
             $this->_messageManager->addError($msg);
             $cartUrl = $this->_url->getUrl('checkout/cart/index');
             $this->_redirect->redirect($this->_response, $cartUrl);

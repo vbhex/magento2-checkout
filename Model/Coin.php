@@ -16,7 +16,7 @@ use Vbhex\Checkout\Api\Data\CoinInterface;
 use Magento\Framework\DataObject\IdentityInterface;
 
 /**
- * Dservice Coin Model.
+ * VbhexCheckout Coin Model.
  *
  * @method \Vbhex\CheckoutModel\ResourceModel\Coin _getResource()
  * @method \Vbhex\Checkout\Model\ResourceModel\Coin getResource()
@@ -38,21 +38,21 @@ class Coin extends AbstractModel implements CoinInterface, IdentityInterface
     /**#@-*/
 
     /**
-     * Dservice Coin cache tag.
+     * VbhexCheckout Coin cache tag.
      */
-    const CACHE_TAG = 'vbhexcheckout_coins';
+    const CACHE_TAG = 'vc_coins';
 
     /**
      * @var string
      */
-    protected $_cacheTag = 'vbhexcheckout_coins';
+    protected $_cacheTag = 'vc_coins';
 
     /**
      * Prefix of model events names.
      *
      * @var string
      */
-    protected $_eventPrefix = 'vbhexcheckout_coins';
+    protected $_eventPrefix = 'vc_coins';
 
     /**
      * Initialize resource model.
