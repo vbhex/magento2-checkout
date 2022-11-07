@@ -1,0 +1,133 @@
+<script type="text/javascript">
+    //<![CDATA[[
+    require(['jquery'], function($) {
+           $(".vbhexcheckout-button").click(function(){
+			  $(".vbhexcheckout-account-name").toggleClass("active");
+			  $(".vbhexcheckout-account-main").toggleClass("active");
+		});
+
+		$('body').on('click', function (e) {
+			if (!$('.vbhexcheckout-account-main').is(e.target)
+				&& $('.vbhexcheckout-account-main').has(e.target).length === 0
+				&& $('.vbhexcheckout-account-main.active').has(e.target).length === 0
+			) {
+				$('.vbhexcheckout-account-main').removeClass('active');
+				$('.vbhexcheckout-account-name').removeClass('active');
+			}
+
+		});
+
+    });
+
+    // ]]>
+</script>
+
+<style>
+.vbhexcheckout-account-main
+{
+	position: relative;
+}
+.vbhexcheckout-account-menu ul{
+	margin: 0;
+    padding: 0;
+    list-style: none none;
+    background: #fff;
+    border: 1px solid #bbb;
+    margin-top: 4px;
+    min-width: 100%;
+    z-index: 101;
+    box-sizing: border-box;
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    box-shadow: 0 3px 3px rgb(0 0 0 / 15%);
+	min-width: 175px;
+    z-index: 1000;
+}
+
+@media (min-width: 768px){
+.vbhexcheckout-account-header {
+    min-width: 175px;
+    z-index: 1000;
+	display: inline-block;
+}
+.vbhexcheckout-account-menu ul li a
+{
+    color: #333333;
+    text-decoration: none;
+	display: block;
+    line-height: 1.4;
+    padding: 8px;
+}
+.vbhexcheckout-account-menu ul li{
+	margin-bottom:0px;
+}
+.vbhexcheckout-account-menu  ul:before {
+    right: 10px;
+    top: -12px;
+	border: 6px solid;
+    border-color: transparent transparent #ffffff transparent;
+    z-index: 99;
+	content: '';
+    display: block;
+    height: 0;
+    position: absolute;
+    width: 0;
+}
+.vbhexcheckout-account-name .vbhexcheckout-button{
+	background-image: none;
+    background: none;
+    -moz-box-sizing: content-box;
+    border: 0;
+    box-shadow: none;
+    line-height: inherit;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    text-shadow: none;
+    font-weight: 400;
+    color: #ffffff;
+	cursor: pointer;
+    display: inline-block;
+}
+.vbhexcheckout-account-name.active .vbhexcheckout-button:after {
+    content: '\e621';
+}
+.vbhexcheckout-account-name .vbhexcheckout-button:after {
+	-webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 10px;
+    line-height: 22px;
+    color: inherit;
+    content: '\e622';
+    font-family: 'luma-icons';
+    margin: 0;
+    vertical-align: top;
+    display: inline-block;
+    font-weight: normal;
+    overflow: hidden;
+    speak: none;
+    text-align: center;
+}
+.vbhexcheckout-account-name .vbhexcheckout-button span{
+	display:none;
+}
+.vbhexcheckout-account-header li:hover {
+    background: #e8e8e8;
+    cursor: pointer;
+}
+}
+li.vbhexcheckout-account-main.active .vbhexcheckout-account-header
+{
+	display:block;
+}
+@media (max-width: 768px){
+	.vbhexcheckout-account-name .vbhexcheckout-button{
+		display:none;
+	}
+}
+.header.content .logo img {
+    width: auto !important;
+}
+</style>

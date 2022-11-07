@@ -1,0 +1,53 @@
+<?php
+    $order_id = $block->getData('order_id') ?? "Not Set";
+    $coin_id = $block->getData('coin_id') ?? "Not Set";
+    $wallet = $block->getData('wallet')?? "Not Set";
+?>
+<div>
+    <table>
+        <ul>
+            <li>Order id : <?= $order_id ?></li>
+        </ul>
+        <ul>
+            <li>Coin id : <?= $coin_id ?></li>
+        </ul>
+        <ul>
+            <li>User wallet : <?= $wallet ?></li>
+        </ul>
+    </table>
+</div>
+<?php $_logs = $block->getLogs(); ?>
+<?= $block->getChildHtml('info') ?>
+<?php if ($_logs && count($_logs)) : ?>
+    <div class="table-wrapper orders-history">
+        <table class="data table table-order-items history" id="my-orders-table">
+            <caption class="table-caption"><?= $block->escapeHtml(__('Coin Logs')) ?></caption>
+            <thead>
+                <tr>
+                    <th scope="col" class="col id"><?= $block->escapeHtml(__('User Wallet #')) ?></th>
+                    <th scope="col" class="col date"><?= $block->escapeHtml(__('Date')) ?></th>
+                    <?= $block->getChildHtml('extra.column.header') ?>
+                    <th scope="col" class="col total"><?= $block->escapeHtml(__('Coin Amount')) ?></th>
+                    <th scope="col" class="col status"><?= $block->escapeHtml(__('Scenarios')) ?></th>
+                    <th scope="col" class="col status"><?= $block->escapeHtml(__('Tx Hash')) ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($_logs as $_log) : ?>
+                    <tr>
+                        <td data-th="<?= $block->escapeHtml(__('User Wallet #')) ?>" class="col id"><?= $block->escapeHtml($_log->getUserWallet()) ?></td>
+                        <td data-th="<?= $block->escapeHtml(__('Date')) ?>" class="col date"><?= /* @noEscape */ $block->escapeHtml($_log->getCreatedAt()) ?></td>
+                        <td data-th="<?= $block->escapeHtml(__('Coin Amount')) ?>" class="col total"><?= /* @noEscape */ $_log->getCoinAmount() ."". $_log->getCoinSymbol() ?></td>
+                        <td data-th="<?= $block->escapeHtml(__('Scenarios')) ?>" class="col status"><?= $block->escapeHtml($block->getScenariosLabel($_log->getScenarios())) ?></td>
+                        <td data-th="<?= $block->escapeHtml(__('Tx Hash')) ?>" class="col status"><a target="_blank" href="https://goerli.etherscan.io/tx/<?=$_log->getTxHash() ?>"><?= $block->escapeHtml($block->hideTxHash($_log->getTxHash())) ?></a></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php if ($block->getPagerHtml()) : ?>
+        <div class="order-products-toolbar toolbar bottom"><?= $block->getPagerHtml() ?></div>
+    <?php endif ?>
+<?php else : ?>
+    <div class="message info empty"><span><?= $block->escapeHtml($block->getEmptyLogsMessage()) ?></span></div>
+<?php endif ?>

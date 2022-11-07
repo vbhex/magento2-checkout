@@ -1,0 +1,192 @@
+<div class="kg-footer" id="kg-foter">
+  <div class="kg-footer-top">
+    <div class="kg-inner-wrap">
+      <div class="kg-footer-logo">
+        <div class="kg-logo">
+          <?php
+                /*$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                $storeID =1;
+                $folderName = \Magento\Config\Model\Config\Backend\Image\Logo::UPLOAD_DIR;
+                $storeLogoPath = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('design/header/logo_src', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeID);
+                $path = '<img src="/pub/media/' . $folderName . '/' . $storeLogoPath . '"/>';*/
+            ?>
+          <?php echo $this->getLayout()
+          ->createBlock('Magento\Cms\Block\Block')
+          ->setBlockId('footer-col-1')
+          ->toHtml(); ?></div>
+      </div>
+      <div class="kg-footer-link-wrap">
+        <div class="kg-links"> <?php echo $this->getLayout()
+          ->createBlock('Magento\Cms\Block\Block')
+          ->setBlockId('footer-col-2')
+          ->toHtml(); ?> </div>
+        <div class="kg-links"> <?php echo $this->getLayout()
+          ->createBlock('Magento\Cms\Block\Block')
+          ->setBlockId('footer-col-3')
+          ->toHtml(); ?> </div>
+      </div>
+      <div class="kg-newsletter"> <?php echo $this->getLayout()
+          ->createBlock('Magento\Cms\Block\Block')
+          ->setBlockId('footer-col-4')
+          ->toHtml(); ?> </div>
+    </div>
+  </div>
+</div>
+<style>
+.page-footer #kg-foter .kg-footer-top .kg-inner-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 60px 0;
+}
+.page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-footer-logo {
+    width: 25%;
+}
+.page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-footer-link-wrap {
+    width: 37%;
+    display: flex;
+    justify-content: end;
+}
+.page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-newsletter {
+    width: 37%;
+}
+.page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-links {
+    display: inline-block;
+    margin-right: 39px;
+	width: 30%;
+}
+.page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-links:last-child{
+    margin-right: 0px;
+}
+.page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-newsletter .block.newsletter {
+    width: 100%;
+    float: unset;
+    max-width: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: end;
+}
+.page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-links ul{
+    padding: 0px;
+    margin: 0px;
+    list-style: none;
+}
+.page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-links ul li{
+    margin-bottom: 10px;
+}
+.page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-links ul li:last-child{
+    margin-bottom: 0px;
+}
+.page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-links ul li a {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 27px;
+    color: #1979C3;
+}
+.kg-footer-copyright .kg-copyright-inner-wrap {
+    background: #1979C3;
+    padding: 10px 47px;
+    display: flex;
+    justify-content: space-between;
+}
+.kg-footer-copyright .kg-copyright-inner-wrap p,
+.kg-footer-copyright .kg-copyright-inner-wrap p a {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 27px;
+    color: #FFFFFF;
+    margin: 0;
+}
+.kg-footer-copyright .kg-copyright-inner-wrap p.copyright {
+    background-color: transparent;
+    padding: 0;
+}
+.page-footer{
+    background: #F0F0F0 !important;
+}
+.page-footer .footer.content,
+.page-footer{
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+@media screen and (max-width:991px){
+    .page-footer #kg-foter .kg-footer-top .kg-inner-wrap{
+        flex-wrap: wrap;
+    }
+    .page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-footer-logo {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-footer-link-wrap,
+    .page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-newsletter{
+        width: 50%;
+        justify-content: unset;
+    }
+    .page-footer #kg-foter .kg-footer-top .kg-inner-wrap{
+        padding: 60px 0;
+    }
+    .kg-footer-copyright .kg-copyright-inner-wrap p, .kg-footer-copyright .kg-copyright-inner-wrap p a{
+        font-size: 16px;
+        line-height: 20px;
+    }
+    .page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-links ul li a{
+        font-size: 14px;
+        line-height: 20px;
+    }
+}
+@media screen and (max-width:768px){
+    .page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-footer-logo .kg-logo img{
+        width: 270px;
+    }
+    .kg-footer-copyright .kg-copyright-inner-wrap{
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-footer-link-wrap{
+        flex-wrap: wrap;
+    }
+    .page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-links{
+        display: block;
+        width: 100%;
+    }
+    .page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-links ul li:last-child {
+        margin-bottom: 10px;
+    }
+    .page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-footer-link-wrap, 
+    .page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-newsletter{
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-newsletter{
+        margin-bottom: 0px;
+    }
+    .page-footer #kg-foter .kg-footer-top .kg-inner-wrap .kg-newsletter .block.newsletter{
+        justify-content: unset;
+    }
+    .page-footer #kg-foter .kg-footer-top .kg-inner-wrap {
+        padding: 40px 0;
+    }
+    .kg-footer-copyright .kg-copyright-inner-wrap{
+        padding: 10px;
+    }
+    .kg-footer-copyright .kg-copyright-inner-wrap p, .kg-footer-copyright .kg-copyright-inner-wrap p a{
+        font-size: 14px;
+    }
+}
+.kg-footer-copyright{
+        background: #1979C3;
+    }
+    .kg-footer-copyright .kg-copyright-inner-wrap{
+        box-sizing: border-box;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 1280px;
+        padding-left: 20px;
+        padding-right: 20px;
+        width: auto;
+    }
+</style>

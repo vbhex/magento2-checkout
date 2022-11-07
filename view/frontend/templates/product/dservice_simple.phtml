@@ -1,0 +1,172 @@
+<?php
+$blockObj = $block->getLayout()->createBlock('Vbhex\Checkout\Block\Dservice');
+$eth_price =  $blockObj->getETHPrice();
+?>
+<div>
+    <table>
+        <tr>
+            <td>
+                <h3>Get Vote Coins</h3>
+                <input type="value" id="vote_coin_quantity" /> VOTEs <p id="free_gift"></p>
+                <input class="btn_connect_wallet" type="button" value="Connect Wallet" />
+                <input class="btn_buy_vote" type="button" />
+                <input type="hidden" id="wallet_connected" />
+                <input type="hidden" id="eth_amount" />
+                <input type="hidden" id="eth_price" value="<?= $eth_price ?>" />
+                <p>You currently have <b id="vote_balance">0</b> Vote coins</p>
+                <p><b>Dservice Contract on Goerli network : </b>
+                    <a target="_blank" href="https://goerli.etherscan.io/address/0x7C570a8bd608Ef8bc043319aaca342ff67750E3f">0x7C******750E3f</a>
+                </p>
+            </td>
+            <td>
+                <div style="float:right">
+
+                    <p>Pay with ETH, you will get gVOTE , gUSDT and VOTE;</p>
+                    <p>gVOTE can be used to resolve Disputes on stage 1,</p>
+                    <p>gUSDT can be used as currency to buy products on Dcmarket on stage 1.</p>
+                    <p>Dservice will be deployed on Ethereum Mainnet & L2 network on stage 2.</p>
+                    <p>VOTE can be used to resolve Disputes on stage 2.</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<hr>
+<br>
+<br>
+<div>
+    <p><b>How Dservice Acts as An Escrow On BlockChain : </b></p>
+    <img src="https://vbhex.com/media/wysiwyg/Dservice-Flow-updated.drawio_2.png" />
+</div>
+<br>
+<div>
+    <p><b>How Dservice Resolve a Dispute : </b></p>
+    <img src="https://vbhex.com/media/wysiwyg/Dservice_Vote_Rule.drawio-updated_1.png" />
+</div>
+<script type="text/javascript">
+    //<![CDATA[[
+    require(['jquery', 'web3', 'constvar', 'chainvar'], function($, web3) {
+        $("#vote_coin_quantity").on("input", function() {
+            if (parseInt($('#wallet_connected').val()) == 1) {
+                var eth_price = parseFloat($('#eth_price').val());
+                $(".btn_buy_vote").val("Buy with " + parseFloat($(this).val()) / 10000 + " ETH");
+                $("#free_gift").html("along with " + parseFloat($(this).val()) * v_gVoteMul + " gVOTEs and about " + parseFloat($(this).val()) * eth_price / 10000 + " gUSDTs for free.");
+                $("#eth_amount").val(parseFloat($(this).val()) * 100000000000000);
+            }
+        });
+        var connectWallet = async () => {
+            if (window.ethereum) {
+                const accounts = await window.ethereum.request({
+                    method: 'eth_requestAccounts'
+                });
+                const theAccount = accounts[0];
+
+                window.web3 = new web3(window.ethereum);
+                if (window.ethereum.networkVersion !== v_buyVoteChainId) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{
+                                chainId: web3.utils.toHex(v_buyVoteChainId)
+                            }]
+                        });
+                    } catch (err) {
+                        // This error code indicates that the chain has not been added to MetaMask
+                        if (err.code === 4902) {
+                            await window.ethereum.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [{
+                                    chainName: v_buyVoteChainName,
+                                    chainId: web3.utils.toHex(v_buyVoteChainId),
+                                    nativeCurrency: {
+                                        name: v_buyVoteCurrencyName,
+                                        decimals: v_buyVoteDecimals,
+                                        symbol: v_buyVoteCurrencySymbol
+                                    },
+                                    rpcUrls: [v_buyVoteRpcUrl],
+                                    blockExplorerUrls: [v_buyVoteExplorerUrl]
+                                }]
+                            });
+                        }
+                    }
+                }
+                var eth_amount = $("#eth_amount").val();
+                if (eth_amount == "" || eth_amount == null || typeof(eth_amount) == undefined || parseInt(eth_amount) < 500) {
+                    var eth_price = parseFloat($('#eth_price').val());
+                    // init the data to buy VOTE coins
+                    $('.btn_connect_wallet').hide();
+                    $('.btn_buy_vote').show();
+                    $("#vote_coin_quantity").val(1000);
+                    $('.btn_buy_vote').val("Buy with 0.1 ETH");
+                    $('#eth_amount').val(100000000000000000);
+                    $("#free_gift").html("along with " + 1000 * v_gVoteMul + " gVOTEs and about " + 0.1 * eth_price + " gUSDTs for free.");
+                }
+                $('#wallet_connected').val(1);
+                // get the VOTE balance of the connected wallet
+                const coinContract = new window.web3.eth.Contract(erc20AbiJson, v_buyVoteVoteCoinContract);
+                coinContract.methods.balanceOf(theAccount).call().then(function(result) {
+                    var decm_balance = result / parseFloat("1000000.000");
+                    $('#vote_balance').html(decm_balance);
+                });
+                // on click the buy vote button
+                $('.btn_buy_vote').click(function() {
+                    var eth_amount = $('#eth_amount').val();
+                    if (window.web3.utils.toBN(eth_amount).lt(window.web3.utils.toBN((50000000000000000)))) {
+                        alert("Value sent is less than 0.05ETH");
+                        return false;
+                    }
+                    // alert("ETH : "+eth_amount);
+                    // triggle buy vote contract
+                    const buyVoteContract = new window.web3.eth.Contract(buyVoteAbiJson, v_buyVoteContract);
+                    buyVoteContract.methods.buy().send({
+                            from: theAccount,
+                            value: eth_amount
+                        })
+                        .then(function(receipt) {
+                            if (receipt.status) {
+                                // update the user balance
+                                coinContract.methods.balanceOf(theAccount).call().then(function(result) {
+                                    var decm_balance = result / parseFloat("1000000.000");
+                                    $('#vote_balance').html(decm_balance);
+                                });
+                            }
+                        });
+                    return true;
+                });
+                return true;
+            }
+            alert("Please install MetaMask to use this dApp!");
+            return false;
+        }
+
+        $('.btn_connect_wallet').click(function() {
+            connectWallet();
+        });
+
+        $(document).ready(function() {
+            $('.btn_connect_wallet').show();
+            $('.btn_buy_vote').hide();
+            $('#wallet_connected').val(0);
+            if (window.ethereum) {
+                // connectWallet();
+                // detect Metamask account change
+                window.ethereum.on('accountsChanged', function(accounts) {
+                    // console.log('accountsChanges', accounts);
+                    window.location.href = window.location.href;
+                });
+
+                // detect Network account change
+                window.ethereum.on('networkChanged', function(networkId) {
+                    // console.log('networkChanged', networkId);
+                    window.location.href = window.location.href;
+                });
+            } else {
+                // alert("Please install MetaMask to use this dApp!");
+                $('.btn_connect_wallet').click(function() {
+                    alert("Please install MetaMask to use this dApp!");
+                });
+            }
+        })
+    });
+    // ]]>
+</script>

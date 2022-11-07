@@ -1,0 +1,907 @@
+<?php
+$blockObj = $block->getLayout()->createBlock('Vbhex\Checkout\Block\Dservice');
+$eth_price =  $blockObj->getETHPrice();
+?>
+<div class="kg-main-page">
+<section class="kg-contentarea_01">
+        <div class="inner-content-main">
+            <div class="kg-left-wrap">
+                <div class="inner-wrap">
+                    <div class="kg-top-title">
+                        <h2>ESCROW ON BLOCKCHAIN</h2>
+                    </div>
+                    <p class="kg-to-info">Dservice uses blockchain to protect funds, eliminating the possibility of scam.</p>
+                </div>
+            </div>
+            <div class="kg-right-wraop">
+                <div class="kg-img-wrap"> <img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/1.png'); ?>" /> </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="kg-contentarea_02">
+        <div class="kg-inner-wrap">
+
+            <?php
+            echo $this->getLayout()
+                ->createBlock('Magento\Cms\Block\Block')
+                ->setBlockId('no_dispute')
+                ->toHtml();
+
+
+            echo $this->getLayout()
+                ->createBlock('Magento\Cms\Block\Block')
+                ->setBlockId('with_dispute')
+                ->toHtml();
+
+            ?>
+
+        </div>
+    </section>
+    <section class="kg-contentarea_03">
+        <div class="kg-inner-wrap">
+            <div class="kg-top-title">
+                <h3>How a dispute is resolved?</h3>
+            </div>
+            <div class="kg-content-wrap">
+                <div class="img-wrap"> <img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/5th_new.png'); ?>"> </div>
+            </div>
+        </div>
+    </section>
+    <section class="kg-contentarea_04">
+        <div class="kg-inner-wrap">
+            <div class="kg-top-title">
+                <h3>want to resolve a dispute?</h3>
+            </div>
+            <div class="kg-content-wrap">
+                <div class="kg-row-wrap">
+                    <div class="kg-form">
+                        <div class="inner-wrap">
+                            <!-- <form> -->
+                             <div>
+                                <p class="top-title">Get vote coins</p>
+                                <div class="kg-form-content">
+                                    <input type="number" id="vote_coin_quantity" value="" />
+                                    <button class="kg-btn kg-plus"><img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/plus.png'); ?>"></button>
+                                    <button class="kg-btn kg-minus"><img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/minus.png'); ?>"></button>
+                                </div>
+                                <div class="kg-action-btn btn_connect_wallet"> <button  class="kg-connect-wallet btn">Connect Wallet</button> </div>
+                                <div class="kg-action-btn btn_buy_vote"></div>
+                            </div>
+                            <!-- </form> -->
+                        </div>
+                        <div class="kg_about_eth">
+                                <p id="free_gift">Connect Wallet to get Vote and Currency</p>
+                        </div>
+                        <div class="kg_deservice_contract">
+                            <p><b>Dservice Contract on Goerli network : </b>
+                                <a target="_blank" name="vbhexcheckout" href="https://goerli.etherscan.io/address/0x7C570a8bd608Ef8bc043319aaca342ff67750E3f">0x7C******750E3f</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="kg-Vote-coins-wrap">
+                        <div class="kg-vote-titles">
+                        	<div class="kg-inner-vote">
+                                <h2>PAY WITH ETH<img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/pay_with.png'); ?>"/></h2>
+                                <p>Pay with ETH, you will get gVOTE , gUSD and VOTE;</p>
+                                <p><span>gVOTE</span> can be used to resolve Disputes on stage 1,</p>
+                                <p><span>gUSD</span> can be used as currency to buy products on Dcmarket on stage 1.</p>
+                                <p><span>Dservice</span> will be deployed on Ethereum Mainnet & L2 network on stage 2.</p>
+                                <p>VOTE can be used to resolve Disputes on stage 2.</p>
+                            </div>
+                        </div>
+                        <div class="kg-inner-wrap">
+                        	<div class="kg-inner-sub-area">
+                                <p class="info">You currently have</p>
+                                <p id="vote_balance" class="kg-vote-value">0</p>
+                                <p class="info">Vote coins</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<input type="hidden" id="eth_amount" />
+<input type="hidden" id="wallet_connected" />
+<input type="hidden" id="eth_price" value="<?= $eth_price ?>" />
+<script type="text/javascript">
+    //<![CDATA[[
+    require(['jquery', 'web3', 'constvar', 'chainvar'], function($, web3) {
+
+        $("#vote_coin_quantity").on("input", function() {
+            if (parseInt($('#wallet_connected').val()) == 1) {
+                var eth_price = parseFloat($('#eth_price').val());
+                $(".btn_buy_vote").html("<button  class='kg-connect-wallet btn'>Buy with " + (parseFloat($(this).val()) / 10000).toFixed(4) + " ETH</button>");
+                $("#free_gift").html("along with " + (parseFloat($(this).val()) * v_gVoteMul).toFixed(2) + " gVOTEs and about " + (parseFloat($(this).val()) * eth_price / 20000).toFixed(2) + " gUSDs which depends on the real time price of ETH.");
+                $("#eth_amount").val(parseFloat($(this).val()) * 100000000000000);
+            }
+        });
+        var connectWallet = async () => {
+            if (window.ethereum) {
+                const accounts = await window.ethereum.request({
+                    method: 'eth_requestAccounts'
+                });
+                const theAccount = accounts[0];
+
+                window.web3 = new web3(window.ethereum);
+                if (window.ethereum.networkVersion !== v_buyVoteChainId) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{
+                                chainId: web3.utils.toHex(v_buyVoteChainId)
+                            }]
+                        });
+                    } catch (err) {
+                        // This error code indicates that the chain has not been added to MetaMask
+                        if (err.code === 4902) {
+                            await window.ethereum.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [{
+                                    chainName: v_buyVoteChainName,
+                                    chainId: web3.utils.toHex(v_buyVoteChainId),
+                                    nativeCurrency: {
+                                        name: v_buyVoteCurrencyName,
+                                        decimals: v_buyVoteDecimals,
+                                        symbol: v_buyVoteCurrencySymbol
+                                    },
+                                    rpcUrls: [v_buyVoteRpcUrl],
+                                    blockExplorerUrls: [v_buyVoteExplorerUrl]
+                                }]
+                            });
+                        }
+                    }
+                }
+                var eth_amount = $("#eth_amount").val();
+                if (eth_amount == "" || eth_amount == null || typeof(eth_amount) == undefined || parseInt(eth_amount) < 500) {
+                    var eth_price = parseFloat($('#eth_price').val());
+                    // init the data to buy VOTE coins
+                    $('.btn_connect_wallet').hide();
+                    $('.btn_buy_vote').show();
+                    $("#vote_coin_quantity").val(1000);
+                    $('.btn_buy_vote').html("<button  class='kg-connect-wallet btn'>Buy with 0.1000 ETH</button>");
+                    $('#eth_amount').val(100000000000000000);
+                    $("#free_gift").html("along with " + (1000 * v_gVoteMul).toFixed(2) + " gVOTEs and about " + (0.05 * eth_price).toFixed(2) + " gUSDs which depends on the real time price of ETH.");
+                }
+                $('#wallet_connected').val(1);
+                // get the VOTE balance of the connected wallet
+                const coinContract = new window.web3.eth.Contract(erc20AbiJson, v_buyVoteVoteCoinContract);
+                coinContract.methods.balanceOf(theAccount).call().then(function(result) {
+                    var decm_balance = result / parseFloat("1000000.000");
+                    $('#vote_balance').html(decm_balance);
+                });
+                // on click the buy vote button
+                $('.btn_buy_vote').click(function() {
+                    var eth_amount = $('#eth_amount').val();
+                    if (window.web3.utils.toBN(eth_amount).lt(window.web3.utils.toBN((50000000000000000)))) {
+                        alert("Value sent is less than 0.05ETH");
+                        return false;
+                    }
+                    // alert("ETH : "+eth_amount);
+                    // triggle buy vote contract
+                    const buyVoteContract = new window.web3.eth.Contract(buyVoteAbiJson, v_buyVoteContract);
+                    buyVoteContract.methods.buy().send({
+                            from: theAccount,
+                            value: eth_amount
+                        })
+                        .then(function(receipt) {
+                            if (receipt.status) {
+                                // update the user balance
+                                coinContract.methods.balanceOf(theAccount).call().then(function(result) {
+                                    var decm_balance = result / parseFloat("1000000.000");
+                                    $('#vote_balance').html(decm_balance);
+                                });
+                            }
+                        });
+                    return true;
+                });
+                return true;
+            }
+            alert("Please install MetaMask to use this dApp!");
+            return false;
+        }
+
+        $('.btn_connect_wallet').click(function() {
+            connectWallet();
+        });
+
+
+
+        $(document).ready(function() {
+            if (window.location.href.includes("?#")) {
+            //    connectWallet();
+            }
+            if (window.ethereum) {
+                // connectWallet();
+                // detect Metamask account change
+                window.ethereum.on('accountsChanged', function(accounts) {
+                    console.log('accountsChanges', accounts);
+                    // window.location = "https://" + window.location.host + "?#";
+                    // window.location.href = window.location.href;
+                    location.reload();
+                });
+
+                // detect Network account change
+                window.ethereum.on('networkChanged', function(networkId) {
+                    console.log('networkChanged', networkId);
+                    // window.location = "https://" + window.location.host + "?#";
+                    // window.location.href = window.location.href;
+                    location.reload();
+                });
+            } else {
+                // alert("Please install MetaMask to use this dApp!");
+                $('.btn_connect_wallet').click(function() {
+                    alert("Please install MetaMask to use this dApp!");
+                });
+            }
+            $('.btn_connect_wallet').show();
+            $('.btn_buy_vote').hide();
+            $('#wallet_connected').val(0);
+            var eth_price = parseFloat($('#eth_price').val());
+            $(".kg-plus").on("click", function() {
+                var final_var = window.web3.utils.toBN(parseInt($("#vote_coin_quantity").val())).add(window.web3.utils.toBN(1));
+                $("#vote_coin_quantity").val(final_var);
+                $(".btn_buy_vote").html("<button  class='kg-connect-wallet btn'>Buy with " + (parseFloat(final_var) / 10000).toFixed(4) + " ETH</button>");
+                $("#free_gift").html("along with " + (parseFloat(final_var) * v_gVoteMul).toFixed(2) + " gVOTEs and about " + (parseFloat(final_var) * eth_price / 20000).toFixed(2) + " gUSDs which depends on the real time price of ETH.");
+                $("#eth_amount").val(parseFloat(final_var) * 100000000000000);
+                return true;
+            });
+            $(".kg-minus").on("click", function() {
+                var final_var = window.web3.utils.toBN(parseInt($("#vote_coin_quantity").val())).sub(window.web3.utils.toBN(1));
+                if (final_var < 500) {
+                    alert("At least 500 coins");
+                    return false;
+                }
+                $("#vote_coin_quantity").val(final_var);
+                $(".btn_buy_vote").html("<button  class='kg-connect-wallet btn'>Buy with " + (parseFloat(final_var) / 10000).toFixed(4) + " ETH</button>");
+                $("#free_gift").html("along with " + (parseFloat(final_var) * v_gVoteMul).toFixed(2) + " gVOTEs and about " + (parseFloat(final_var) * eth_price / 20000).toFixed(2) + " gUSDs which depends on the real time price of ETH.");
+                $("#eth_amount").val(parseFloat(final_var) * 100000000000000);
+                return true;
+            });
+
+
+        })
+    });
+    // ]]>
+</script>
+<style>
+    .cms-index-index .page-main .columns .column.main {
+        width: 100%;
+    }
+
+    .kg-main-page section.kg-contentarea_01 .inner-content-main .kg-left-wrap .kg-top-title h2 {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 800;
+        font-size: 74px;
+        line-height: 101px;
+        text-transform: uppercase;
+        color: #1979C3;
+        margin-bottom: 29px;
+    }
+
+    .kg-main-page section.kg-contentarea_01 {
+        position: relative;
+        width: 100%;
+        padding: 70px 0 130px 0;
+    }
+
+    .kg-main-page section.kg-contentarea_01 .inner-content-main .kg-left-wrap p.kg-to-info {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 30px;
+        line-height: 41px;
+        color: #333333;
+        margin-bottom: 0px;
+    }
+
+    .kg-main-page section.kg-contentarea_01 .inner-content-main {
+        display: flex;
+        position: relative;
+        width: 100%;
+    }
+
+    .kg-main-page section.kg-contentarea_01 .inner-content-main .kg-left-wrap .inner-wrap {
+        max-width: 815px;
+        position: relative;
+    }
+
+    .kg-main-page section.kg-contentarea_01 .inner-content-main .kg-right-wraop {
+        margin-left: 169px;
+        position: relative;
+    }
+
+    .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-row-wrap .kg-col-md-6 .kg-content-wrap .top-title h3 {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 800;
+        font-size: 45px;
+        line-height: 61px;
+        text-transform: uppercase;
+        color: #333333;
+        padding-bottom: 13px;
+        margin-bottom: 22px;
+        margin-top: 0;
+        border-bottom: 1px solid #000000;
+    }
+
+    .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-row-wrap .kg-col-md-6 .kg-content-wrap p.info {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 22px;
+        line-height: 30px;
+        color: #333333;
+    }
+
+    .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-row-wrap .kg-col-md-6.kg-left {
+        max-width: 469px;
+        display: inline-block;
+        width: 40%;
+    }
+
+    .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-row-wrap .kg-col-md-6.kg-right {
+        display: inline-block;
+        width: 60%;
+    }
+
+    .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-row-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-row-wrap .kg-col-md-6.kg-left .kg-content-wrap {
+        max-width: 344px;
+    }
+
+    .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-gird-col:nth-child(even) .kg-row-wrap .kg-col-md-6.kg-left {
+        order: 2;
+    }
+
+    .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-gird-col:nth-child(even) .kg-row-wrap .kg-col-md-6.kg-left .kg-content-wrap {
+        margin-left: auto;
+    }
+
+    .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-gird-col {
+        margin-bottom: 95px !important;
+    }
+
+    .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-gird-col:last-child {
+        margin-bottom: 0px;
+    }
+
+    .kg-main-page section.kg-contentarea_02 {
+        padding-bottom: 50.76px;
+        position: relative;
+    }
+
+    .kg-main-page section.kg-contentarea_03 {
+        background: #F0F0F0;
+        position: relative;
+        padding: 140px 0 48.12px 0;
+    }
+
+    .kg-main-page section.kg-contentarea_03 .kg-inner-wrap {
+        padding: 0 45px;
+        position: relative;
+    }
+
+    .kg-main-page section.kg-contentarea_03 .kg-inner-wrap .kg-top-title h3 {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 45px;
+        line-height: 61px;
+        text-transform: uppercase;
+        padding-bottom: 13px;
+        border-bottom: 1px solid #000000;
+        display: inline-block;
+        margin-top: 0;
+        margin-bottom: 33px;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-top-title h3 {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 45px;
+        line-height: 61px;
+        text-transform: uppercase;
+        color: #333333;
+        padding-bottom: 13px;
+        border-bottom: 1px solid #000000;
+        margin-top: 0px;
+        display: inline-block;
+        margin-bottom: 0;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-form .inner-wrap p.top-title {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 23px;
+        line-height: 31px;
+        text-transform: uppercase;
+        margin-bottom: 27px;
+		margin-top: 40px;
+    }
+
+    .kg-main-page section.kg-contentarea_04 {
+        position: relative;
+        padding: 40px 0 64px 0;
+        display: block;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-form .inner-wrap div .kg-form-content input {
+        max-width: 202px;
+        height: 45px;
+        border: 1px solid #999999;
+        border-radius: 5px;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-form .inner-wrap div .kg-form-content button.kg-btn {
+        background-color: #fff;
+        border: 1px solid #999999;
+        height: 45px;
+        border-radius: 0px 5px 5px 0px;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-form .inner-wrap div .kg-form-content button.kg-btn.kg-plus {
+        transform: rotate(-179.33deg);
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-form .inner-wrap .kg-action-btn button.kg-connect-wallet.btn {
+        background: #1979C3;
+        border-radius: 5px;
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 27px;
+        color: #FFFFFF;
+        padding: 9px 26px;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-form .inner-wrap .kg-action-btn {
+        display: inline-flex;
+        margin-top: 21px;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-form,
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap {
+        width: 50%;
+        display: inline-block;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-Vote-coins-wrap .kg-inner-wrap {
+        background: #1979C3;
+        border-radius: 10px;
+        padding: 31px 10px 24px 10px;
+        text-align: center;
+        max-width: 363px;
+        margin-left: auto;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-Vote-coins-wrap .kg-inner-wrap p.info {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 23px;
+        line-height: 31px;
+        text-transform: uppercase;
+        color: #FFFFFF;
+        margin-bottom: 8px;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-Vote-coins-wrap p.kg-vote-value {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 45px;
+        line-height: 61px;
+        text-transform: uppercase;
+        color: #FFFFFF;
+        margin-bottom: 8px;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-inner-wrap {
+        background: #1979C3;
+        border-radius: 10px;
+        text-align: center;
+        max-width: 363px;
+        margin-left: auto;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-inner-wrap p.info {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 23px;
+        line-height: 27px;
+        text-transform: uppercase;
+        color: #FFFFFF;
+        margin-bottom: 0;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-inner-wrap p:last-child {
+        margin-bottom: 0px;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap p.kg-vote-value {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 45px;
+        line-height: 61px;
+        text-transform: uppercase;
+        color: #FFFFFF;
+		margin-bottom:5px;
+		margin-top: -4px;
+    }
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap{
+        margin-top: -6px;
+    }
+    @media screen and (max-width:991px) {
+        .kg-main-page section.kg-contentarea_01 .inner-content-main {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-row-wrap {
+            flex-direction: column;
+        }
+
+        .kg-main-page section.kg-contentarea_01,
+        .kg-main-page section.kg-contentarea_04 {
+            padding: 40px 0px;
+        }
+
+        .kg-main-page section.kg-contentarea_03 {
+            padding: 40px 20px;
+        }
+
+        .kg-main-page section.kg-contentarea_01 .inner-content-main .kg-right-wraop {
+            margin-left: 0px !important;
+        }
+
+        .kg-main-page section.kg-contentarea_01 .inner-content-main .kg-left-wrap,
+        .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-row-wrap .kg-col-md-6.kg-left {
+            order: 2;
+        }
+
+        .kg-main-page section.kg-contentarea_01 .inner-content-main .kg-left-wrap .inner-wrap,
+        .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-row-wrap .kg-col-md-6.kg-left,
+        .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-row-wrap .kg-col-md-6.kg-left .kg-content-wrap {
+            max-width: 100% !important;
+            width: 100%;
+        }
+
+        .kg-main-page section.kg-contentarea_01 .inner-content-main .kg-left-wrap .kg-top-title h2 {
+            margin-bottom: 25px;
+            font-size: 54px;
+            line-height: 54px;
+        }
+
+        .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-row-wrap .kg-col-md-6 .kg-content-wrap .top-title h3,
+        .kg-main-page section.kg-contentarea_03 .kg-inner-wrap .kg-top-title h3,
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-top-title h3 {
+            font-size: 34px;
+            line-height: 40px;
+            display: inline-block;
+        }
+
+        .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-row-wrap .kg-col-md-6 .kg-content-wrap p.info {
+            font-size: 19px;
+            line-height: 27px;
+        }
+
+        .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-row-wrap .kg-col-md-6.kg-right {
+            margin-bottom: 20px;
+        }
+
+        .kg-main-page section.kg-contentarea_03 .kg-inner-wrap {
+            padding: 0px;
+        }
+
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-top-title h3 {
+            margin-bottom: 50px;
+        }
+    }
+
+    @media screen and (max-width:767px) {
+        .kg-main-page section.kg-contentarea_01 .inner-content-main .kg-left-wrap .kg-top-title h2 {
+            font-size: 32px;
+            line-height: 40px;
+            margin-bottom: 20px;
+        }
+
+        .kg-main-page section.kg-contentarea_01 .inner-content-main .kg-left-wrap p.kg-to-info {
+            font-size: 20px;
+            line-height: 26px;
+        }
+
+        .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-row-wrap .kg-col-md-6.kg-right,
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-form,
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap {
+            width: 100%;
+        }
+
+        .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-row-wrap .kg-col-md-6 .kg-content-wrap .top-title h3,
+        .kg-main-page section.kg-contentarea_03 .kg-inner-wrap .kg-top-title h3,
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-top-title h3 {
+            font-size: 26px;
+            line-height: 30px;
+            display: inline-block;
+        }
+
+        .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-gird-col {
+            margin-bottom: 40px !important;
+        }
+
+        .kg-main-page section.kg-contentarea_02 .kg-inner-wrap .kg-row-wrap .kg-col-md-6 .kg-content-wrap p.info {
+            font-size: 16px;
+        }
+
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-form .inner-wrap div .kg-form-content input {
+            max-width: 225px;
+        }
+
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-form .inner-wrap p.top-title {
+            font-size: 16px;
+            line-height: 8px;
+			margin-top:0;
+        }
+
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap {
+            margin-top: 15px;
+        }
+
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-form .inner-wrap .kg-action-btn button.kg-connect-wallet.btn {
+            padding: 8px 15px 8px 15px;
+            font-size: 16px;
+            line-height: 22px;
+        }
+
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-inner-wrap {
+            padding: 20px;
+            max-width: 100%;
+        }
+
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-inner-wrap p.info {
+            font-size: 16px;
+            line-height: 22px;
+        }
+
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap p.kg-vote-value {
+            font-size: 42px;
+            line-height: 45px;
+        }
+
+        .kg-main-page section.kg-contentarea_01 .inner-content-main .kg-right-wraop .kg-img-wrap img {
+            width: 200px;
+        }
+    }
+
+    .cms-index-index .page-title {
+        display: none;
+    }
+
+    @media screen and (max-width:480px) {
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-form .inner-wrap div .kg-form-content input {
+            max-width: 208px;
+        }
+
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-form .inner-wrap div .kg-form-content button.kg-btn {
+            margin-top: 0;
+            width: 37px;
+            padding: 10px;
+        }
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-form .inner-wrap .kg-action-btn button.kg-connect-wallet.btn:hover {
+        background: #006bb4;
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+    .kg-main-page section.kg-contentarea_02 .kg-inner-wrap div:nth-child(even) .kg-row-wrap .kg-col-md-6.kg-left {
+        order: 2;
+    }
+
+    .kg-main-page section.kg-contentarea_02 .kg-inner-wrap div:nth-child(even) .kg-row-wrap .kg-col-md-6.kg-left .kg-content-wrap {
+        margin-left: auto;
+    }
+
+ .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-vote-titles {
+    background: #F9EB98;
+    border-radius: 10px;
+    margin-bottom: 46px;
+    position: relative;
+    }
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap  .kg-vote-titles h2 {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 16px;
+    text-transform: uppercase;
+    color: #333333;
+    border-bottom: 1px solid #000000;
+    display: inline-block;
+    padding-bottom: 6px;
+    margin-top: 0;
+    margin-bottom: 4px;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles p {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    align-items: center;
+    color: #333333;
+	margin-bottom: 0;
+	line-height: 18px;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles span {
+    color: #1979C3;
+    font-weight: 700;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles h2 img {
+    margin-left: 3px;
+    position: relative;
+    top: 3px;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles:after {
+    content: '';
+    position: absolute;
+    border: 1px solid #000000;
+    width: 70%;
+    bottom: -24px;
+    left: 0;
+	border: 0;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_about_eth {
+    background: #F0F0F0;
+    border-radius: 5px;
+    max-width: 404px;
+    margin-bottom: 22px;
+    margin-top: 25px;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_about_eth p {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 28px;
+    color: #333333;
+    margin: 0;
+	padding: 16px 18px;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-inner-vote {
+    padding: 13px 30px 24px;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles p:last-child{
+    margin-bottom: 0;
+}
+
+
+@media only screen and (max-width:767px){
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-vote-titles {
+    max-width: 100%;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_about_eth p {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24px;
+    color: #333333;
+    margin: 0;
+}
+}
+ .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-vote-titles {
+    background: #F9EB98;
+    border-radius: 10px;
+    margin-bottom: 46px;
+    position: relative;
+    max-width: 363px;
+    margin-left: auto;
+    }
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap  .kg-vote-titles h2 {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 16px;
+    text-transform: uppercase;
+    color: #333333;
+    border-bottom: 1px solid #000000;
+    display: inline-block;
+    padding-bottom: 6px;
+    margin-top: 0;
+    margin-bottom: 4px;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles p {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    align-items: center;
+    color: #333333;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles span {
+    color: #1979C3;
+    font-weight: 700;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles h2 img {
+    margin-left: 3px;
+    position: relative;
+    top: 3px;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles:after {
+    content: '';
+    position: absolute;
+    border-bottom: 1px solid #000000;
+    width: 70%;
+    bottom: -24px;
+    left: 0;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-inner-vote {
+    padding: 13px 30px 24px;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles p:last-child{
+    margin-bottom: 0;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-inner-wrap .kg-inner-sub-area {
+    padding: 28px 10px 28px 10px;
+}
+
+
+@media only screen and (max-width:767px){
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-vote-titles {
+    max-width: 100%;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_about_eth p {
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 24px;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-inner-vote {
+    padding: 11px 18px 20px;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-inner-wrap .kg-inner-sub-area {
+   padding: 0;
+}
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_deservice_contract p {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 30px;
+    color: #333333;
+	margin:0;
+}
+.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_deservice_contract {
+    max-width: 404px;
+}
+@media only screen and (min-width:992px){
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_deservice_contract p b {
+    display: inline-block;
+    width: 100%;
+    white-space: nowrap;
+}
+}
+
+
+</style>

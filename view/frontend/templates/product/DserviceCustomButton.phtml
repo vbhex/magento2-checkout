@@ -1,0 +1,61 @@
+<div>
+    <input class="btn_order_on_vbhexcheckout" type="button" value="Order On Dservice" />
+</div>
+<div style="display:none">
+
+</div>
+
+<script type="text/javascript">
+    //<![CDATA[[
+        require(['jquery', 'web3', 'constvar'], function($, web3) {
+        var connectWallet = async () => {
+            if (window.ethereum) {
+                const accounts = await window.ethereum.request({
+                    method: 'eth_requestAccounts'
+                });
+                const theAccount = accounts[0];
+                var html = "Wallet Address:" + theAccount + " ; ";
+                html += "Please Add this product to Cart, and then choose Dservice Payment when Place Order";
+                alert(html);
+                window.web3 = new web3(window.ethereum);
+                if (window.ethereum.networkVersion !== 5) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{
+                                chainId: web3.utils.toHex(5)
+                            }]
+                        });
+                    } catch (err) {
+                        // This error code indicates that the chain has not been added to MetaMask
+                        if (err.code === 4902) {
+                            await window.ethereum.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [{
+                                    chainName: v_chainName,
+                                    chainId: web3.utils.toHex(v_chainId),
+                                    nativeCurrency: {
+                                        name: v_currencyName,
+                                        decimals: v_decimals,
+                                        symbol: v_currencySymbol
+                                    },
+                                    rpcUrls: [v_rpcUrl],
+                                    blockExplorerUrls: [v_explorerUrl]
+                                }]
+                            });
+                        }
+                    }
+                }
+
+                return true;
+            }
+            alert("Please install MetaMask to use this dApp!");
+            return false;
+        }
+
+        $('.btn_order_on_vbhexcheckout').click(function() {
+            connectWallet();
+        });
+    });
+    // ]]>
+</script>

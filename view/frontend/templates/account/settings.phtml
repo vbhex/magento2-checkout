@@ -1,0 +1,68 @@
+<?php
+/**
+ * Vbhex Software.
+ *
+ * @category  Vbhex
+ * @package   Vbhex_Checkout
+ * @author    Vbhex
+ * @copyright Copyright (c) Vbhex Software Private Limited (https://vbhex.com)
+ * @license   https://store.vbhex.com/license.html
+ */
+/** @var $block \Vbhex\Checkout\Block\Account\Settings */
+
+$helper = $this->helper(\Vbhex\Checkout\Helper\Data::class);
+// $partner = $block->getPersistentData();
+$partner = $helper->getDserviceSettings();
+
+
+$bsc_wallet_address = $partner['bsc_wallet_address'] ?? "";
+$eth_wallet_address = $partner['eth_wallet_address'] ?? "";
+?>
+<form id="seller_form" action="<?= $block->escapeUrl($block->getUrl('vbhexcheckout/account/settingsPost', ["_secure" => $this->getRequest()->isSecure()])) ?>"  enctype="multipart/form-data" method="post" data-role="form-profile-validate" data-mage-init='{"validation":{}}'>
+    <div class="wk-mp-design">
+        <fieldset class="fieldset info wk-mp-fieldset">
+            <div data-mage-init='{"formButtonAction": {}}' class="wk-mp-page-title legend" id="wk-mp-editprofile-form">
+                <span><?= /* @noEscape */ __('Set Dservice Information') ?></span>
+                <button class="button wk-mp-btn" title="<?= /* @noEscape */ __('Save Dservice Settings') ?>" type="submit" id="save-btn">
+                    <span><span><?= /* @noEscape */ __('Save Dservice Settings') ?></span></span>
+                </button>
+            </div>
+            <?= $block->getBlockHtml('seller.formkey')?>
+            <?= $block->getBlockHtml('formkey')?>
+            <!-- <legend class="legend"><span><?php // echo __('Profile Information') ?></span></legend> -->
+            <div class="field profile">
+                <label for="bscwalletaddress"><?= /* @noEscape */ __('BSC Wallet Address') ?> </label>
+                <div class="control">
+                    <input type="text" id="bsc_wallet_address" name="bsc_wallet_address" value="<?= $block->escapeHtml($bsc_wallet_address); ?>" title="bscwalletaddress" class="input-text" />
+                </div>
+            </div>
+            <div class="field profile">
+                <label for="ethwalletaddress"><?= /* @noEscape */ __('Ethereum Wallet Address') ?> </label>
+                <div class="control">
+                     <input type="text" id="eth_wallet_address" name="eth_wallet_address" value="<?= $block->escapeHtml($eth_wallet_address); ?>" title="ethwalletaddress" class="input-text" />
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>
+<script type="text/javascript">
+    //<![CDATA[[
+    require(['jquery', 'web3', 'constvar', 'chainvar'], function($, web3) {
+        $('#seller_form').submit(function(){
+            var bsc_wallet_address = $('#bsc_wallet_address').val();
+            var eth_wallet_address = $('#eth_wallet_address').val();
+
+            if(!web3.utils.isAddress(bsc_wallet_address)){
+                alert("BSC wallet address is not correct!");
+               return false;
+            } else if(!web3.utils.isAddress(eth_wallet_address)){
+                alert("ETH wallet address is not correct!");
+               return false;
+            } else {
+                return true;
+            }
+        });
+    });
+    // ]]>
+</script>
+

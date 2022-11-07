@@ -1,0 +1,583 @@
+<?php
+
+$author_type_name = ["Unkonw","Buyer","Seller","Voter"];
+$order_id = $block->getData('order_id');
+$customParameter = $block->getDetail();
+$app_id = $customParameter['app_id'] ?? 0;
+$voteCoinDecm = $customParameter['vote_coin_decm'] ?? 0;
+$entity_id = $customParameter['entity_id'] ?? 0;
+$seller_wallet = $customParameter['seller_wallet'] ?? "";
+$coin = $customParameter['coin'] ?? "";
+$coin_symbol = $customParameter['coin_symbol'] ?? "";
+$coin_decm = $customParameter['coin_decm'] ?? 0;
+$coin_address = $customParameter['coin_address'] ?? "0x0000000000000000000000000000000000000000";
+$order_status = $customParameter['order_status'] ?? 0;
+$show_shipping = $customParameter['show_shipping'] ?? "";
+$shippingFirstName = $customParameter['shippingFirstName'] ?? "";
+$shippingLastName = $customParameter['shippingLastName'] ?? "";
+$shippingStreet = $customParameter['shippingStreet'] ?? "";
+$shippingCity = $customParameter['shippingCity'] ?? "";
+$shippingPostcode = $customParameter['shippingPostcode'] ?? "";
+$shippingState_name = $customParameter['shippingState_name'] ?? "";
+$shippingCountry_name = $customParameter['shippingCountry_name'] ?? "";
+$shippingTelephone = $customParameter['shippingTelephone'] ?? "";
+$products = $customParameter['products'] ?? "";
+$orderCurrencySymbol = $customParameter['orderCurrencySymbol'] ?? "";
+$subTotal = $customParameter['subTotal'] ?? "";
+$shippingAmount = $customParameter['shippingAmount'] ?? "";
+$taxAmount = $customParameter['taxAmount'] ?? "";
+$grandTotal = $customParameter['grandTotal'] ?? "";
+$txHash     = $customParameter['tx_hash'] ?? "";
+$chainOrderId   =   $customParameter['chain_order_id'] ?? 0;
+$totalAmount = $customParameter['totalAmount'] ?? 0;
+$paidAmount = $customParameter['paidAmount'] ?? 0;
+$pendingAmount = bcsub($totalAmount, $paidAmount, 6);
+$coinAmount = bcmul($totalAmount, pow(10, intval($coin_decm)));
+//dispute
+$refundAmount = $customParameter['refund'] ?? 0;
+$refundAmountDec = bcdiv($refundAmount, pow(10, intval($coin_decm)), 4);
+$votePrice = $customParameter['vote_price'] ?? 0;
+$votePriceDec = bcdiv($votePrice, pow(10, intval($voteCoinDecm)), 4);
+$minVotes = $customParameter['min_votes'] ?? 0;
+$minVoteDiff = $customParameter['min_vote_diff'] ?? 0;
+$refundTime = $customParameter['refund_time'] ?? 0;
+$agree = $customParameter['agree'] ?? 0;
+$disagree = $customParameter['disagree'] ?? 0;
+$disputeHash = $customParameter['dispute_hash'] ?? "No Transaction Yet";
+$disputeDiscuss = $customParameter['dispute_discuss'] ?? "";
+$dispute_status = $customParameter['dispute_status'] ?? 0;
+//coin logs
+$coinLogs = $customParameter['coinLogs'];
+?>
+<main id="site-content" role="main">
+    <div class="cr-plugin-copy">
+        <p>Copied</p>
+    </div>
+    <article class="post-8 page type-page status-publish hentry" id="post-8">
+        <input type="hidden" id="current">
+        <input type="hidden" id="imageBase" value="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images'); ?>">
+        <div class="post-inner thin ">
+            <div class="entry-content">
+                <div class="cr-plugin-main-box clearfix">
+                    <div class="cr-plugin-left">
+                        <div class="cr-plugin-shipping cr-plugin-shadow cr-plugin-mr-top clearfix">
+                            <div class="cr-plugin-shipping-address">
+                            <h3 class="cr-plugin-title">Vote Information</h3>
+                                <p>
+                                Vote Price : <b><?php echo $votePriceDec; ?> VOTE</b> <br>
+                                Min Votes  : <b><?php echo $minVotes; ?> votes</b> <br>
+                                Min Vote Diffirence : <b><?php echo $minVoteDiff; ?> votes</b> <br>
+                                Agree / Disgree : <b><?php echo $agree; ?> / <?php echo $disagree; ?></b>
+                                </p>
+                            </div>
+                            <?php if ($show_shipping) { ?>
+                                <div class="cr-plugin-billing-address">
+                                    <h3 class="cr-plugin-title">Shipping Address</h3>
+                                    <p>
+                                        <?php echo $shippingFirstName; ?> <?php echo $shippingLastName; ?> <br>
+                                        <?php echo implode(', ', $shippingStreet); ?> <br>
+                                        <?php echo $shippingCity; ?> - <?php echo $shippingPostcode; ?> <br>
+                                        <?php echo $shippingState_name; ?> <?php echo $shippingCountry_name; ?><br>
+                                        <?php echo $shippingTelephone; ?>
+                                    </p>
+                                </div>
+                            <?php } ?>
+                        </div>
+                        <div class="cr-plugin-cart-summary cr-plugin-shadow cr-plugin-mr-top">
+                            <h3 class="cr-plugin-title">Cart Summary</h3>
+                            <div class="cr-plugin-cart-table">
+                                <div class="cr-plugin-cart-table-box">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Product Info</th>
+                                                <th style="text-align: center;">Quantity</th>
+                                                <th style="text-align: right;">Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            if (is_array($products)) {
+                                                foreach ($products as $product) {
+                                            ?>
+                                                    <tr>
+                                                        <td style="width: 300px;">
+                                                            <div class="cr-plugin-cart-img">
+                                                                <img src="<?php echo $product['productImage']; ?>" align="" />
+                                                            </div>
+                                                            <div class="cr-plugin-cart-des">
+                                                                <p><?php echo $product['productName']; ?> <?php echo $product['productOptions']; ?></p>
+                                                            </div>
+                                                        </td>
+                                                        <td style="text-align: center;">
+                                                            <span><?php echo $product['productQty']; ?></span>
+                                                        </td>
+                                                        <td style="text-align: right;">
+                                                            <span><?php echo $orderCurrencySymbol; ?> <?php echo $product['productPrice']; ?></span>
+                                                        </td>
+                                                    </tr>
+                                            <?php
+                                                }
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="cr-plugin-payment-detail">
+                                <h3 class="cr-plugin-title">Payment Details</h3>
+                                <ul>
+                                    <li>Main Contract <span style="size: 15px;word-break: break-word;font-weight:500"><a class="main_contract_link"></a></span></li>
+                                    <li>Seller Wallet <span style="size: 15px;word-break: break-word;font-weight:500" id="seller_wallet_address"><?php echo $seller_wallet; ?></span></li>
+                                    <li>Total <span><?php echo $orderCurrencySymbol; ?> <?php echo $subTotal; ?></span></li>
+                                    <li>Shipping Fee <span><?php echo $orderCurrencySymbol; ?> <?php echo $shippingAmount; ?></span></li>
+                                    <li>Total Taxes <span><?php echo $orderCurrencySymbol; ?> <?php echo $taxAmount; ?></span></li>
+                                </ul>
+                                <ul class="cr-plugin-payment-grand">
+                                    <li>Grand Total <span><?php echo $orderCurrencySymbol; ?> <?php echo $grandTotal; ?></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="cr-plugin-billing-main cr-plugin-shadow">
+                            <h3 class="cr-plugin-title">Order Coin Logs</h3>
+                            <div class="cr-plugin-timer" id="timerStatus"></div>
+                            <div class="cr-plugin-billing-box">
+                                <div class="cr-plugin-billing-amount">
+                                   <?php if($coinLogs): ?>
+                                    <table>
+                                        <?php foreach($coinLogs as $log): ?>
+                                            <tr>
+                                            <td><?= $block->simpleAddress($log->getUserWallet()) ?>  </td>
+                                            <td><?= $block->escapeHtml($block->getScenariosLabel($log->getScenarios())) ?> </td>
+                                            <td><?= /* @noEscape */ $log->getCoinAmount() ." ". $log->getCoinSymbol() ?> </td>
+                                            <td><?= /* @noEscape */ $block->escapeHtml($log->getCreatedAt()) ?></p>
+                                            </tr>
+                                        <?php endforeach ?>
+                                    </table>
+                                        <br>
+                                        <a target="_blank" href="<?= $block->escapeHtml($block->getLogUrl()) ?>">More</a>
+                                   <?php else: ?>
+                                    No Logs Yet
+                                   <?php endif ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cr-plugin-right">
+                        <div class="cr-plugin-billing-main cr-plugin-shadow">
+                            <h3 class="cr-plugin-title">Billing Details</h3>
+                            <div class="cr-plugin-timer" id="timerStatus"></div>
+                            <div class="cr-plugin-billing-box">
+                                <!-- <div class="cr-plugin-billing-code">
+                                 <img class="copyToClipboard" data-copy-detail= title="click to copy" align="">
+                              </div> -->
+                                <div class="cr-plugin-billing-amount">
+                                    <ul>
+                                        <li>
+                                            <span>Amount : Paid Amount</span>
+                                            <p><?php echo $totalAmount; ?> <?php echo $coin_symbol; ?> : <?php echo $paidAmount; ?> <?php echo $coin_symbol; ?></p>
+                                        </li>
+                                        <li>
+                                            <span>Transaction Hash</span>
+                                            <?php if ($order_status == 0) : ?>
+                                                <p>No Transaction Yet</p>
+                                            <?php else : ?>
+                                                <p class="copyToClipboard" style="font-size:12px;" title="click to copy" data-copy-detail="<?php echo $txHash; ?>"><a class="tx_hash_link"></a> <img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/copy.png'); ?>"></p>
+                                            <?php endif ?>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cr-plugin-billing-main cr-plugin-shadow">
+                            <h3 class="cr-plugin-title">Dispute</h3>
+                            <div class="cr-plugin-timer" id="timerStatus"></div>
+                            <div class="cr-plugin-billing-box">
+                                <div class="cr-plugin-billing-amount">
+                                    <ul>
+                                        <li>
+                                            <span>Requested Amount : Paid Amount</span>
+                                            <p class="refund_amount"><?php echo $refundAmountDec; ?> <?php echo $coin_symbol; ?> : <?php echo $paidAmount; ?> <?php echo $coin_symbol; ?></p>
+                                        </li>
+                                        <?php if (($dispute_status == 1) && ($order_status == 1)) : ?>
+                                            <li>
+                                                <span>Status</span>
+                                                <p>Buyer Opened Dispute</p>
+                                            </li>
+                                            <li>
+                                            <span>Action</span>
+                                                <form action="<?= $block->escapeUrl($block->getUrl('vbhexcheckout/transaction/sellerPost', ["app_order_id" => $order_id, "_secure" => $this->getRequest()->isSecure()])) ?>" enctype="multipart/form-data" method="post" data-role="form-profile-validate" data-mage-init='{"validation":{}}'>
+                                                    <ul>
+                                                        <li>
+                                                            <input style="margin-right:100px; background-color: green" class="btn_refund_now" type="button" value="Refund Now" />
+                                                            <input style="margin-right:100px; background-color: red" class="btn_refuse_refund" type="button" value="Refuse Refund" />
+                                                        </li>
+                                                        <li>
+                                                        <div class="refuse_expired_div"></div>
+                                                        </li>
+                                                        <li>
+                                                            <textarea id="seller_reason" name="seller_reason" placeholder="put seller reason here" style="width:80%"></textarea>
+                                                            <input type="hidden" name="app_order_id" value="<?php echo $order_id; ?>" />
+                                                            <?= $block->getBlockHtml('formkey') ?>
+                                                            <br/>
+                                                            <input style="margin-left:0px" class="btn_disagree_refund" type="submit" value="Submit Reason" />
+                                                        </li>
+                                                    </ul>
+                                                </form>
+
+                                            </li>
+                                        <?php elseif (($dispute_status == 5) && ($order_status == 1)) : ?>
+                                            <li>
+                                                <span>Status</span>
+                                                <p>Seller Refused Refund</p>
+                                            </li>
+                                            <li>
+                                            <span>Action</span>
+                                                <form action="<?= $block->escapeUrl($block->getUrl('vbhexcheckout/transaction/sellerPost', ["app_order_id" => $order_id, "_secure" => $this->getRequest()->isSecure()])) ?>" enctype="multipart/form-data" method="post" data-role="form-profile-validate" data-mage-init='{"validation":{}}'>
+                                                    <ul>
+                                                        <li>
+                                                            <input style="margin-right:100px; background-color: green" class="btn_refund_now" type="button" value="Refund Now" />
+                                                            <input style="margin-right:100px; background-color: yellow" class="btn_appeal_dispute" type="button" value="Appeal" />
+                                                        </li>
+                                                        <li>
+                                                            <textarea id="seller_reason" name="seller_reason" placeholder="put seller reason here" style="width:80%"></textarea>
+                                                            <input type="hidden" name="app_order_id" value="<?php echo $order_id; ?>" />
+                                                            <?= $block->getBlockHtml('formkey') ?>
+                                                            <br/>
+                                                            <input style="margin-left:0px" class="btn_disagree_refund" type="submit" value="Submit Reason" />
+                                                        </li>
+                                                    </ul>
+                                                </form>
+                                            </li>
+                                        <?php elseif (($dispute_status == 7) && ($order_status == 1)) : ?>
+                                            <li>
+                                                <span>Status</span>
+                                                <p>Dispute Appealed to Vote</p>
+                                            </li>
+                                            <li>
+                                            <span>Action</span>
+                                                <form action="<?= $block->escapeUrl($block->getUrl('vbhexcheckout/transaction/sellerPost', ["app_order_id" => $order_id, "_secure" => $this->getRequest()->isSecure()])) ?>" enctype="multipart/form-data" method="post" data-role="form-profile-validate" data-mage-init='{"validation":{}}'>
+                                                    <ul>
+                                                        <li>
+                                                            <input style="margin-right:100px; background-color: green" class="btn_refund_now" type="button" value="Refund Now" />
+                                                        </li>
+                                                        <li>
+                                                            <textarea id="seller_reason" name="seller_reason" placeholder="put seller reason here" style="width:80%"></textarea>
+                                                            <input type="hidden" name="app_order_id" value="<?php echo $order_id; ?>" />
+                                                            <?= $block->getBlockHtml('formkey') ?>
+                                                            <br/>
+                                                            <input style="margin-left:0px" class="btn_disagree_refund" type="submit" value="Submit Reason" />
+                                                        </li>
+                                                    </ul>
+                                                </form>
+                                            </li>
+                                        <?php elseif ($dispute_status == 0 && $order_status == 1) : ?>
+                                            <li>
+                                                <span>Status</span>
+                                                <p><?php echo __("Order Paid & No Dispute"); ?></p>
+                                            </li>
+                                            <li>
+                                                <span>Cash Out</span>
+                                                <div class="cashout_label"></div>
+                                            </li>
+                                        <?php elseif ($dispute_status == 3 && $order_status == 2) : ?>
+                                            <li>
+                                                <span>Status</span>
+                                                <p><?php echo __("Seller Agree Refund"); ?></p>
+                                            </li>
+                                        <?php elseif ($dispute_status == 2 && $order_status == 2) : ?>
+                                            <li>
+                                                <span>Status</span>
+                                                <p><?php echo __("Refund Permitted By Voters"); ?></p>
+                                            </li>
+                                        <?php elseif ($dispute_status == 4 && $order_status == 2) : ?>
+                                            <li>
+                                                <span>Status</span>
+                                                <p><?php echo __("Refund Denied By Voters"); ?></p>
+                                            </li>
+                                        <?php elseif (strpos($disputeHash, 'x')==1) : ?>
+                                            <li>
+                                                <span>Dispute Hash</span>
+                                                <p class="copyToClipboard" style="font-size:12px;" title="click to copy" data-copy-detail="<?php echo $disputeHash; ?>"><a class="dispute_hash_link"></a> <img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/copy.png'); ?>"></p>
+                                            </li>
+                                        <?php else : ?>
+                                            <li>
+                                                <span>Status</span>
+                                                <p><?php echo __("No Transaction Yet"); ?></p>
+                                            </li>
+                                        <?php endif ?>
+                                        <li>
+                                            <span>Dispute Discuss</span>
+                                            <?php if(is_array($disputeDiscuss)) : ?>
+                                                <?php foreach($disputeDiscuss as $discuss) : ?>
+                                                <div>
+                                                    <p style="font-size:16px"><?= $author_type_name[$discuss['author_type']]; ?>: </p>
+                                                    <span style="font-size:20px"><b><?= $block->escapeHtml($discuss['detail']); ?></b></span>
+                                                    <p style="font-size:10px; margin: right 0;"><?= $discuss['created_at']; ?></p>
+                                                </div>
+                                                <?php endforeach; ?>
+                                            <?php endif ?>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- .entry-content -->
+        </div>
+        <!-- .post-inner -->
+    </article>
+    <!-- .post -->
+</main>
+<script type="text/javascript">
+    //<![CDATA[[
+    require(['jquery', 'web3', 'constvar', 'chainvar'], function($, web3) {
+
+        const ethEnabled = async () => {
+            if (window.ethereum) {
+                const accounts = await window.ethereum.request({
+                    method: 'eth_requestAccounts'
+                });
+
+                window.web3 = new web3(window.ethereum);
+                if (window.ethereum.networkVersion !== v_chainId) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{
+                                chainId: web3.utils.toHex(v_chainId)
+                            }]
+                        });
+                    } catch (err) {
+                        // This error code indicates that the chain has not been added to MetaMask
+                        if (err.code === 4902) {
+                            await window.ethereum.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [{
+                                    chainName: v_chainName,
+                                    chainId: web3.utils.toHex(v_chainId),
+                                    nativeCurrency: {
+                                        name: v_currencyName,
+                                        decimals: v_decimals,
+                                        symbol: v_currencySymbol
+                                    },
+                                    rpcUrls: [v_rpcUrl],
+                                    blockExplorerUrls: [v_explorerUrl]
+                                }]
+                            });
+                        }
+                    }
+                }
+                const theAccount = window.web3.utils.toChecksumAddress(accounts[0]);
+                const mainContractAddress = window.web3.utils.toChecksumAddress(v_mainContract);
+                const mainContract = new window.web3.eth.Contract(abiJson, mainContractAddress);
+                var app_id = <?php echo $app_id; ?>;
+                var chain_order_id = <?php echo $chainOrderId; ?>;
+                var dispute_status = <?php echo $dispute_status; ?>;
+                var order_status = <?php echo $order_status; ?>;
+                //init timer countdown div
+                window.web3.eth.getBlockNumber().then(function(bestBlock) {
+                    window.web3.eth.getBlock(bestBlock).then(function(theBlock) {
+                        var current_timestamp = theBlock.timestamp;
+                        //init refuse expired div
+                        if(dispute_status==1&&order_status==1){
+                            mainContract.methods.refuseExpired(app_id, chain_order_id).call().then(function(expired_timestamp) {
+                            var expired_timestamp = expired_timestamp;
+                            if (window.web3.utils.toBN(current_timestamp).lt(window.web3.utils.toBN(expired_timestamp))) {
+                                // can not cash out, time countdown
+                                timer2(expired_timestamp - current_timestamp);
+                            } else {
+                                // do nothing
+                                $('.refuse_expired_div').html('<p>Buyer could cash out according to the dispute amount</p>');
+                            }
+                        });
+                        }
+
+                        //init cash out div
+                        if(dispute_status==0&&order_status==1){
+                            mainContract.methods.orderBook(app_id, chain_order_id).call().then(function(orderBook) {
+                            var cashout_timestamp = orderBook.cashOutTime;
+                            console.log("cashout_timestamp : " + cashout_timestamp);
+                            if (window.web3.utils.toBN(current_timestamp).lt(window.web3.utils.toBN(cashout_timestamp))) {
+                                // can not cash out, time countdown
+                                timer(cashout_timestamp - current_timestamp);
+                            } else {
+                                // show cash out button
+                                var button = '<input type="button" style="margin-left:0px" value="Cash Out" class="btn_cash_out" />';
+                                $('.cashout_label').html(button);
+                                // cash out
+                                $('.btn_cash_out').click(function() {
+                                    cashOut();
+                                });
+                            }
+                        });
+                        }
+                    });
+                });
+                $('.btn_refund_now').click(function() {
+                    refundNow();
+                });
+
+
+                $('.btn_refuse_refund').click(function() {
+                    refuseRefund();
+                });
+
+                $('.btn_appeal_dispute').click(function() {
+                    appeal();
+                });
+
+                var refundNow = function() {
+
+                    var seller_wallet = window.web3.utils.toChecksumAddress("<?php echo strval($seller_wallet); ?>");
+                    if (seller_wallet != window.web3.utils.toChecksumAddress(theAccount)) {
+                        alert("Please use your seller account : " + seller_wallet);
+                        return false;
+                    }
+                    // Refund now on blockchain
+                    mainContract.methods.agreeRefund(app_id, chain_order_id).send({
+                        from: theAccount
+                    }).then(function(receipt) {
+                        console.log(receipt);
+                        window.setTimeout(() => {
+                            window.location.href = window.location.href;
+                        }, 30000);
+                    });
+                }
+
+                var refuseRefund = function() {
+
+                    var seller_wallet = window.web3.utils.toChecksumAddress("<?php echo strval($seller_wallet); ?>");
+                    if (seller_wallet != window.web3.utils.toChecksumAddress(theAccount)) {
+                        alert("Please use your seller account : " + seller_wallet);
+                        return false;
+                    }
+                    // Refuse refund on blockchain
+                    mainContract.methods.refuseRefund(app_id, chain_order_id).send({
+                        from: theAccount
+                    }).then(function(receipt) {
+                        console.log(receipt);
+                        window.setTimeout(() => {
+                            window.location.href = window.location.href;
+                        }, 30000);
+                    });
+                }
+
+                var appeal = function() {
+                    // appeal dispute on blockchain
+                    mainContract.methods.appeal(app_id, chain_order_id).send({
+                        from: theAccount
+                    }).then(function(receipt) {
+                        console.log(receipt);
+                        window.setTimeout(() => {
+                            window.location.href = window.location.href;
+                        }, 30000);
+                    });
+                }
+
+                var cashOut = function() {
+                    mainContract.methods.cashOut(app_id, chain_order_id).send({
+                        from: theAccount
+                    }).then(function(receipt) {
+                        console.log(receipt);
+                        window.setTimeout(() => {
+                            window.location.href = window.location.href;
+                        }, 30000);
+                    });
+                }
+
+                return true;
+            }
+            alert("Please install MetaMask to use this dApp!");
+            return false;
+        }
+
+        $(document).ready(function() {
+            // set main contract address
+            $('.main_contract_link').html('<a target="_blank" href="'+v_explorerUrl+'address/'+v_mainContract+'">'+v_mainContract+'</a>');
+            // set dispute hash link
+            $('.dispute_hash_link').html('<a target="_blank" href="'+v_explorerUrl+'tx/<?php echo $disputeHash; ?>"><?php echo $disputeHash; ?></a>');
+            // set tx hash link
+            $('.tx_hash_link').html('<a target="_blank" href="'+v_explorerUrl+'tx/<?php echo $txHash; ?>"><?php echo $txHash; ?></a>');
+
+            if (window.ethereum) {
+                ethEnabled();
+                // refresh page every 30 seconds
+                window.setTimeout( function() {
+                    window.location.reload();
+                }, 30000);
+                // detect Metamask account change
+                window.ethereum.on('accountsChanged', function(accounts) {
+                    console.log('accountsChanges', accounts);
+                    window.location.href = window.location.href;
+                });
+
+                // detect Network account change
+                window.ethereum.on('networkChanged', function(networkId) {
+                    console.log('networkChanged', networkId);
+                    window.location.href = window.location.href;
+                });
+            } else {
+                alert("Please install MetaMask to use this dApp!");
+                $('.btn_cash_out').click(function() {
+                    alert("Please install MetaMask to use this dApp!");
+                });
+
+                $('.btn_refund_now').click(function() {
+                    alert("Please install MetaMask to use this dApp!");
+                });
+
+                $('.btn_refuse_refund').click(function() {
+                    alert("Please install MetaMask to use this dApp!");
+                });
+            }
+
+        })
+
+        function timer(intDiff) {
+            timeInter = window.setInterval(function() {
+                var day = 0,
+                    hour = 0,
+                    minute = 0,
+                    second = 0; //æ—¶é—´é»˜è®¤å€¼
+                if (intDiff > 0) {
+                    day = Math.floor(intDiff / (60 * 60 * 24))
+                    hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
+                    minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
+                    second = Math.floor(intDiff) - (day * 60 * 60 * 24) - (hour * 60 * 60) - (minute * 60);
+                }
+                if (hour <= 9) hour = '0' + hour;
+                if (minute <= 9) minute = '0' + minute;
+                if (second <= 9) second = '0' + second;
+                var time = day + ' day(s) ' + hour + ' : ' + minute + ' : ' + second;
+                $('.cashout_label').html("You can cash out in : <b>" + time + "</b>  if buyer make no dispute");
+                intDiff--;
+            }, 1000);
+        }
+
+        function timer2(intDiff) {
+            timeInter = window.setInterval(function() {
+                var day = 0,
+                    hour = 0,
+                    minute = 0,
+                    second = 0; //æ—¶é—´é»˜è®¤å€¼
+                if (intDiff > 0) {
+                    day = Math.floor(intDiff / (60 * 60 * 24))
+                    hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
+                    minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
+                    second = Math.floor(intDiff) - (day * 60 * 60 * 24) - (hour * 60 * 60) - (minute * 60);
+                }
+                if (hour <= 9) hour = '0' + hour;
+                if (minute <= 9) minute = '0' + minute;
+                if (second <= 9) second = '0' + second;
+                var time = day + ' day(s) ' + hour + ' : ' + minute + ' : ' + second;
+                $('.refuse_expired_div').html("You can refuse refund in : <b>" + time + "</b>  , or buyer will win the dispute");
+                intDiff--;
+            }, 1000);
+        }
+
+    });
+    // ]]>
+</script>

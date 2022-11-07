@@ -1,0 +1,30 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment">
+            <group id="vbhex_checkout" translate="label comment" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Custom Payment Option</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="title" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Pay Via Dservice</label>
+                </field>
+                <field id="description" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Description</label>
+                    <comment>Payment method description that the customer will see on your checkout</comment>
+                </field>
+                <field id="cointypes" translate="label" type="multiselect" sortOrder="75" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Coin Types</label>
+                    <source_model>Vbhex\Checkout\Model\Config\Source\Coin</source_model>
+                </field>
+                 <field id="invoice_expiry" translate="label" type="text" sortOrder="10" showInDefault="1"
+                    showInWebsite="1" showInStore="1">
+                    <label>Invoice expiry time in Minutes</label>
+                    <comment>It indicates invoice validity. An invoice will not valid after expiry minutes. E.g if you set Invoice expiry time as minutes 30 then the invoice will expire after 30 minutes. Set 0 to avoid expiry</comment>
+                    <validate>required-entry validate-digits validate-zero-or-greater validate-invoice-expiry-max-value</validate>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,737 @@
+<?php
+    $_topDispute = $block->getTopDisputes();
+?>
+<div class="kg-main-page-btn">
+	<p class="kg_wallet_address">
+    	<input type="button" class="btn_connect_wallet" value="Connect Wallet" />
+    </p>
+	<button type="button" id="switch_design" data-attr="advanced"><span><img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/dispute/Group233.png'); ?>"/></span>Switch to Basic</button>
+</div>
+<div class="kg-main-page">
+  <section class="kg-contentarea_1" id="kg-contentarea_1">
+    <div class="kg-inner-wrap">
+      <div class="kg-balance-info-tab">
+        <div class="kg-top-title">
+          <h2>My Balance on Dservice</h2>
+          <span class="toggle_icon"><img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/dispute/arrow_up.png'); ?>"/></span>
+        </div>
+        <div class="kg-tab-wrap">
+          <div class="inner-wrap">
+            <div class="kg-row">
+            	<div class="message info empty"><span><span>There is no Balance on Dservice.</span></span></div>
+            </div>
+          </div>
+          <div class="kg-action-btn kg-action-btn_withdraw" style="display:none"> <input type="button" value="Withdraw" class="btn_withdraw kg-withdraw-btn" /></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="kg-contentarea_2" id="kg-contentarea_2">
+    <div class="kg-inner-wrap">
+      <div class="kg-top-title">
+        <h2>Disputes for you to Vote <span class="view-all"><a href="<?= $block->escapeHtml($block->getMoreUrl()) ?>" class="kg-view-all-btn">View all <span class="icon-wrap"><img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/dispute/right-icon.png'); ?>"></span></a></span> </h2>
+      </div>
+      <div class="kg-disputes-vote-wrap">
+        <div class="kg-row">
+          <?php if (count($_topDispute) == 0) : ?>
+       <div class="message info empty"><span>
+      <?= $block->escapeHtml($block->getEmptyLogsMessage()) ?>
+      </span></div>
+          <?php else: ?>
+          <?php endif; ?>
+           <?php foreach ($_topDispute as $_dispute) : ?>
+              <div class="kg-vote-card">
+                <div class="kg-vote-profile">
+                  <figure> <img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/dispute/vote.png'); ?>"> </figure>
+                </div>
+                <div class="kg-vote-info">
+                  <div class="kg-inner-wrap">
+                    <div class="vote-info-icon"> <img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/dispute/vote-icon.png'); ?>"> </div>
+                    <p class="kg-profile-name">Refund Asked</p>
+                    <p class="kg-vote-value"><?php echo $_dispute['order_refund_decm'].' '; ?><?php echo $_dispute['coin_symbol'] ?></p>
+                    <div class="kg-action-btn"> <a href="<?php echo  $block->escapeUrl($block->getDetailUrl($_dispute['app_order_id'])) ?>" class="view-details">View details</a> </div>
+                  </div>
+                </div>
+              </div>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="kg_basic" style="display:none">
+<div>
+  <div class="connected_wallet">
+    <input type="button" class="btn_connect_wallet" value="Connect Wallet" />
+  </div>
+  <input type="hidden" id="current_account" />
+</div>
+<div>
+<div class="table-wrapper orders-history">
+  <div class="table-caption" style="font-size:x-large"><b>
+    <?= $block->escapeHtml(__('Disputes for you to Vote')) ?>
+    </b></div>
+
+    <?php if (count($_topDispute) == 0) : ?>
+    <div class="message info empty"><span>
+      <?= $block->escapeHtml($block->getEmptyLogsMessage()) ?>
+      </span></div>
+    <?php else : ?>
+     <table class="data table table-order-items history" id="my-orders-table">
+    <thead>
+      <tr>
+        <th scope="col" class="col amount"><?= $block->escapeHtml(_('Refund Asked')) ?></th>
+        <th scope="col" class="col amount"><?= $block->escapeHtml(_('Paid Amount')) ?></th>
+        <th scope="col" class="col id"><?= $block->escapeHtml(_('Agree')) ?></th>
+        <th scope="col" class="col id"><?= $block->escapeHtml(_('Disagree')) ?></th>
+        <th scope="col" class="col amount"><?= $block->escapeHtml(_('Vote Price')) ?></th>
+        <th scope="col" class="col id"><?= $block->escapeHtml(_('Min Votes')) ?></th>
+        <th scope="col" class="col id"><?= $block->escapeHtml(_('Min Vote Diff')) ?></th>
+        <th scope="col" class="col action"><?= $block->escapeHtml(_('Action')) ?></th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($_topDispute as $_dispute) : ?>
+      <tr>
+        <td class="col amount"><?= $_dispute['order_refund_decm'] ?>
+          <?=$_dispute['coin_symbol'] ?></td>
+        <td class="col amount"><?= $_dispute['paid_amount'] ?>
+          <?=$_dispute['coin_symbol'] ?></td>
+        <td class="col id"><?= $_dispute['agree'] ?></td>
+        <td class="col id"><?= $_dispute['disagree'] ?></td>
+        <td class="col amount"><?= $_dispute['vote_price']/1000000 ?>
+          VOTE</td>
+        <td class="col id"><?= $_dispute['min_votes'] ?>
+          votes</td>
+        <td class="col id"><?= $_dispute['min_vote_diff'] ?>
+          votes</td>
+        <td class="col action"><a href="<?= $block->escapeUrl($block->getDetailUrl($_dispute['app_order_id'])) ?>">View Detail</a></td>
+      </tr>
+      <?php endforeach; ?>
+    </tbody>
+  </table>
+  <a target="_blank" style="float:right" href="<?= $block->escapeHtml($block->getMoreUrl()) ?>">More</a>
+  <?php endif ?>
+</div>
+<hr>
+<hr>
+<div>
+  <div class="table-caption" style="font-size:x-large"><b>
+    <?= $block->escapeHtml(__('My Balance On Dservice')) ?>
+    </b></div>
+  <input type="button" value="Withdraw" class="btn_withdraw" />
+  <div class="my_balance_list"> </div>
+</div>
+</div>
+<script>
+ require(['jquery'], function($) {
+	 $(".toggle_icon").click(function(){
+	  $(this).toggleClass("toggle-active");
+	  $('.kg-tab-wrap').toggleClass("kg-tab-wrap-active");
+	});
+
+	$("#switch_design").click(function(){
+		var design_layout=$(this).attr('data-attr');
+
+		if(design_layout == 'basic')
+		{
+			$(this).attr('data-attr','advanced');
+			$(this).html('<span><img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/dispute/Group233.png'); ?>"/></span>Switch to Basic');
+			jQuery('.kg_wallet_address').css('opacity','1');
+			jQuery('.kg-main-page').fadeIn();
+			jQuery('.kg_basic').fadeOut();
+		}else
+		{
+			$(this).attr('data-attr','basic');
+			$(this).html('<span><img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/dispute/Group233.png'); ?>"/></span>Switch to Pro');
+			jQuery('.kg_wallet_address').css('opacity','0');
+			jQuery('.kg_basic').fadeIn();
+			jQuery('.kg-main-page').fadeOut();
+		}
+	});
+});
+
+function selectbalance(id)
+{
+	jQuery("#balance_with_draw_"+id).prop("checked",true);
+	jQuery('.kg-card').removeClass('kg-card-active');
+	jQuery('.kg_card_area_'+id).addClass('kg-card-active');
+	//console.log(jQuery(this).html());
+}
+</script>
+<script type="text/javascript">
+    //<![CDATA[[
+    require(['jquery', 'web3', 'constvar', 'chainvar'], function($, web3) {
+        var connectWallet = async () => {
+            if (window.ethereum) {
+                const accounts = await window.ethereum.request({
+                    method: 'eth_requestAccounts'
+                });
+                const theAccount = accounts[0];
+                $('.connected_wallet').html("<p style='float:right'><b>Wallet Address</b> :" + hideAddress(theAccount) + "</p>");
+				$('.kg_wallet_address').html("<p><strong>Wallet Address:</strong> :" + hideAddress(theAccount) + "</p>");
+                window.web3 = new web3(window.ethereum);
+                const mainContractAddress = window.web3.utils.toChecksumAddress(v_mainContract);
+                const mainContract = new window.web3.eth.Contract(abiJson, mainContractAddress);
+                // get coin list
+                $.ajax({
+                    url: window.location.origin + "/rest/V1/vbhexcheckout/coin/list",
+                    async: true,
+                    type: 'get',
+                    success: function(result) {
+                        var data = JSON.parse(result);
+                        var list = data.result;
+                        if (list) {
+							var ad_text = "";
+                            var text = "<table>";
+                            var coins = [];
+                            for (var i = 0; i < list.length; i++) {
+                                var coin = list[i];
+                                var coin_address = window.web3.utils.toChecksumAddress(coin.contract_address);
+                                var coin_name = coin.name;
+                                var coin_symbol = coin.symbol;
+                                var coin_img = coin.logo;
+
+                                coins[i] = coin;
+                                var logUrl = window.location.origin + "/vbhexcheckout/general/coinlog/coin/" + coin.id + "/wallet/"+theAccount+"/";
+                                if(coin_address=="0x0000000000000000000000000000000000000000"){
+                                    text = text + "<tr><td><input type='radio' name='selected_coin' id='balance_with_draw_"+i+"' value='" + coin_address + "' />" +
+                                    coin_name + "</td><td><p id='" + coin_address + "'></p></td>" +
+                                    "<td><a target='blank' href='" + logUrl + "'>View Log</a></td></tr>";
+
+								ad_text = ad_text + '<div class="kg-card kg_card_area_'+i+'" onclick="selectbalance('+i+')">'+
+								'<div class="kg-card-inner-wrap"><div class="kg-card-title"><h3><span class="kg-card-icon">'+
+								'<img src="'+coin_img+'"></span>'+coin_name+'</h3>'+
+                  	'</div><p class="kg-service-info" id="pro_d'+coin_address+'"></p><p class="card-wallet" id="pro_w'+coin_address+'"></p><div class="kg-action-wrap"> <a href="'+logUrl+'" class="kg-view-logs">View Logs</a> </div></div></div>';
+
+                                } else {
+                                    text = text + "<tr><td><input type='radio' name='selected_coin' id='balance_with_draw_"+i+"' value='" + coin_address + "' />" +
+                                    coin_name + "</td><td><p id='" + coin_address + "'></p></td>" +
+                                    "<td><a target='blank' href='" + logUrl + "'>View Log</a></td></tr>";
+
+								ad_text = ad_text + '<div class="kg-card kg_card_area_'+i+'" onclick="selectbalance('+i+')">'+
+								'<div class="kg-card-inner-wrap"><div class="kg-card-title"><a target="_blank" href="https://goerli.etherscan.io/address/'+coin_address+'"><h3><span class="kg-card-icon">'+
+								'<img src="'+coin_img+'"></span>'+coin_name+'</h3></a>'+
+                  	'</div><p class="kg-service-info" id="pro_d'+coin_address+'"></p><p class="card-wallet" id="pro_w'+coin_address+'"></p><div class="kg-action-wrap"> <a href="'+logUrl+'" class="kg-view-logs">View Logs</a> </div></div></div>';
+
+                                }
+
+                            }
+                            text = text + "</table>";
+
+							if(ad_text)
+							{
+								$('.kg-action-btn_withdraw').show();
+							}
+
+							$('.kg-tab-wrap .kg-row').html(ad_text);
+
+                            $('.my_balance_list').html(text);
+                            coins.forEach(function(item) {
+                                //get user balance from blockchain
+                                mainContract.methods.userBalance(theAccount, item.contract_address).call().then(function(balance) {
+                                    var id = "#" + item.contract_address;
+                                    var pro_d_id = "#pro_d" + item.contract_address;
+
+                                    var balance_decm = window.web3.utils.toBN(balance).div(window.web3.utils.toBN(10).pow(window.web3.utils.toBN(item.decm)));
+                                    var balance_str = balance_decm.toString()+" "+item.symbol;
+                                    var balance_pro_d = "Dservice:"+balance_decm.toString();
+
+                                    $(id).html(balance_str);
+                                    $(pro_d_id).html(balance_pro_d);
+
+                                });
+                                // if coin is ETH
+                                if(item.contract_address=="0x0000000000000000000000000000000000000000"){
+                                    window.web3.eth.getBalance(theAccount).then(function(balance) {
+                                        var pro_w_id = "#pro_w" + item.contract_address;
+                                        var balance_decm = window.web3.utils.fromWei(balance,'ether');
+                                        var balance_str = balance_decm.toString()+" "+item.symbol;
+                                        var balance_pro_w = "Wallet:"+balance_decm.toString();
+                                        $(pro_w_id).html(balance_pro_w);
+                                    });
+                                } else {
+                                    var coin_address = window.web3.utils.toChecksumAddress(item.contract_address);
+                                    var coinContract = new window.web3.eth.Contract(erc20AbiJson, coin_address);
+                                    coinContract.methods.balanceOf(theAccount).call().then(function(balance){
+                                        var pro_w_id = "#pro_w" + item.contract_address;
+                                        var balance_decm = window.web3.utils.toBN(balance).div(window.web3.utils.toBN(10).pow(window.web3.utils.toBN(item.decm)));
+                                        var balance_str = balance_decm.toString()+" "+item.symbol;
+                                        var balance_pro_w = "Wallet:"+balance_decm.toString();
+                                        $(pro_w_id).html(balance_pro_w);
+                                    });
+                                }
+                            })
+                        } else {
+                            console.log(list);
+                        }
+                    }
+                });
+                if (window.ethereum.networkVersion !== v_chainId) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{
+                                chainId: web3.utils.toHex(v_chainId)
+                            }]
+                        });
+                    } catch (err) {
+                        // This error code indicates that the chain has not been added to MetaMask
+                        if (err.code === 4902) {
+                            await window.ethereum.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [{
+                                    chainName: v_chainName,
+                                    chainId: web3.utils.toHex(v_chainId),
+                                    nativeCurrency: {
+                                        name: v_currencyName,
+                                        decimals: v_decimals,
+                                        symbol: v_currencySymbol
+                                    },
+                                    rpcUrls: [v_rpcUrl],
+                                    blockExplorerUrls: [v_explorerUrl]
+                                }]
+                            });
+                        }
+                    }
+                }
+
+                // press button of withdraw
+                $('.btn_withdraw').click(function() {
+                    var selected_coin = $('input[name="selected_coin"]:checked').val();
+                    if (typeof(selected_coin) == "undefined") {
+                        alert("please choose a coin to withdraw!");
+                        return false;
+                    }
+                    //get user balance from blockchain
+                    mainContract.methods.userBalance(theAccount, selected_coin).call().then(function(balance) {
+                        if (balance <= 0) {
+                            alert("You do not have any balance for selected coin");
+                            return false;
+                        } else {
+                            // withdraw all the balance
+                            mainContract.methods.withdraw(balance, selected_coin).send({
+                                from: theAccount
+                            }).then(function(receipt) {
+                                alert("withdraw successfully");
+                                window.setTimeout(() => {
+                                    window.location.href = window.location.href;
+                                }, 30000);
+                            });
+                        }
+                    });
+
+                });
+
+                return true;
+            }
+            alert("Please install MetaMask to use this dApp!");
+            return false;
+        }
+
+        $('.btn_connect_wallet').click(function() {
+            connectWallet();
+        });
+
+        function hideAddress(address) {
+            var firstStr = address.substring(0,8);
+            var lastStr = address.substring(37,42);
+            var newStr = firstStr + "******" + lastStr;
+            return newStr;
+        }
+
+        $(document).ready(function() {
+            if (window.ethereum) {
+                connectWallet();
+                // detect Metamask account change
+                window.ethereum.on('accountsChanged', function(accounts) {
+                    console.log('accountsChanges', accounts);
+                    window.location.href = window.location.href;
+                });
+
+                // detect Network account change
+                window.ethereum.on('networkChanged', function(networkId) {
+                    console.log('networkChanged', networkId);
+                    window.location.href = window.location.href;
+                });
+            } else {
+                alert("Please install MetaMask to use this dApp!");
+                $('.btn_connect_wallet').click(function() {
+                    alert("Please install MetaMask to use this dApp!");
+                });
+            }
+
+
+        })
+    });
+    // ]]>
+</script>
+<style>
+ section#kg-contentarea_1 {
+        position: relative;
+        margin-bottom: 83px;
+        display: block;
+        width: 100%;
+    }
+    section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab {
+        background: #FFFFFF;
+        box-shadow: 0px 0px 27px rgb(51 51 51 / 10%);
+        border-radius: 15px;
+        padding: 35px 42px;
+    }
+    section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-top-title h2 {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 25px;
+        line-height: 34px;
+        color: #333333;
+        margin-top: 0;
+        padding-bottom: 28px;
+        margin-bottom: 37px;
+        border-bottom: 1px solid rgba(51, 51, 51, 0.25);
+    }
+
+
+    section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-tab-wrap .inner-wrap .kg-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 50px;
+        justify-content: center;
+    }
+    section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-tab-wrap .inner-wrap .kg-card {
+        background: #F0F0F0;
+        box-shadow: 0px 0px 27px rgb(51 51 51 / 10%);
+        border-radius: 10px;
+        padding: 27px 0;
+        text-align: center;
+        max-width: 435px;
+        width: 100%;
+    }
+    section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-tab-wrap .inner-wrap .kg-card .kg-card-inner-wrap h3 span {
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 5px;
+    }
+
+
+    section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-tab-wrap .inner-wrap .kg-card .kg-card-inner-wrap .kg-card-title h3 {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 30px;
+        line-height: 41px;
+        margin-top: 0;
+        margin-bottom: 20px;
+        color: #333333;
+    }
+    section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-tab-wrap .inner-wrap .kg-card .kg-card-inner-wrap p.kg-service-info {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 25px;
+        line-height: 34px;
+        color: #333333;
+        margin-bottom: 20px;
+    }
+    section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-tab-wrap .inner-wrap .kg-card .kg-card-inner-wrap p.card-wallet {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 25px;
+        line-height: 34px;
+        color: #1979C3;
+    }
+    section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-tab-wrap .inner-wrap .kg-card .kg-card-inner-wrap .kg-action-wrap a.kg-view-logs {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 15px;
+        line-height: 20px;
+        text-align: center;
+        color: #333333;
+    }
+    section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-tab-wrap .kg-action-btn .kg-withdraw-btn {
+        background: #1979C3;
+        border-radius: 5px;
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 27px;
+        color: #FFFFFF;
+        padding: 16px 58px;
+		border: #1979C3;
+    }
+    section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-tab-wrap .kg-action-btn {
+        display: flex;
+        justify-content: center;
+        margin-top: 40px;
+    }
+    section#kg-contentarea_2 {
+        background: #FFFFFF;
+        box-shadow: 0px 0px 27px rgb(51 51 51 / 10%);
+        border-radius: 15px;
+        padding: 50px 0 27px 0;
+    }
+    section#kg-contentarea_2 .kg-inner-wrap .kg-top-title h2 {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 45px;
+        line-height: 61px;
+        text-align: center;
+        color: #333333;
+        margin-top: 0px;
+        margin-bottom: 69px;
+    }
+    section#kg-contentarea_2 .kg-inner-wrap .kg-disputes-vote-wrap .kg-row{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    section#kg-contentarea_2 .kg-inner-wrap .kg-disputes-vote-wrap .kg-row .kg-vote-card {
+        position: relative;
+        width: 15%;
+		flex: 1 15%;
+		padding:10px;
+        text-align: center;
+        margin-bottom: 75px;
+    }
+    section#kg-contentarea_2 .kg-inner-wrap .kg-disputes-vote-wrap .kg-row .kg-vote-card:nth-last-child(1),
+    section#kg-contentarea_2 .kg-inner-wrap .kg-disputes-vote-wrap .kg-row .kg-vote-card:nth-last-child(2),
+    section#kg-contentarea_2 .kg-inner-wrap .kg-disputes-vote-wrap .kg-row .kg-vote-card:nth-last-child(3){
+        margin-bottom: 0px;
+    }
+    section#kg-contentarea_2 .kg-inner-wrap .kg-disputes-vote-wrap .kg-row .kg-vote-card .kg-vote-info {
+        background: #F0F0F0;
+        box-shadow: 0px 0px 27px rgb(51 51 51 / 10%);
+        border-radius: 10px;
+        padding: 8px 28px;
+        text-align: center;
+        max-width: 192px;
+        margin: auto;
+    }
+    section#kg-contentarea_2 .kg-inner-wrap .kg-disputes-vote-wrap .kg-row .kg-vote-card .kg-vote-info .kg-inner-wrap p.kg-profile-name {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 25px;
+        color: #333333;
+        margin: 0;
+    }
+    section#kg-contentarea_2 .kg-inner-wrap .kg-disputes-vote-wrap .kg-row .kg-vote-card .kg-vote-info .kg-inner-wrap p.kg-vote-value {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 25px;
+        color: #1979C3;
+        margin-bottom: 8px;
+    }
+    section#kg-contentarea_2 .kg-inner-wrap .kg-disputes-vote-wrap .kg-row .kg-vote-card .kg-vote-info .kg-inner-wrap .kg-action-btn a.view-details {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 16px;
+        text-align: center;
+        color: #333333;
+    }
+    section#kg-contentarea_2 .kg-inner-wrap .kg-top-title {
+        position: relative;
+    }
+    section#kg-contentarea_2 .kg-inner-wrap .kg-top-title  span.view-all {
+        position: absolute;
+        top: 0;
+        right: 47px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
+    section#kg-contentarea_2 .kg-inner-wrap .kg-top-title  a.kg-view-all-btn {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 25px;
+        line-height: 34px;
+        display: flex;
+        align-items: center;
+    }
+    section#kg-contentarea_2 .kg-inner-wrap .kg-top-title a.kg-view-all-btn span.icon-wrap {
+        display: flex;
+        margin-left: 9px;
+        width: 31px;
+        height: 25px;
+    }
+	.kg-tab-wrap
+	{
+		display:none;
+	}
+	.kg-tab-wrap-active
+	{
+		display:block;
+	}
+	 section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-top-title {
+        position: relative;
+    }
+    section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-top-title span.toggle_icon {
+        position: absolute;
+        top: -5px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        right: 0;
+        cursor: pointer;
+        transform: rotate(180deg);
+        transition: all 0.20s ease-in;
+    }
+    section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-top-title h2{
+        margin-bottom: 0px !important;
+    }
+    section#kg-contentarea_1 .kg-inner-wrap .kg-tab-wrap-active{
+        margin-top: 37px;
+    }
+    section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-top-title span.toggle_icon.toggle-active{
+        transform: rotate(0deg);
+    }
+    @media screen and (max-width:1019px){
+        section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-tab-wrap .inner-wrap .kg-row{
+            gap: 25px;
+        }
+    }
+    @media screen and (max-width:991px){
+        section#kg-contentarea_2 .kg-inner-wrap .kg-top-title h2{
+            font-size: 35px;
+        }
+        section#kg-contentarea_2 .kg-inner-wrap .kg-disputes-vote-wrap .kg-row .kg-vote-card {
+            position: relative;
+            width: 48.8888%;
+        }
+
+
+        section#kg-contentarea_2 .kg-inner-wrap .kg-disputes-vote-wrap .kg-row{
+            gap: 15px;
+        }
+        section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-tab-wrap .inner-wrap .kg-card{
+            max-width: 48%;
+        }
+        section#kg-contentarea_2 .kg-inner-wrap .kg-top-title span.view-all{
+            position: unset;
+            justify-content: center;
+        }
+        section#kg-contentarea_2 .kg-inner-wrap .kg-top-title a.kg-view-all-btn{
+            font-size: 20px;
+            line-height: 25px;
+        }
+        section#kg-contentarea_2 .kg-inner-wrap .kg-top-title a.kg-view-all-btn span.icon-wrap{
+            width: 25px;
+            height: 20px
+        }
+        section#kg-contentarea_2{
+            padding: 30px 0 30px 0;
+        }
+        section#kg-contentarea_1{
+            margin-bottom: 40px;
+        }
+    }
+    @media screen and (max-width:767px){
+        section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-tab-wrap .inner-wrap .kg-card {
+            max-width: 100%;
+        }
+        section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-tab-wrap .inner-wrap .kg-card .kg-card-inner-wrap .kg-card-title h3{
+            font-size: 25px;
+            line-height: 30px;
+            margin-bottom: 15px;
+        }
+        section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-tab-wrap .inner-wrap .kg-card .kg-card-inner-wrap p.kg-service-info{
+            font-size: 20px;
+            line-height: 25px;
+            margin-bottom: 15px;
+        }
+        section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-tab-wrap .inner-wrap .kg-card .kg-card-inner-wrap p.card-wallet{
+            font-size: 20px;
+             line-height: 25px;
+        }
+        section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab{
+            padding: 20px 20px;
+        }
+        section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-tab-wrap .kg-action-btn a.kg-withdraw-btn{
+            font-size: 18px;
+        }
+        section#kg-contentarea_2 .kg-inner-wrap .kg-disputes-vote-wrap .kg-row{
+            justify-content: center;
+        }
+        section#kg-contentarea_2 .kg-inner-wrap .kg-disputes-vote-wrap .kg-row .kg-vote-card{
+            width: 47%;
+        }
+    }
+    @media screen and (max-width:580px){
+        section#kg-contentarea_2 .kg-inner-wrap .kg-disputes-vote-wrap .kg-row .kg-vote-card{
+            width: 100% !important;
+            margin-bottom: 30px;
+        }
+        section#kg-contentarea_2 .kg-inner-wrap .kg-top-title h2 {
+            font-size: 25px;
+        }
+    }
+	section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-tab-wrap .inner-wrap .kg-card{
+        cursor: pointer;
+    }
+    section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-tab-wrap .inner-wrap .kg-card:hover,
+	section#kg-contentarea_1 .kg-inner-wrap .kg-balance-info-tab .kg-tab-wrap .inner-wrap .kg-card-active{
+        background: #D6D6D6;
+    }
+    .kg-main-page-btn button {
+        background: #1979C3;
+        border-radius: 5px;
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 27px;
+        color: #FFFFFF;
+    }
+    .kg-main-page-btn {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 70px;
+    }
+    .kg-main-page-btn button span {
+        display: inline-block;
+        vertical-align: inherit;
+        margin-right: 15px;
+    }
+    .kg-main-page-btn p {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-size: 20px;
+        line-height: 27px;
+        word-break: break-all;
+        color: #333333;
+		margin: 0;
+    }
+	.kg-main-page-btn .kg_wallet_address input
+	{
+		background: #1979C3;
+		border-radius: 5px;
+		font-family: 'Open Sans';
+		font-style: normal;
+		font-weight: 600;
+		font-size: 20px;
+		line-height: 27px;
+		color: #FFFFFF;
+		border: 0;
+		padding: 7px 15px;
+	}
+    @media screen and (max-width:767px){
+        .kg-main-page-btn p,
+        .kg-main-page-btn button{
+            font-size: 18px;
+            line-height: 25px;
+        }
+    }
+</style>

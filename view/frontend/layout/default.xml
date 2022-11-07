@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Dservice Software.
+ *
+ * @category  Dservice
+ * @package   Vbhex_Checkout
+ * @author    Vbhex
+ * @copyright Copyright (c) Vbhex Software Private Limited (https://Vbhex.com)
+ * @license   https://store.vbhex.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+  <head>
+    <css src="Webkul_Marketplace::css/wk_block.css"/>
+  </head>
+  <body>
+    <referenceContainer name="header.container">
+      <block class="Magento\Framework\View\Element\Template" name="custom_header" as="custom_header" template="Vbhex_Checkout::vbhexcheckout_mis.phtml"/>
+    </referenceContainer>
+    <referenceBlock name="header.links">
+      <block class="Vbhex\Checkout\Block\Html\Dropdown" name="vbhexcheckout-top-link" >
+        <arguments>
+          <argument name="label" xsi:type="string" translate="true">Dservice</argument>
+          <argument name="path" xsi:type="string">vbhexcheckout</argument>
+        </arguments>
+      </block>
+    </referenceBlock>
+    <referenceBlock name="footer_links">
+      <block class="Magento\Framework\View\Element\Html\Link" name="vbhexcheckout-foot-link" >
+        <arguments>
+          <argument name="label" xsi:type="string" translate="true">Dservice</argument>
+          <argument name="path" xsi:type="string">vbhexcheckout</argument>
+        </arguments>
+      </block>
+    </referenceBlock>
+
+	<referenceBlock name="footer_links" remove="true" />
+	<referenceBlock name="form.subscribe" remove="true" />
+	<referenceBlock name="copyright" remove="true"/>
+
+	<referenceContainer name="footer-container">
+	 <container name="footer" as="footer" label="Page Footer" htmlTag="div" htmlClass="footer content">
+			<block class="Magento\Framework\View\Element\Template" template="Vbhex_Checkout::footer.phtml"/>
+		</container>
+	</referenceContainer>
+   <referenceContainer name="before.body.end">
+			<block class="Magento\Theme\Block\Html\Footer" name="absolute_footer" template="Vbhex_Checkout::copyright.phtml" />
+   </referenceContainer>
+  </body>
+</page>

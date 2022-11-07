@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * Copyright © Vbhex, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+
+/** @var \Vbhex\Checkout\Block\General\Dispute\Lists $block */
+?>
+<?php $_orders = $block->getList(); ?>
+<?= $block->getChildHtml('info') ?>
+<?php if ($_orders && count($_orders)) : ?>
+    <div class="table-wrapper orders-history">
+        <table class="data table table-order-items history" id="my-orders-table">
+            <caption class="table-caption"><?= $block->escapeHtml(__('Orders')) ?></caption>
+            <thead>
+                <tr>
+                    <th scope="col" class="col amount"><?= $block->escapeHtml(_('Refund Asked')) ?></th>
+                    <th scope="col" class="col amount"><?= $block->escapeHtml(_('Paid Amount')) ?></th>
+                    <th scope="col" class="col id"><?= $block->escapeHtml(_('Agree')) ?></th>
+                    <th scope="col" class="col id"><?= $block->escapeHtml(_('Disagree')) ?></th>
+                    <th scope="col" class="col amount"><?= $block->escapeHtml(_('Vote Price')) ?></th>
+                    <th scope="col" class="col id"><?= $block->escapeHtml(_('Min Votes')) ?></th>
+                    <th scope="col" class="col id"><?= $block->escapeHtml(_('Min Vote Diff')) ?></th>
+                    <th scope="col" class="col action"><?= $block->escapeHtml(_('Action')) ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($_orders as $_dispute) : ?>
+                    <tr>
+                        <td class="col amount"><?= $_dispute['order_refund_decm'] ?>
+                            <?= $_dispute['coin_symbol'] ?></td>
+                        <td class="col amount"><?= $_dispute['paid_amount'] ?>
+                            <?= $_dispute['coin_symbol'] ?></td>
+                        <td class="col id"><?= $_dispute['agree'] ?></td>
+                        <td class="col id"><?= $_dispute['disagree'] ?></td>
+                        <td class="col amount"><?= $_dispute['vote_price'] / 1000000 ?>
+                            VOTE</td>
+                        <td class="col id"><?= $_dispute['min_votes'] ?>
+                            votes</td>
+                        <td class="col id"><?= $_dispute['min_vote_diff'] ?>
+                            votes</td>
+                        <td class="col action"><a href="<?= $block->escapeUrl($block->getTrxUrl($_dispute['app_order_id'])) ?>">View Detail</a></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php if ($block->getPagerHtml()) : ?>
+        <div class="order-products-toolbar toolbar bottom"><?= $block->getPagerHtml() ?></div>
+    <?php endif ?>
+<?php else : ?>
+    <div class="message info empty"><span><?= $block->escapeHtml($block->getEmptyOrdersMessage()) ?></span></div>
+<?php endif ?>

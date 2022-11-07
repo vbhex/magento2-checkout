@@ -1,0 +1,13 @@
+<div class="kg-footer-copyright">
+  <div class="kg-copyright-inner-wrap">
+    <p class="copyright">
+      <?php
+	      $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+		  $scopeConfig = $objectManager->create('\Magento\Framework\App\Config\ScopeConfigInterface'); 
+		  $storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+		  $baseurl=$storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB);
+	  	  echo $scopeConfig->getValue('design/footer/copyright', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);?>
+    </p>
+    <p class="Privacy-policy"><a href="<?php echo $baseurl; ?>privacy-policy-cookie-restriction-mode" target="_blank">Privacy and Cookie Policy</a></p>
+  </div>
+</div>
