@@ -11,8 +11,6 @@
 
 namespace Vbhex\Checkout\Model;
 
-use Magento\Framework\Model\AbstractModel;
-use Vbhex\Checkout\Api\Data\CoinInterface;
 use Vbhex\Checkout\Api\CoinRepositoryInterface;
 use Vbhex\Checkout\Model\ResourceModel\Coin\CollectionFactory;
 

@@ -3,4 +3,5 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Vbhex\Checkout\Api\Data\OrderInterface" type="Vbhex\Checkout\Model\Order"></preference>
     <preference for="Vbhex\Checkout\Api\CoinRepositoryInterface" type="Vbhex\Checkout\Model\CoinRepository"></preference>
+    <preference for="Vbhex\Checkout\Api\ModRepositoryInterface" type="Vbhex\Checkout\Model\ModRepository"></preference>
 </config>
