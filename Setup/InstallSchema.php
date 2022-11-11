@@ -101,7 +101,7 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 						['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
 						'Created At'
 				)
-				->setComment('VbhexCheckout Coins Table');
+				->setComment('Vbhex Coins Table');
 			$installer->getConnection()->createTable($table);
 
 			$installer->getConnection()->addIndex(
@@ -934,6 +934,107 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 					\Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_FULLTEXT
 				),
 				['user_wallet','tx_hash','given_gvote_tx_hash','given_gusdt_tx_hash'],
+				\Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_FULLTEXT
+			);
+		}
+
+        if (!$installer->tableExists('vc_mods')) {
+			$table = $installer->getConnection()->newTable(
+				$installer->getTable('vc_mods')
+			)
+				->addColumn(
+					'entity_id',
+					\Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+					null,
+					[
+						'identity' => true,
+						'nullable' => false,
+						'primary'  => true,
+						'unsigned' => true,
+					],
+					'ID'
+				)
+                ->addColumn(
+					'mod_id',
+					\Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+					null,
+					['nullable' => false, 'default' => 0],
+					'Mod Id'
+				)
+				->addColumn(
+					'name',
+					\Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+					55,
+					['nullable => false'],
+					'Mod Name'
+				)
+                ->addColumn(
+					'image',
+					\Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+					155,
+					['nullable => false'],
+					'Image URL'
+				)
+                ->addColumn(
+					'external_url',
+					\Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+					155,
+					['nullable' => true, 'default' => 0],
+					'External Url'
+				)
+                ->addColumn(
+					'description',
+					\Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+					550,
+					['nullable => false'],
+					'Contract Address'
+				)
+                ->addColumn(
+					'attributes',
+					\Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+					255,
+					['nullable => false'],
+					'Mod Attributes'
+				)
+				->addColumn(
+					'background_color',
+					\Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+					12,
+					['nullable' => true],
+					'Background Color'
+				)
+                ->addColumn(
+					'animation_url',
+					\Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+					155,
+					['nullable' => true, 'default' => 0],
+					'External Url'
+				)
+                ->addColumn(
+					'youtube_url',
+					\Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+					155,
+					['nullable' => true, 'default' => 0],
+					'Youtube Url'
+				)
+				->addColumn(
+						'created_at',
+						\Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+						null,
+						['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+						'Created At'
+				)
+				->setComment('Vbhex Mods Table');
+			$installer->getConnection()->createTable($table);
+
+			$installer->getConnection()->addIndex(
+				$installer->getTable('vc_mods'),
+				$setup->getIdxName(
+					$installer->getTable('vc_mods'),
+					['name','image','description'],
+					\Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_FULLTEXT
+				),
+				['name','image','description'],
 				\Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_FULLTEXT
 			);
 		}
