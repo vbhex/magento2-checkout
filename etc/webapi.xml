@@ -18,4 +18,10 @@
             <resource ref="anonymous" />
         </resources>
     </route>
+    <route url="/V1/vc/mod/contract/info" method="GET">
+        <service class="Vbhex\Checkout\Api\ModRepositoryInterface" method="getContractMeta"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
 </routes>

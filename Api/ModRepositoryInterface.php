@@ -24,4 +24,13 @@ interface ModRepositoryInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getModMetaData($id);
+
+    /**
+     * Retrieve mod contract meta data.
+     *
+     * @api
+     * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getContractMeta();
 }
