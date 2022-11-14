@@ -81,10 +81,10 @@ class ModRepository implements ModRepositoryInterface
         $data = array();
         $data             =   [
             'name'             =>      "Vbhex Moderators",
-            'description'      =>      "Vbhex Moderators",
+            'description'      =>      "Vbhex Moderators Contract",
             'image'              =>    "https://d1wlhu0novpxl3.cloudfront.net\mods\Zombatar_41.jpg",
             'external_link'       =>    "https://vbhex.com",
-            'seller_fee_basis_points'        =>      0,
+            'seller_fee_basis_points'        =>      100,
             'fee_recipient'     =>  "0x59B2309A468E0f6c94303D7752A019E57562bD36"
         ];
 

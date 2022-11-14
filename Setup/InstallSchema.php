@@ -992,7 +992,7 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
                 ->addColumn(
 					'attributes',
 					\Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-					255,
+					555,
 					['nullable => false'],
 					'Mod Attributes'
 				)
