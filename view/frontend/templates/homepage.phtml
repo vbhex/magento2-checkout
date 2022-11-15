@@ -52,17 +52,16 @@ $eth_price =  $blockObj->getETHPrice();
                              <div>
                                 <p class="top-title">Get mod info by ID</p>
                                 <div class="kg-form-content">
-                                    <input type="number" id="vote_coin_quantity" value="" />
+                                    <input type="number" id="mod_id" value="" />
                                     <button class="kg-btn kg-plus"><img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/plus.png'); ?>"></button>
                                     <button class="kg-btn kg-minus"><img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/minus.png'); ?>"></button>
                                 </div>
                                 <div class="kg-action-btn btn_connect_wallet"> <button  class="kg-connect-wallet btn">Connect Wallet</button> </div>
-                                <div class="kg-action-btn btn_buy_vote"></div>
                             </div>
                             <!-- </form> -->
                         </div>
                         <div class="kg_about_eth">
-                                <p id="free_gift">Connect Wallet to get Mod Information</p>
+                                <p id="mod_info">Connect Wallet to get Mod Information</p>
                         </div>
                         <div class="kg_deservice_contract">
                             <p><b>Shadow Mods selling on 3rd party markets : </b>
@@ -94,19 +93,17 @@ $eth_price =  $blockObj->getETHPrice();
         </div>
     </section>
 </div>
-<input type="hidden" id="eth_amount" />
+<input type="hidden" id="current_mod_id" />
 <input type="hidden" id="wallet_connected" />
 <input type="hidden" id="eth_price" value="<?= $eth_price ?>" />
 <script type="text/javascript">
     //<![CDATA[[
     require(['jquery', 'web3', 'constvar', 'chainvar'], function($, web3) {
 
-        $("#vote_coin_quantity").on("input", function() {
+        $("#mod_id").on("input", function() {
             if (parseInt($('#wallet_connected').val()) == 1) {
-                var eth_price = parseFloat($('#eth_price').val());
-                $(".btn_buy_vote").html("<button  class='kg-connect-wallet btn'>Buy with " + (parseFloat($(this).val()) / 10000).toFixed(4) + " ETH</button>");
-                $("#free_gift").html("along with " + (parseFloat($(this).val()) * v_gVoteMul).toFixed(2) + " gVOTEs and about " + (parseFloat($(this).val()) * eth_price / 20000).toFixed(2) + " gUSDs which depends on the real time price of ETH.");
-                $("#eth_amount").val(parseFloat($(this).val()) * 100000000000000);
+                var mod_id = $(this).val();
+                $("#mod_info").html("");
             }
         });
         var connectWallet = async () => {
@@ -117,12 +114,12 @@ $eth_price =  $blockObj->getETHPrice();
                 const theAccount = accounts[0];
 
                 window.web3 = new web3(window.ethereum);
-                if (window.ethereum.networkVersion !== v_buyVoteChainId) {
+                if (window.ethereum.networkVersion !== v_chainId) {
                     try {
                         await window.ethereum.request({
                             method: 'wallet_switchEthereumChain',
                             params: [{
-                                chainId: web3.utils.toHex(v_buyVoteChainId)
+                                chainId: web3.utils.toHex(v_chainId)
                             }]
                         });
                     } catch (err) {
@@ -131,30 +128,27 @@ $eth_price =  $blockObj->getETHPrice();
                             await window.ethereum.request({
                                 method: 'wallet_addEthereumChain',
                                 params: [{
-                                    chainName: v_buyVoteChainName,
-                                    chainId: web3.utils.toHex(v_buyVoteChainId),
+                                    chainName: v_chainName,
+                                    chainId: web3.utils.toHex(v_chainId),
                                     nativeCurrency: {
-                                        name: v_buyVoteCurrencyName,
-                                        decimals: v_buyVoteDecimals,
-                                        symbol: v_buyVoteCurrencySymbol
+                                        name: v_currencyName,
+                                        decimals: v_decimals,
+                                        symbol: v_currencySymbol
                                     },
-                                    rpcUrls: [v_buyVoteRpcUrl],
-                                    blockExplorerUrls: [v_buyVoteExplorerUrl]
+                                    rpcUrls: [v_rpcUrl],
+                                    blockExplorerUrls: [v_explorerUrl]
                                 }]
                             });
                         }
                     }
                 }
-                var eth_amount = $("#eth_amount").val();
-                if (eth_amount == "" || eth_amount == null || typeof(eth_amount) == undefined || parseInt(eth_amount) < 500) {
-                    var eth_price = parseFloat($('#eth_price').val());
-                    // init the data to buy VOTE coins
+                var current_mod_id = $("#current_mod_id").val();
+                if (current_mod_id == "" || current_mod_id == null || typeof(current_mod_id) == undefined || parseInt(current_mod_id) < 1) {
+                    // init the data
                     $('.btn_connect_wallet').hide();
-                    $('.btn_buy_vote').show();
-                    $("#vote_coin_quantity").val(1000);
-                    $('.btn_buy_vote').html("<button  class='kg-connect-wallet btn'>Buy with 0.1000 ETH</button>");
-                    $('#eth_amount').val(100000000000000000);
-                    $("#free_gift").html("along with " + (1000 * v_gVoteMul).toFixed(2) + " gVOTEs and about " + (0.05 * eth_price).toFixed(2) + " gUSDs which depends on the real time price of ETH.");
+                    $("#mod_id").val(1);
+                    $('#current_mod_id').val(1);
+                    $("#mod_info").html("");
                 }
                 $('#wallet_connected').val(1);
                 // get the VOTE balance of the connected wallet
@@ -164,7 +158,7 @@ $eth_price =  $blockObj->getETHPrice();
                     $('#vote_balance').html(decm_balance);
                 });
                 // on click the buy vote button
-                $('.btn_buy_vote').click(function() {
+                $('.btn_query_mod').click(function() {
                     var eth_amount = $('#eth_amount').val();
                     if (window.web3.utils.toBN(eth_amount).lt(window.web3.utils.toBN((50000000000000000)))) {
                         alert("Value sent is less than 0.05ETH");
@@ -228,26 +222,26 @@ $eth_price =  $blockObj->getETHPrice();
                 });
             }
             $('.btn_connect_wallet').show();
-            $('.btn_buy_vote').hide();
+            $('.btn_query_mod').hide();
             $('#wallet_connected').val(0);
             var eth_price = parseFloat($('#eth_price').val());
             $(".kg-plus").on("click", function() {
-                var final_var = window.web3.utils.toBN(parseInt($("#vote_coin_quantity").val())).add(window.web3.utils.toBN(1));
-                $("#vote_coin_quantity").val(final_var);
-                $(".btn_buy_vote").html("<button  class='kg-connect-wallet btn'>Buy with " + (parseFloat(final_var) / 10000).toFixed(4) + " ETH</button>");
-                $("#free_gift").html("along with " + (parseFloat(final_var) * v_gVoteMul).toFixed(2) + " gVOTEs and about " + (parseFloat(final_var) * eth_price / 20000).toFixed(2) + " gUSDs which depends on the real time price of ETH.");
+                var final_var = window.web3.utils.toBN(parseInt($("#mod_id").val())).add(window.web3.utils.toBN(1));
+                $("#mod_id").val(final_var);
+                $(".btn_query_mod").html("<button  class='kg-connect-wallet btn'>Buy with " + (parseFloat(final_var) / 10000).toFixed(4) + " ETH</button>");
+                $("#mod_info").html("along with " + (parseFloat(final_var) * v_gVoteMul).toFixed(2) + " gVOTEs and about " + (parseFloat(final_var) * eth_price / 20000).toFixed(2) + " gUSDs which depends on the real time price of ETH.");
                 $("#eth_amount").val(parseFloat(final_var) * 100000000000000);
                 return true;
             });
             $(".kg-minus").on("click", function() {
-                var final_var = window.web3.utils.toBN(parseInt($("#vote_coin_quantity").val())).sub(window.web3.utils.toBN(1));
+                var final_var = window.web3.utils.toBN(parseInt($("#mod_id").val())).sub(window.web3.utils.toBN(1));
                 if (final_var < 500) {
                     alert("At least 500 coins");
                     return false;
                 }
-                $("#vote_coin_quantity").val(final_var);
-                $(".btn_buy_vote").html("<button  class='kg-connect-wallet btn'>Buy with " + (parseFloat(final_var) / 10000).toFixed(4) + " ETH</button>");
-                $("#free_gift").html("along with " + (parseFloat(final_var) * v_gVoteMul).toFixed(2) + " gVOTEs and about " + (parseFloat(final_var) * eth_price / 20000).toFixed(2) + " gUSDs which depends on the real time price of ETH.");
+                $("#mod_id").val(final_var);
+                $(".btn_query_mod").html("<button  class='kg-connect-wallet btn'>Buy with " + (parseFloat(final_var) / 10000).toFixed(4) + " ETH</button>");
+                $("#mod_info").html("along with " + (parseFloat(final_var) * v_gVoteMul).toFixed(2) + " gVOTEs and about " + (parseFloat(final_var) * eth_price / 20000).toFixed(2) + " gUSDs which depends on the real time price of ETH.");
                 $("#eth_amount").val(parseFloat(final_var) * 100000000000000);
                 return true;
             });
