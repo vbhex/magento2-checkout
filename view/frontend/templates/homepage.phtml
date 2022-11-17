@@ -3,7 +3,7 @@ $blockObj = $block->getLayout()->createBlock('Vbhex\Checkout\Block\VbhexCheckout
 $eth_price =  $blockObj->getETHPrice();
 ?>
 <div class="kg-main-page">
-<section class="kg-contentarea_01">
+    <section class="kg-contentarea_01">
         <div class="inner-content-main">
             <div class="kg-left-wrap">
                 <div class="inner-wrap">
@@ -49,19 +49,22 @@ $eth_price =  $blockObj->getETHPrice();
                     <div class="kg-form">
                         <div class="inner-wrap">
                             <!-- <form> -->
-                             <div>
+                            <div>
                                 <p class="top-title">Get mod info by ID</p>
                                 <div class="kg-form-content">
                                     <input type="number" id="mod_id" value="" />
                                     <button class="kg-btn kg-plus"><img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/plus.png'); ?>"></button>
                                     <button class="kg-btn kg-minus"><img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/minus.png'); ?>"></button>
                                 </div>
-                                <div class="kg-action-btn btn_connect_wallet"> <button  class="kg-connect-wallet btn">Connect Wallet</button> </div>
+                                <div class="kg-action-btn btn_connect_wallet"> <button class="kg-connect-wallet btn">Connect Wallet</button> </div>
                             </div>
                             <!-- </form> -->
                         </div>
                         <div class="kg_about_eth">
-                                <p id="mod_info">Connect Wallet to get Mod Information</p>
+                            <p id="mod_info">Connect Wallet to get Mod Information</p>
+                            <p id="total_score"></p>
+                            <p id="success_score"></p>
+                            <p id="success_rate"></p>
                         </div>
                         <div class="kg_deservice_contract">
                             <p><b>Shadow Mods selling on 3rd party markets : </b>
@@ -71,8 +74,8 @@ $eth_price =  $blockObj->getETHPrice();
                     </div>
                     <div class="kg-Vote-coins-wrap">
                         <div class="kg-vote-titles">
-                        	<div class="kg-inner-vote">
-                                <h2>HOW TO OWN A MOD<img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/pay_with.png'); ?>"/></h2>
+                            <div class="kg-inner-vote">
+                                <h2>HOW TO OWN A MOD<img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/pay_with.png'); ?>" /></h2>
                                 <p><span>Step 1 :</span>Buy shadow mods from 3rd party </p>
                                 <p> marketplace like opensea.</p>
                                 <p><span>Step 2 :</span> Go to VBHex homepage,</p>
@@ -81,9 +84,9 @@ $eth_price =  $blockObj->getETHPrice();
                             </div>
                         </div>
                         <div class="kg-inner-wrap">
-                        	<div class="kg-inner-sub-area">
+                            <div class="kg-inner-sub-area">
                                 <p class="info">You currently have</p>
-                                <p id="vote_balance" class="kg-vote-value">0</p>
+                                <p id="mod_balance" class="kg-vote-value">0</p>
                                 <p class="info">Shadow mods</p>
                             </div>
                         </div>
@@ -93,7 +96,6 @@ $eth_price =  $blockObj->getETHPrice();
         </div>
     </section>
 </div>
-<input type="hidden" id="current_mod_id" />
 <input type="hidden" id="wallet_connected" />
 <input type="hidden" id="eth_price" value="<?= $eth_price ?>" />
 <script type="text/javascript">
@@ -103,7 +105,7 @@ $eth_price =  $blockObj->getETHPrice();
         $("#mod_id").on("input", function() {
             if (parseInt($('#wallet_connected').val()) == 1) {
                 var mod_id = $(this).val();
-                $("#mod_info").html("");
+
             }
         });
         var connectWallet = async () => {
@@ -142,45 +144,36 @@ $eth_price =  $blockObj->getETHPrice();
                         }
                     }
                 }
-                var current_mod_id = $("#current_mod_id").val();
-                if (current_mod_id == "" || current_mod_id == null || typeof(current_mod_id) == undefined || parseInt(current_mod_id) < 1) {
+                const modContract = new window.web3.eth.Contract(modAbiJson, v_modContract);
+                var mod_id = $("#mod_id").val();
+                if (mod_id == "" || mod_id == null || typeof(mod_id) == undefined || parseInt(mod_id) < 1) {
                     // init the data
                     $('.btn_connect_wallet').hide();
                     $("#mod_id").val(1);
-                    $('#current_mod_id').val(1);
-                    $("#mod_info").html("");
+                    mod_id = 1
                 }
                 $('#wallet_connected').val(1);
-                // get the VOTE balance of the connected wallet
-                const coinContract = new window.web3.eth.Contract(erc20AbiJson, v_buyVoteVoteCoinContract);
-                coinContract.methods.balanceOf(theAccount).call().then(function(result) {
-                    var decm_balance = result / parseFloat("1000000.000");
-                    $('#vote_balance').html(decm_balance);
+                // get the MOD balance of the connected wallet
+                modContract.methods.balanceOf(theAccount).call().then(function(result) {
+                    $('#mod_balance').html(result);
                 });
-                // on click the buy vote button
-                $('.btn_query_mod').click(function() {
-                    var eth_amount = $('#eth_amount').val();
-                    if (window.web3.utils.toBN(eth_amount).lt(window.web3.utils.toBN((50000000000000000)))) {
-                        alert("Value sent is less than 0.05ETH");
-                        return false;
-                    }
-                    // alert("ETH : "+eth_amount);
-                    // triggle buy vote contract
-                    const buyVoteContract = new window.web3.eth.Contract(buyVoteAbiJson, v_buyVoteContract);
-                    buyVoteContract.methods.buy().send({
-                            from: theAccount,
-                            value: eth_amount
-                        })
-                        .then(function(receipt) {
-                            if (receipt.status) {
-                                // update the user balance
-                                coinContract.methods.balanceOf(theAccount).call().then(function(result) {
-                                    var decm_balance = result / parseFloat("1000000.000");
-                                    $('#vote_balance').html(decm_balance);
-                                });
-                            }
-                        });
-                    return true;
+                // get the MOD Total score
+                modContract.methods.modTotalScore(mod_id).call().then(function(result) {
+                    $("#mod_info").hide();
+                    $("#total_score").show();
+                    $("#total_score").html("Total Score : " + result);
+                });
+                // get the MOD Success score
+                modContract.methods.modSuccessScore(mod_id).call().then(function(result) {
+                    $("#mod_info").hide();
+                    $("#success_score").show();
+                    $("#success_score").html("Success Score : " + result);
+                });
+                // get the MOD Success rate
+                modContract.methods.modSuccessRate(mod_id).call().then(function(result) {
+                    $("#mod_info").hide();
+                    $("#success_rate").show();
+                    $("#success_rate").html("Success Score : " + result);
                 });
                 return true;
             }
@@ -196,7 +189,7 @@ $eth_price =  $blockObj->getETHPrice();
 
         $(document).ready(function() {
             if (window.location.href.includes("?#")) {
-            //    connectWallet();
+                //    connectWallet();
             }
             if (window.ethereum) {
                 // connectWallet();
@@ -222,31 +215,74 @@ $eth_price =  $blockObj->getETHPrice();
                 });
             }
             $('.btn_connect_wallet').show();
-            $('.btn_query_mod').hide();
             $('#wallet_connected').val(0);
-            var eth_price = parseFloat($('#eth_price').val());
+            $('#mod_info').show();
+            $('$mod_info').html("Please connect the wallet to get Mod Info");
+            $("#success_score").hide();
+            $("#total_score").hide();
+            $("#success_rate").hide();
+            const modContract = new window.web3.eth.Contract(modAbiJson, v_modContract);
             $(".kg-plus").on("click", function() {
-                var final_var = window.web3.utils.toBN(parseInt($("#mod_id").val())).add(window.web3.utils.toBN(1));
+                if($('#wallet_connected').val()==1) {
+                    var final_var = window.web3.utils.toBN(parseInt($("#mod_id").val())).add(window.web3.utils.toBN(1));
                 $("#mod_id").val(final_var);
-                $(".btn_query_mod").html("<button  class='kg-connect-wallet btn'>Buy with " + (parseFloat(final_var) / 10000).toFixed(4) + " ETH</button>");
-                $("#mod_info").html("along with " + (parseFloat(final_var) * v_gVoteMul).toFixed(2) + " gVOTEs and about " + (parseFloat(final_var) * eth_price / 20000).toFixed(2) + " gUSDs which depends on the real time price of ETH.");
-                $("#eth_amount").val(parseFloat(final_var) * 100000000000000);
-                return true;
+                modContract.methods.totalSupply().call().then(function(result) {
+                    if (final_var > result) {
+                        alert("Mod Id can not be bigger than total supply");
+                        return false;
+                    } else {
+                        // get the MOD Total score
+                        modContract.methods.modTotalScore(mod_id).call().then(function(result) {
+                            $("#mod_info").hide();
+                            $("#total_score").show();
+                            $("#total_score").html("Total Score : " + result);
+                        });
+                        // get the MOD Success score
+                        modContract.methods.modSuccessScore(mod_id).call().then(function(result) {
+                            $("#mod_info").hide();
+                            $("#success_score").show();
+                            $("#success_score").html("Success Score : " + result);
+                        });
+                        // get the MOD Success rate
+                        modContract.methods.modSuccessRate(mod_id).call().then(function(result) {
+                            $("#mod_info").hide();
+                            $("#success_rate").show();
+                            $("#success_rate").html("Success Score : " + result);
+                        });
+                        return true;
+                    }
+
+                });
+                } else {
+                    alert("Please connect wallet first!");
+                }
             });
             $(".kg-minus").on("click", function() {
                 var final_var = window.web3.utils.toBN(parseInt($("#mod_id").val())).sub(window.web3.utils.toBN(1));
-                if (final_var < 500) {
-                    alert("At least 500 coins");
+                if (final_var < 1) {
+                    alert("Mod Id can not be smaller than 1");
                     return false;
                 }
-                $("#mod_id").val(final_var);
-                $(".btn_query_mod").html("<button  class='kg-connect-wallet btn'>Buy with " + (parseFloat(final_var) / 10000).toFixed(4) + " ETH</button>");
-                $("#mod_info").html("along with " + (parseFloat(final_var) * v_gVoteMul).toFixed(2) + " gVOTEs and about " + (parseFloat(final_var) * eth_price / 20000).toFixed(2) + " gUSDs which depends on the real time price of ETH.");
-                $("#eth_amount").val(parseFloat(final_var) * 100000000000000);
-                return true;
+                // get the MOD Total score
+                modContract.methods.modTotalScore(mod_id).call().then(function(result) {
+                            $("#mod_info").hide();
+                            $("#total_score").show();
+                            $("#total_score").html("Total Score : " + result);
+                        });
+                        // get the MOD Success score
+                        modContract.methods.modSuccessScore(mod_id).call().then(function(result) {
+                            $("#mod_info").hide();
+                            $("#success_score").show();
+                            $("#success_score").html("Success Score : " + result);
+                        });
+                        // get the MOD Success rate
+                        modContract.methods.modSuccessRate(mod_id).call().then(function(result) {
+                            $("#mod_info").hide();
+                            $("#success_rate").show();
+                            $("#success_rate").html("Success Score : " + result);
+                        });
+                    return true;
             });
-
-
         })
     });
     // ]]>
@@ -412,7 +448,7 @@ $eth_price =  $blockObj->getETHPrice();
         line-height: 31px;
         text-transform: uppercase;
         margin-bottom: 27px;
-		margin-top: 40px;
+        margin-top: 40px;
     }
 
     .kg-main-page section.kg-contentarea_04 {
@@ -529,12 +565,14 @@ $eth_price =  $blockObj->getETHPrice();
         line-height: 61px;
         text-transform: uppercase;
         color: #FFFFFF;
-		margin-bottom:5px;
-		margin-top: -4px;
+        margin-bottom: 5px;
+        margin-top: -4px;
     }
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap{
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap {
         margin-top: -6px;
     }
+
     @media screen and (max-width:991px) {
         .kg-main-page section.kg-contentarea_01 .inner-content-main {
             flex-direction: column;
@@ -643,7 +681,7 @@ $eth_price =  $blockObj->getETHPrice();
         .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-form .inner-wrap p.top-title {
             font-size: 16px;
             line-height: 8px;
-			margin-top:0;
+            margin-top: 0;
         }
 
         .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap {
@@ -706,186 +744,209 @@ $eth_price =  $blockObj->getETHPrice();
         margin-left: auto;
     }
 
- .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-vote-titles {
-    background: #F9EB98;
-    border-radius: 10px;
-    margin-bottom: 46px;
-    position: relative;
-    }
-    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap  .kg-vote-titles h2 {
-    font-family: 'Open Sans';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 12px;
-    line-height: 16px;
-    text-transform: uppercase;
-    color: #333333;
-    border-bottom: 1px solid #000000;
-    display: inline-block;
-    padding-bottom: 6px;
-    margin-top: 0;
-    margin-bottom: 4px;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles p {
-    font-family: 'Open Sans';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12px;
-    align-items: center;
-    color: #333333;
-	margin-bottom: 0;
-	line-height: 18px;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles span {
-    color: #1979C3;
-    font-weight: 700;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles h2 img {
-    margin-left: 3px;
-    position: relative;
-    top: 3px;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles:after {
-    content: '';
-    position: absolute;
-    border: 1px solid #000000;
-    width: 70%;
-    bottom: -24px;
-    left: 0;
-	border: 0;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_about_eth {
-    background: #F0F0F0;
-    border-radius: 5px;
-    max-width: 404px;
-    margin-bottom: 22px;
-    margin-top: 25px;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_about_eth p {
-    font-family: 'Open Sans';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 22px;
-    line-height: 28px;
-    color: #333333;
-    margin: 0;
-	padding: 16px 18px;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-inner-vote {
-    padding: 13px 30px 24px;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles p:last-child{
-    margin-bottom: 0;
-}
-
-
-@media only screen and (max-width:767px){
     .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-vote-titles {
-    max-width: 100%;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_about_eth p {
-    font-family: 'Open Sans';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 24px;
-    color: #333333;
-    margin: 0;
-}
-}
- .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-vote-titles {
-    background: #F9EB98;
-    border-radius: 10px;
-    margin-bottom: 46px;
-    position: relative;
-    max-width: 363px;
-    margin-left: auto;
+        background: #F9EB98;
+        border-radius: 10px;
+        margin-bottom: 46px;
+        position: relative;
     }
-    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap  .kg-vote-titles h2 {
-    font-family: 'Open Sans';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 12px;
-    line-height: 16px;
-    text-transform: uppercase;
-    color: #333333;
-    border-bottom: 1px solid #000000;
-    display: inline-block;
-    padding-bottom: 6px;
-    margin-top: 0;
-    margin-bottom: 4px;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles p {
-    font-family: 'Open Sans';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12px;
-    align-items: center;
-    color: #333333;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles span {
-    color: #1979C3;
-    font-weight: 700;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles h2 img {
-    margin-left: 3px;
-    position: relative;
-    top: 3px;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles:after {
-    content: '';
-    position: absolute;
-    border-bottom: 1px solid #000000;
-    width: 70%;
-    bottom: -24px;
-    left: 0;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-inner-vote {
-    padding: 13px 30px 24px;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles p:last-child{
-    margin-bottom: 0;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-inner-wrap .kg-inner-sub-area {
-    padding: 28px 10px 28px 10px;
-}
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles h2 {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 16px;
+        text-transform: uppercase;
+        color: #333333;
+        border-bottom: 1px solid #000000;
+        display: inline-block;
+        padding-bottom: 6px;
+        margin-top: 0;
+        margin-bottom: 4px;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles p {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        align-items: center;
+        color: #333333;
+        margin-bottom: 0;
+        line-height: 18px;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles span {
+        color: #1979C3;
+        font-weight: 700;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles h2 img {
+        margin-left: 3px;
+        position: relative;
+        top: 3px;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles:after {
+        content: '';
+        position: absolute;
+        border: 1px solid #000000;
+        width: 70%;
+        bottom: -24px;
+        left: 0;
+        border: 0;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_about_eth {
+        background: #F0F0F0;
+        border-radius: 5px;
+        max-width: 404px;
+        margin-bottom: 22px;
+        margin-top: 25px;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_about_eth p {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 22px;
+        line-height: 28px;
+        color: #333333;
+        margin: 0;
+        padding: 16px 18px;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-inner-vote {
+        padding: 13px 30px 24px;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles p:last-child {
+        margin-bottom: 0;
+    }
 
 
-@media only screen and (max-width:767px){
+    @media only screen and (max-width:767px) {
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-vote-titles {
+            max-width: 100%;
+        }
+
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_about_eth p {
+            font-family: 'Open Sans';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 24px;
+            color: #333333;
+            margin: 0;
+        }
+    }
+
     .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-vote-titles {
-    max-width: 100%;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_about_eth p {
-    font-weight: 400;
-    font-size: 22px;
-    line-height: 24px;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-inner-vote {
-    padding: 11px 18px 20px;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-inner-wrap .kg-inner-sub-area {
-   padding: 0;
-}
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_deservice_contract p {
-    font-family: 'Open Sans';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 22px;
-    line-height: 30px;
-    color: #333333;
-	margin:0;
-}
-.kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_deservice_contract {
-    max-width: 404px;
-}
-@media only screen and (min-width:992px){
-    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_deservice_contract p b {
-    display: inline-block;
-    width: 100%;
-    white-space: nowrap;
-}
-}
+        background: #F9EB98;
+        border-radius: 10px;
+        margin-bottom: 46px;
+        position: relative;
+        max-width: 363px;
+        margin-left: auto;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles h2 {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 16px;
+        text-transform: uppercase;
+        color: #333333;
+        border-bottom: 1px solid #000000;
+        display: inline-block;
+        padding-bottom: 6px;
+        margin-top: 0;
+        margin-bottom: 4px;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles p {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        align-items: center;
+        color: #333333;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles span {
+        color: #1979C3;
+        font-weight: 700;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles h2 img {
+        margin-left: 3px;
+        position: relative;
+        top: 3px;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles:after {
+        content: '';
+        position: absolute;
+        border-bottom: 1px solid #000000;
+        width: 70%;
+        bottom: -24px;
+        left: 0;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-inner-vote {
+        padding: 13px 30px 24px;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-vote-titles p:last-child {
+        margin-bottom: 0;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-inner-wrap .kg-inner-sub-area {
+        padding: 28px 10px 28px 10px;
+    }
 
 
+    @media only screen and (max-width:767px) {
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-vote-titles {
+            max-width: 100%;
+        }
+
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_about_eth p {
+            font-weight: 400;
+            font-size: 22px;
+            line-height: 24px;
+        }
+
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-inner-vote {
+            padding: 11px 18px 20px;
+        }
+
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg-Vote-coins-wrap .kg-inner-wrap .kg-inner-sub-area {
+            padding: 0;
+        }
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_deservice_contract p {
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 22px;
+        line-height: 30px;
+        color: #333333;
+        margin: 0;
+    }
+
+    .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_deservice_contract {
+        max-width: 404px;
+    }
+
+    @media only screen and (min-width:992px) {
+        .kg-main-page section.kg-contentarea_04 .kg-inner-wrap .kg-content-wrap .kg-row-wrap .kg_deservice_contract p b {
+            display: inline-block;
+            width: 100%;
+            white-space: nowrap;
+        }
+    }
 </style>
