@@ -1,45 +1,7 @@
 <?php
-$blockObj = $block->getLayout()->createBlock('Vbhex\Checkout\Block\VbhexCheckout');
-$eth_price =  $blockObj->getETHPrice();
 ?>
 <div class="kg-main-page">
-    <section class="kg-contentarea_01">
-        <div class="inner-content-main">
-            <div class="kg-left-wrap">
-                <div class="inner-wrap">
-                    <div class="kg-top-title">
-                        <h2>Decentralized Escrow</h2>
-                    </div>
-                    <p class="kg-to-info">VBHex uses smart contract to protect funds, eliminating the possibility of scam, which even comes from the platform (APP Owner).</p>
-                </div>
-            </div>
-            <div class="kg-right-wraop">
-                <div class="kg-img-wrap"> <img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/1.png'); ?>" /> </div>
-            </div>
-        </div>
-    </section>
-
-
-    <section class="kg-contentarea_02">
-        <div class="kg-inner-wrap">
-
-            <?php
-            echo $this->getLayout()
-                ->createBlock('Magento\Cms\Block\Block')
-                ->setBlockId('no_dispute')
-                ->toHtml();
-
-
-            echo $this->getLayout()
-                ->createBlock('Magento\Cms\Block\Block')
-                ->setBlockId('with_dispute')
-                ->toHtml();
-
-            ?>
-
-        </div>
-    </section>
-    <section class="kg-contentarea_04">
+<section class="kg-contentarea_04">
         <div class="kg-inner-wrap">
             <div class="kg-top-title">
                 <h3>want to resolve a dispute?</h3>
@@ -67,27 +29,27 @@ $eth_price =  $blockObj->getETHPrice();
                             <p id="success_rate"></p>
                         </div>
                         <div class="kg_deservice_contract">
-                            <p><b>Shadow Mods selling on 3rd party markets : </b>
-                                <a target="_blank" name="vc" href="https://goerli.etherscan.io/address/0x7C570a8bd608Ef8bc043319aaca342ff67750E3f">Opensea VBHex shadow mods</a>
+                            <p><b>Mods are selling on 3rd party markets : </b>
+                                <a target="_blank" name="vc" href="https://goerli.etherscan.io/address/0x7C570a8bd608Ef8bc043319aaca342ff67750E3f">Opensea VBHex  mods</a>
                             </p>
                         </div>
                     </div>
                     <div class="kg-Vote-coins-wrap">
                         <div class="kg-vote-titles">
                             <div class="kg-inner-vote">
-                                <h2>HOW TO OWN A MOD<img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/pay_with.png'); ?>" /></h2>
-                                <p><span>Step 1 :</span>Buy shadow mods from 3rd party </p>
+                                <h2>HOW TO EARN FROM A MOD<img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/pay_with.png'); ?>" /></h2>
+                                <p><span>Step 1 :</span>Buy a VBHex mod from 3rd party </p>
                                 <p> marketplace like opensea.</p>
-                                <p><span>Step 2 :</span> Go to VBHex homepage,</p>
-                                <p>input the mod ID you want to exchange,</p>
-                                <p>Click Exchange button to exchange.</p>
+                                <p><span>Step 2 :</span> Improve your mod scores,</p>
+                                <p>so that buyers and sellers will choose you as Mod,</p>
+                                <p><span>Step 3 :</span>Resolve dispute correctly to earn mod fee.</p>
                             </div>
                         </div>
                         <div class="kg-inner-wrap">
                             <div class="kg-inner-sub-area">
                                 <p class="info">You currently have</p>
                                 <p id="mod_balance" class="kg-vote-value">0</p>
-                                <p class="info">Shadow mods</p>
+                                <p class="info">Vbhex mods</p>
                             </div>
                         </div>
                     </div>
@@ -95,19 +57,31 @@ $eth_price =  $blockObj->getETHPrice();
             </div>
         </div>
     </section>
+    <section class="kg-contentarea_02">
+        <div class="kg-inner-wrap">
+
+            <?php
+            echo $this->getLayout()
+                ->createBlock('Magento\Cms\Block\Block')
+                ->setBlockId('no_dispute')
+                ->toHtml();
+
+
+            echo $this->getLayout()
+                ->createBlock('Magento\Cms\Block\Block')
+                ->setBlockId('with_dispute')
+                ->toHtml();
+
+            ?>
+
+        </div>
+    </section>
 </div>
 <input type="hidden" id="wallet_connected" />
-<input type="hidden" id="eth_price" value="<?= $eth_price ?>" />
 <script type="text/javascript">
     //<![CDATA[[
     require(['jquery', 'web3', 'constvar', 'chainvar'], function($, web3) {
 
-        $("#mod_id").on("input", function() {
-            if (parseInt($('#wallet_connected').val()) == 1) {
-                var mod_id = $(this).val();
-
-            }
-        });
         var connectWallet = async () => {
             if (window.ethereum) {
                 const accounts = await window.ethereum.request({
@@ -175,6 +149,101 @@ $eth_price =  $blockObj->getETHPrice();
                     $("#success_rate").show();
                     $("#success_rate").html("Success Score : " + result);
                 });
+                $("#mod_id").on("input", function() {
+                    if (parseInt($('#wallet_connected').val()) == 1) {
+                        var final_var = $(this).val();
+                        modContract.methods.totalSupply().call().then(function(result) {
+                            if (final_var > result) {
+                                alert("Mod Id can not be bigger than total supply");
+                                return false;
+                            } else {
+                                // get the MOD Total score
+                                modContract.methods.modTotalScore(final_var).call().then(function(result) {
+                                    $("#mod_info").hide();
+                                    $("#total_score").show();
+                                    $("#total_score").html("Total Score : " + result);
+                                });
+                                // get the MOD Success score
+                                modContract.methods.modSuccessScore(final_var).call().then(function(result) {
+                                    $("#mod_info").hide();
+                                    $("#success_score").show();
+                                    $("#success_score").html("Success Score : " + result);
+                                });
+                                // get the MOD Success rate
+                                modContract.methods.modSuccessRate(final_var).call().then(function(result) {
+                                    $("#mod_info").hide();
+                                    $("#success_rate").show();
+                                    $("#success_rate").html("Success Score : " + result);
+                                });
+                                return true;
+                            }
+
+                        });
+                    }
+                });
+                $(".kg-plus").on("click", function() {
+
+                    modContract.methods.totalSupply().call().then(function(result) {
+                        if (parseInt($("#mod_id").val())+1  > result) {
+                            alert("Mod Id can not be bigger than total supply");
+                            return false;
+                        } else {
+                            var final_var = window.web3.utils.toBN(parseInt($("#mod_id").val())).add(window.web3.utils.toBN(1));
+                            $("#mod_id").val(final_var);
+                            // get the MOD Total score
+                            modContract.methods.modTotalScore(final_var).call().then(function(result) {
+                                $("#mod_info").hide();
+                                $("#total_score").show();
+                                $("#total_score").html("Total Score : " + result);
+                            });
+                            // get the MOD Success score
+                            modContract.methods.modSuccessScore(final_var).call().then(function(result) {
+                                $("#mod_info").hide();
+                                $("#success_score").show();
+                                $("#success_score").html("Success Score : " + result);
+                            });
+                            // get the MOD Success rate
+                            modContract.methods.modSuccessRate(final_var).call().then(function(result) {
+                                $("#mod_info").hide();
+                                $("#success_rate").show();
+                                $("#success_rate").html("Success Score : " + result);
+                            });
+                            return true;
+                        }
+
+                    });
+                });
+                $(".kg-minus").on("click", function() {
+                    if(parseInt($("#mod_id").val())==1) {
+                        alert("Mod Id can not be smaller than 1");
+                        return false;
+                    }
+                    var final_var = window.web3.utils.toBN(parseInt($("#mod_id").val())).sub(window.web3.utils.toBN(1));
+                    $("#mod_id").val(final_var);
+                    if (final_var < 1) {
+                        alert("Mod Id can not be smaller than 1");
+                        return false;
+                    }
+                    // get the MOD Total score
+                    modContract.methods.modTotalScore(final_var).call().then(function(result) {
+                        $("#mod_info").hide();
+                        $("#total_score").show();
+                        $("#total_score").html("Total Score : " + result);
+                    });
+                    // get the MOD Success score
+                    modContract.methods.modSuccessScore(final_var).call().then(function(result) {
+                        $("#mod_info").hide();
+                        $("#success_score").show();
+                        $("#success_score").html("Success Score : " + result);
+                    });
+                    // get the MOD Success rate
+                    modContract.methods.modSuccessRate(final_var).call().then(function(result) {
+                        $("#mod_info").hide();
+                        $("#success_rate").show();
+                        $("#success_rate").html("Success Score : " + result);
+                    });
+                    return true;
+                });
                 return true;
             }
             alert("Please install MetaMask to use this dApp!");
@@ -184,8 +253,6 @@ $eth_price =  $blockObj->getETHPrice();
         $('.btn_connect_wallet').click(function() {
             connectWallet();
         });
-
-
 
         $(document).ready(function() {
             if (window.location.href.includes("?#")) {
@@ -217,72 +284,11 @@ $eth_price =  $blockObj->getETHPrice();
             $('.btn_connect_wallet').show();
             $('#wallet_connected').val(0);
             $('#mod_info').show();
-            $('$mod_info').html("Please connect the wallet to get Mod Info");
+            $('#mod_info').html("Please connect the wallet to get Mod Info");
             $("#success_score").hide();
             $("#total_score").hide();
             $("#success_rate").hide();
-            const modContract = new window.web3.eth.Contract(modAbiJson, v_modContract);
-            $(".kg-plus").on("click", function() {
-                if($('#wallet_connected').val()==1) {
-                    var final_var = window.web3.utils.toBN(parseInt($("#mod_id").val())).add(window.web3.utils.toBN(1));
-                $("#mod_id").val(final_var);
-                modContract.methods.totalSupply().call().then(function(result) {
-                    if (final_var > result) {
-                        alert("Mod Id can not be bigger than total supply");
-                        return false;
-                    } else {
-                        // get the MOD Total score
-                        modContract.methods.modTotalScore(mod_id).call().then(function(result) {
-                            $("#mod_info").hide();
-                            $("#total_score").show();
-                            $("#total_score").html("Total Score : " + result);
-                        });
-                        // get the MOD Success score
-                        modContract.methods.modSuccessScore(mod_id).call().then(function(result) {
-                            $("#mod_info").hide();
-                            $("#success_score").show();
-                            $("#success_score").html("Success Score : " + result);
-                        });
-                        // get the MOD Success rate
-                        modContract.methods.modSuccessRate(mod_id).call().then(function(result) {
-                            $("#mod_info").hide();
-                            $("#success_rate").show();
-                            $("#success_rate").html("Success Score : " + result);
-                        });
-                        return true;
-                    }
 
-                });
-                } else {
-                    alert("Please connect wallet first!");
-                }
-            });
-            $(".kg-minus").on("click", function() {
-                var final_var = window.web3.utils.toBN(parseInt($("#mod_id").val())).sub(window.web3.utils.toBN(1));
-                if (final_var < 1) {
-                    alert("Mod Id can not be smaller than 1");
-                    return false;
-                }
-                // get the MOD Total score
-                modContract.methods.modTotalScore(mod_id).call().then(function(result) {
-                            $("#mod_info").hide();
-                            $("#total_score").show();
-                            $("#total_score").html("Total Score : " + result);
-                        });
-                        // get the MOD Success score
-                        modContract.methods.modSuccessScore(mod_id).call().then(function(result) {
-                            $("#mod_info").hide();
-                            $("#success_score").show();
-                            $("#success_score").html("Success Score : " + result);
-                        });
-                        // get the MOD Success rate
-                        modContract.methods.modSuccessRate(mod_id).call().then(function(result) {
-                            $("#mod_info").hide();
-                            $("#success_rate").show();
-                            $("#success_rate").html("Success Score : " + result);
-                        });
-                    return true;
-            });
         })
     });
     // ]]>
