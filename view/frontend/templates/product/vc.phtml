@@ -147,7 +147,7 @@
                 modContract.methods.modSuccessRate(mod_id).call().then(function(result) {
                     $("#mod_info").hide();
                     $("#success_rate").show();
-                    $("#success_rate").html("Success Score : " + result);
+                    $("#success_rate").html("Success Rate : " + result);
                 });
                 $("#mod_id").on("input", function() {
                     if (parseInt($('#wallet_connected').val()) == 1) {
@@ -173,7 +173,7 @@
                                 modContract.methods.modSuccessRate(final_var).call().then(function(result) {
                                     $("#mod_info").hide();
                                     $("#success_rate").show();
-                                    $("#success_rate").html("Success Score : " + result);
+                                    $("#success_rate").html("Success Rate : " + result);
                                 });
                                 return true;
                             }
@@ -206,7 +206,7 @@
                             modContract.methods.modSuccessRate(final_var).call().then(function(result) {
                                 $("#mod_info").hide();
                                 $("#success_rate").show();
-                                $("#success_rate").html("Success Score : " + result);
+                                $("#success_rate").html("Success Rate : " + result);
                             });
                             return true;
                         }
@@ -240,7 +240,7 @@
                     modContract.methods.modSuccessRate(final_var).call().then(function(result) {
                         $("#mod_info").hide();
                         $("#success_rate").show();
-                        $("#success_rate").html("Success Score : " + result);
+                        $("#success_rate").html("Success Rate : " + result);
                     });
                     return true;
                 });
