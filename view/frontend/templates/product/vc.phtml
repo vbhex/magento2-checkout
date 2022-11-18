@@ -1,7 +1,7 @@
 <?php
 ?>
 <div class="kg-main-page">
-<section class="kg-contentarea_04">
+    <section class="kg-contentarea_04">
         <div class="kg-inner-wrap">
             <div class="kg-top-title">
                 <h3>want to resolve a dispute?</h3>
@@ -30,7 +30,7 @@
                         </div>
                         <div class="kg_deservice_contract">
                             <p><b>Mods are selling on 3rd party markets : </b>
-                                <a target="_blank" name="vc" href="https://goerli.etherscan.io/address/0x7C570a8bd608Ef8bc043319aaca342ff67750E3f">Opensea VBHex  mods</a>
+                                <a target="_blank" name="vc" href="https://goerli.etherscan.io/address/0x7C570a8bd608Ef8bc043319aaca342ff67750E3f">Opensea VBHex mods</a>
                             </p>
                         </div>
                     </div>
@@ -127,28 +127,31 @@
                     mod_id = 1
                 }
                 $('#wallet_connected').val(1);
+                var updateModInfo = async(modId) =>  {
+                    // get the MOD Total score
+                    modContract.methods.modTotalScore(modId).call().then(function(result) {
+                        $("#mod_info").hide();
+                        $("#total_score").show();
+                        $("#total_score").html("Total Score : " + result);
+                    });
+                    // get the MOD Success score
+                    modContract.methods.modSuccessScore(modId).call().then(function(result) {
+                        $("#mod_info").hide();
+                        $("#success_score").show();
+                        $("#success_score").html("Success Score : " + result);
+                    });
+                    // get the MOD Success rate
+                    modContract.methods.modSuccessRate(modId).call().then(function(result) {
+                        $("#mod_info").hide();
+                        $("#success_rate").show();
+                        $("#success_rate").html("Success Rate : " + result + "%");
+                    });
+                }
                 // get the MOD balance of the connected wallet
                 modContract.methods.balanceOf(theAccount).call().then(function(result) {
                     $('#mod_balance').html(result);
                 });
-                // get the MOD Total score
-                modContract.methods.modTotalScore(mod_id).call().then(function(result) {
-                    $("#mod_info").hide();
-                    $("#total_score").show();
-                    $("#total_score").html("Total Score : " + result);
-                });
-                // get the MOD Success score
-                modContract.methods.modSuccessScore(mod_id).call().then(function(result) {
-                    $("#mod_info").hide();
-                    $("#success_score").show();
-                    $("#success_score").html("Success Score : " + result);
-                });
-                // get the MOD Success rate
-                modContract.methods.modSuccessRate(mod_id).call().then(function(result) {
-                    $("#mod_info").hide();
-                    $("#success_rate").show();
-                    $("#success_rate").html("Success Rate : " + result);
-                });
+                updateModInfo(mod_id);
                 $("#mod_id").on("input", function() {
                     if (parseInt($('#wallet_connected').val()) == 1) {
                         var final_var = $(this).val();
@@ -157,24 +160,7 @@
                                 alert("Mod Id can not be bigger than total supply");
                                 return false;
                             } else {
-                                // get the MOD Total score
-                                modContract.methods.modTotalScore(final_var).call().then(function(result) {
-                                    $("#mod_info").hide();
-                                    $("#total_score").show();
-                                    $("#total_score").html("Total Score : " + result);
-                                });
-                                // get the MOD Success score
-                                modContract.methods.modSuccessScore(final_var).call().then(function(result) {
-                                    $("#mod_info").hide();
-                                    $("#success_score").show();
-                                    $("#success_score").html("Success Score : " + result);
-                                });
-                                // get the MOD Success rate
-                                modContract.methods.modSuccessRate(final_var).call().then(function(result) {
-                                    $("#mod_info").hide();
-                                    $("#success_rate").show();
-                                    $("#success_rate").html("Success Rate : " + result);
-                                });
+                                updateModInfo(final_var);
                                 return true;
                             }
 
@@ -184,64 +170,26 @@
                 $(".kg-plus").on("click", function() {
 
                     modContract.methods.totalSupply().call().then(function(result) {
-                        if (parseInt($("#mod_id").val())+1  > result) {
+                        if (parseInt($("#mod_id").val()) + 1 > result) {
                             alert("Mod Id can not be bigger than total supply");
                             return false;
                         } else {
                             var final_var = window.web3.utils.toBN(parseInt($("#mod_id").val())).add(window.web3.utils.toBN(1));
                             $("#mod_id").val(final_var);
-                            // get the MOD Total score
-                            modContract.methods.modTotalScore(final_var).call().then(function(result) {
-                                $("#mod_info").hide();
-                                $("#total_score").show();
-                                $("#total_score").html("Total Score : " + result);
-                            });
-                            // get the MOD Success score
-                            modContract.methods.modSuccessScore(final_var).call().then(function(result) {
-                                $("#mod_info").hide();
-                                $("#success_score").show();
-                                $("#success_score").html("Success Score : " + result);
-                            });
-                            // get the MOD Success rate
-                            modContract.methods.modSuccessRate(final_var).call().then(function(result) {
-                                $("#mod_info").hide();
-                                $("#success_rate").show();
-                                $("#success_rate").html("Success Rate : " + result);
-                            });
+                            updateModInfo(final_var);
                             return true;
                         }
 
                     });
                 });
                 $(".kg-minus").on("click", function() {
-                    if(parseInt($("#mod_id").val())==1) {
+                    if (parseInt($("#mod_id").val()) == 1) {
                         alert("Mod Id can not be smaller than 1");
                         return false;
                     }
                     var final_var = window.web3.utils.toBN(parseInt($("#mod_id").val())).sub(window.web3.utils.toBN(1));
                     $("#mod_id").val(final_var);
-                    if (final_var < 1) {
-                        alert("Mod Id can not be smaller than 1");
-                        return false;
-                    }
-                    // get the MOD Total score
-                    modContract.methods.modTotalScore(final_var).call().then(function(result) {
-                        $("#mod_info").hide();
-                        $("#total_score").show();
-                        $("#total_score").html("Total Score : " + result);
-                    });
-                    // get the MOD Success score
-                    modContract.methods.modSuccessScore(final_var).call().then(function(result) {
-                        $("#mod_info").hide();
-                        $("#success_score").show();
-                        $("#success_score").html("Success Score : " + result);
-                    });
-                    // get the MOD Success rate
-                    modContract.methods.modSuccessRate(final_var).call().then(function(result) {
-                        $("#mod_info").hide();
-                        $("#success_rate").show();
-                        $("#success_rate").html("Success Rate : " + result);
-                    });
+                    updateModInfo(final_var);
                     return true;
                 });
                 return true;
@@ -284,7 +232,7 @@
             $('.btn_connect_wallet').show();
             $('#wallet_connected').val(0);
             $('#mod_info').show();
-            $('#mod_info').html("Please connect the wallet to get Mod Info");
+            $('#mod_info').html("Connect the wallet to get Mod Info");
             $("#success_score").hide();
             $("#total_score").hide();
             $("#success_rate").hide();
