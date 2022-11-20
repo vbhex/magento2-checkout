@@ -122,12 +122,13 @@
                 var mod_id = $("#mod_id").val();
                 if (mod_id == "" || mod_id == null || typeof(mod_id) == undefined || parseInt(mod_id) < 1) {
                     // init the data
-                    $('.btn_connect_wallet').hide();
+
                     $("#mod_id").val(1);
-                    mod_id = 1
+                    mod_id = 1;
                 }
                 $('#wallet_connected').val(1);
-                var updateModInfo = async(modId) =>  {
+                $('.btn_connect_wallet').hide();
+                var updateModInfo = async (modId) => {
                     // get the MOD Total score
                     modContract.methods.modTotalScore(modId).call().then(function(result) {
                         $("#mod_info").hide();
@@ -198,6 +199,79 @@
             return false;
         }
 
+        var showData = async () => {
+            const accounts = await window.ethereum.request({
+                method: 'eth_requestAccounts'
+            });
+            const theAccount = accounts[0];
+
+            window.web3 = new web3(window.ethereum);
+            if (window.ethereum.networkVersion !== v_chainId) {
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{
+                            chainId: web3.utils.toHex(v_chainId)
+                        }]
+                    });
+                } catch (err) {
+                    // This error code indicates that the chain has not been added to MetaMask
+                    if (err.code === 4902) {
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [{
+                                chainName: v_chainName,
+                                chainId: web3.utils.toHex(v_chainId),
+                                nativeCurrency: {
+                                    name: v_currencyName,
+                                    decimals: v_decimals,
+                                    symbol: v_currencySymbol
+                                },
+                                rpcUrls: [v_rpcUrl],
+                                blockExplorerUrls: [v_explorerUrl]
+                            }]
+                        });
+                    }
+                }
+            }
+            const modContract = new window.web3.eth.Contract(modAbiJson, v_modContract);
+            var mod_id = $("#mod_id").val();
+            if (mod_id == "" || mod_id == null || typeof(mod_id) == undefined || parseInt(mod_id) < 1) {
+                // init the data
+
+                $("#mod_id").val(1);
+                mod_id = 1;
+            }
+            $('#wallet_connected').val(1);
+            $('.btn_connect_wallet').hide();
+            var updateModInfo = async (modId) => {
+                // get the MOD Total score
+                modContract.methods.modTotalScore(modId).call().then(function(result) {
+                    $("#mod_info").hide();
+                    $("#total_score").show();
+                    $("#total_score").html("Total Score : " + result);
+                });
+                // get the MOD Success score
+                modContract.methods.modSuccessScore(modId).call().then(function(result) {
+                    $("#mod_info").hide();
+                    $("#success_score").show();
+                    $("#success_score").html("Success Score : " + result);
+                });
+                // get the MOD Success rate
+                modContract.methods.modSuccessRate(modId).call().then(function(result) {
+                    $("#mod_info").hide();
+                    $("#success_rate").show();
+                    $("#success_rate").html("Success Rate : " + result + "%");
+                });
+            }
+            // get the MOD balance of the connected wallet
+            modContract.methods.balanceOf(theAccount).call().then(function(result) {
+                $('#mod_balance').html(result);
+            });
+            updateModInfo(mod_id);
+            return true;
+        }
+
         $('.btn_connect_wallet').click(function() {
             connectWallet();
         });
@@ -210,18 +284,14 @@
                 // connectWallet();
                 // detect Metamask account change
                 window.ethereum.on('accountsChanged', function(accounts) {
-                    console.log('accountsChanges', accounts);
-                    // window.location = "https://" + window.location.host + "?#";
-                    // window.location.href = window.location.href;
-                    location.reload();
+                    showData();
+                    // location.reload();
                 });
 
                 // detect Network account change
                 window.ethereum.on('networkChanged', function(networkId) {
-                    console.log('networkChanged', networkId);
-                    // window.location = "https://" + window.location.host + "?#";
-                    // window.location.href = window.location.href;
-                    location.reload();
+                    showData();
+                    // location.reload();
                 });
             } else {
                 // alert("Please install MetaMask to use this dApp!");
@@ -229,14 +299,14 @@
                     alert("Please install MetaMask to use this dApp!");
                 });
             }
+
             $('.btn_connect_wallet').show();
-            $('#wallet_connected').val(0);
+            $('#wallet_connected').val(0)
             $('#mod_info').show();
-            $('#mod_info').html("Connect the wallet to get Mod Info");
+            $('#mod_info').html("Connect wallet to get Mod Info");
             $("#success_score").hide();
             $("#total_score").hide();
             $("#success_rate").hide();
-
         })
     });
     // ]]>
