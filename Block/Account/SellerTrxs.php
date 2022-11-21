@@ -127,7 +127,7 @@ class SellerTrxs extends \Magento\Framework\View\Element\Template
         if ($this->getSellerOrders()) {
             $pager = $this->getLayout()->createBlock(
                 \Magento\Theme\Block\Html\Pager::class,
-                'vc.account.sellertrxs.pager'
+                'vbhex.account.sellertrxs.pager'
             )->setCollection(
                 $this->getSellerOrders()
             );
@@ -213,6 +213,6 @@ class SellerTrxs extends \Magento\Framework\View\Element\Template
      */
     public function getEmptyOrdersMessage()
     {
-        return __('You have placed no orders.');
+        return __('You have no orders.');
     }
 }

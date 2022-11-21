@@ -127,7 +127,7 @@ class BuyerTrxs extends \Magento\Framework\View\Element\Template
         if ($this->getBuyerOrders()) {
             $pager = $this->getLayout()->createBlock(
                 \Magento\Theme\Block\Html\Pager::class,
-                'vc.account.buyertrxs.pager'
+                'vbhex.account.buyertrxs.pager'
             )->setCollection(
                 $this->getBuyerOrders()
             );

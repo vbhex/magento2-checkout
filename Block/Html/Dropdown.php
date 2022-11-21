@@ -38,9 +38,9 @@ class Dropdown extends \Magento\Framework\View\Element\Html\Link
                </span>
             <div class="vc-account-menu" data-target="dropdown" aria-hidden="true">
                        <ul class="vc-account-header">
-                           <li><a href="'.$base_url.'vc/account/settings">VbhexCheckout Seller Settings</a></li>
-                           <li><a href="'.$base_url.'vc/account/sellertrxs">VbhexCheckout Seller Orders</a></li>
-                           <li><a href="'.$base_url.'vc/account/buyertrxs">VbhexCheckout Buyer Orders</a></li></ul>
+                           <li><a href="'.$base_url.'vc/account/settings">Seller Settings</a></li>
+                           <li><a href="'.$base_url.'vc/account/sellertrxs">Seller Orders</a></li>
+                           <li><a href="'.$base_url.'vc/account/buyertrxs">Buyer Orders</a></li></ul>
                        </div>
             </li>';
         } else {
@@ -52,7 +52,7 @@ class Dropdown extends \Magento\Framework\View\Element\Html\Link
                </span>
             <div class="vc-account-menu" data-target="dropdown" aria-hidden="true">
                        <ul class="vc-account-header">
-                           <li><a href="'.$base_url.'vc/account/buyertrxs">VbhexCheckout Buyer Orders</a></li></ul>
+                           <li><a href="'.$base_url.'vc/account/buyertrxs">Buyer Orders</a></li></ul>
                        </div>
             </li>';
         }

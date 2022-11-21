@@ -1,16 +1,10 @@
 <?xml version="1.0"?>
 <page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <!-- <referenceContainer name="content">
-            <block class="Magento\Framework\View\Element\Template" template="Vbhex_Checkout::hello.phtml" />
-        </referenceContainer> -->
-        <!-- <referenceContainer name="product.info.main">
-                <block class="Magento\Framework\View\Element\Template"  template="Vbhex_Checkout::product/VbhexCheckoutCustomButton.phtml"  cacheable="false"/>
-        </referenceContainer> -->
         <referenceBlock name="product.info.details">
                 <block class="Magento\Catalog\Block\Product\View" name="vc.tab" as="productvc" template="Vbhex_Checkout::product/vc.phtml"  group="detailed_info" cacheable="false" >
                    <arguments>
-                      <argument translate="true" name="title" xsi:type="string">Vbhex</argument>
+                      <argument translate="true" name="title" xsi:type="string">VBHex</argument>
                        <argument name="sort_order" xsi:type="string">30</argument>
                    </arguments>
                 </block>

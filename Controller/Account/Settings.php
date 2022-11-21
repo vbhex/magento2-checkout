@@ -98,7 +98,7 @@ class Settings extends \Magento\Customer\Controller\AbstractAccount
         if ($isPartner == 1) {
             /** @var \Magento\Framework\View\Result\Page $resultPage */
             $resultPage = $this->_resultPageFactory->create();
-            $resultPage->getConfig()->getTitle()->set(__('VbhexCheckout Seller Account Settings Page'));
+            $resultPage->getConfig()->getTitle()->set(__('VBHex Seller Account Settings Page'));
 
             return $resultPage;
         } else {

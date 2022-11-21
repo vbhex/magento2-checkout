@@ -19,11 +19,11 @@
     <body>
         <referenceBlock name="page.main.title">
             <action method="setPageTitle">
-                <argument translate="true" name="title" xsi:type="string">Seller Transactions</argument>
+                <argument translate="true" name="title" xsi:type="string">Buyer Transactions</argument>
             </action>
         </referenceBlock>
         <referenceContainer name="content">
-            <block class="Vbhex\Checkout\Block\Account\SellerTrxs" name="vc_account_sellertrxs" template="account/sellertrxs.phtml" cacheable="false"/>
+            <block class="Vbhex\Checkout\Block\Account\BuyerTrxs" name="vbhex_account_buyertrxs" template="account/buyertrxs.phtml" cacheable="false"/>
         </referenceContainer>
     </body>
 </page>

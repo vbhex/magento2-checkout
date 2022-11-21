@@ -89,7 +89,7 @@ class BuyerTrxs extends \Magento\Customer\Controller\AbstractAccount
     {
         /** @var \Magento\Framework\View\Result\Page $resultPage */
         $resultPage = $this->_resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->set(__('VbhexCheckout Buyer Transactions List Page'));
+        $resultPage->getConfig()->getTitle()->set(__('Vbhex Buyer Transactions List'));
 
         return $resultPage;
     }

@@ -21,7 +21,7 @@
     <referenceBlock name="header.links">
       <block class="Vbhex\Checkout\Block\Html\Dropdown" name="vc-top-link" >
         <arguments>
-          <argument name="label" xsi:type="string" translate="true">VbhexCheckout</argument>
+          <argument name="label" xsi:type="string" translate="true">VBHex</argument>
           <argument name="path" xsi:type="string">vc</argument>
         </arguments>
       </block>
@@ -29,7 +29,7 @@
     <referenceBlock name="footer_links">
       <block class="Magento\Framework\View\Element\Html\Link" name="vc-foot-link" >
         <arguments>
-          <argument name="label" xsi:type="string" translate="true">VbhexCheckout</argument>
+          <argument name="label" xsi:type="string" translate="true">VBHex</argument>
           <argument name="path" xsi:type="string">vc</argument>
         </arguments>
       </block>
