@@ -23,6 +23,8 @@
                 <app_id>1</app_id>
                 <vote_coin_decm>6</vote_coin_decm>
                 <invoice_expiry>60</invoice_expiry>
+                <mod_contract>0x50a61B63cf8C050411EA96c67B68c952F1E177aE</mod_contract>
+                <rpc>https://goerli.infura.io/v3/c9629d5455d540789ac070eff7edb811</rpc>
                 <model>Vbhex\Checkout\Model\VbhexCheckout</model>
             </vbhex_checkout>
         </payment>
