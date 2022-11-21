@@ -46,6 +46,11 @@ class SettingsPost extends Action
     protected $helper;
 
     /**
+     * @var \Vbhex\Checkout\Helper\Chain
+     */
+    protected $chain;
+
+    /**
      * @var DataPersistorInterface
      */
     protected $dataPersistor;
@@ -71,6 +76,7 @@ class SettingsPost extends Action
      * @param FormKeyValidator                                 $formKeyValidator
      * @param \Magento\Framework\Stdlib\DateTime\DateTime      $date
      * @param \Vbhex\Checkout\Helper\Data                      $helper
+     * @param \Vbhex\Checkout\Helper\Chain                     $chain
      * @param DataPersistorInterface                           $dataPersistor
      * @param CustomerUrl                                      $customerUrl
      * @param SellerFactory                                    $sellerModel
@@ -82,6 +88,7 @@ class SettingsPost extends Action
         FormKeyValidator $formKeyValidator,
         \Magento\Framework\Stdlib\DateTime\DateTime $date,
         \Vbhex\Checkout\Helper\Data $helper,
+        \Vbhex\Checkout\Helper\Chain $chain,
         DataPersistorInterface $dataPersistor,
         CustomerUrl $customerUrl,
         \Vbhex\Checkout\Model\SellerFactory $sellerModel,
@@ -91,6 +98,7 @@ class SettingsPost extends Action
         $this->_formKeyValidator = $formKeyValidator;
         $this->_date = $date;
         $this->helper = $helper;
+        $this->chain  = $chain;
         $this->dataPersistor = $dataPersistor;
         $this->customerUrl = $customerUrl;
         $this->sellerModel = $sellerModel;
@@ -190,12 +198,12 @@ class SettingsPost extends Action
                             foreach ($errors as $message) {
                                 $this->messageManager->addError($message);
                             }
-                            $this->dataPersistor->set('vc_wallet_data', $fields);
+                            $this->dataPersistor->set('vc_settings_data', $fields);
                         } else {
                             $this->messageManager->addSuccess(
-                                __('VbhexCheckout wallet information was successfully saved')
+                                __('Vbhex settings information was successfully saved')
                             );
-                            $this->dataPersistor->clear('vc_wallet_data');
+                            $this->dataPersistor->clear('vc_settings_data');
                         }
 
                         return $this->resultRedirectFactory->create()->setPath(
@@ -217,7 +225,7 @@ class SettingsPost extends Action
                     foreach ($errors as $message) {
                         $this->messageManager->addError($message);
                     }
-                    $this->dataPersistor->set('vc_wallet_data', $fields);
+                    $this->dataPersistor->set('vc_settings_data', $fields);
 
                     return $this->resultRedirectFactory->create()->setPath(
                         '*/*/settings',
@@ -229,7 +237,7 @@ class SettingsPost extends Action
                     "Controller_Account_Settings execute : ".$e->getMessage()
                 );
                 $this->messageManager->addError($e->getMessage());
-                $this->dataPersistor->set('vc_wallet_data', $fields);
+                $this->dataPersistor->set('vc_settings_data', $fields);
 
                 return $this->resultRedirectFactory->create()->setPath(
                     '*/*/settings',
@@ -248,6 +256,7 @@ class SettingsPost extends Action
     {
         $errors = [];
         $data = [];
+        $max_mod_id = $this->chain->getMaxModId();
         foreach ($fields as $code => $value) {
             switch ($code):
                 case 'bsc_wallet_address':
@@ -271,6 +280,14 @@ class SettingsPost extends Action
                         $value = preg_replace("/<script.*?\/script>/s", "", $value) ? : $value;
                         $fields[$code] = $value;
                     }
+                    break;
+                case 'seller_mod_id':
+                    if(intval($value)>$max_mod_id) {
+                        $errors[] = __('Mod Id should be integer and not bigger than max mod id');
+                    } else {
+                        $fields[$code] = intval($value);
+                    }
+                    break;
             endswitch;
         }
 

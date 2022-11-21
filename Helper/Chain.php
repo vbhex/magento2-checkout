@@ -49,7 +49,6 @@ class Chain extends \Magento\Framework\App\Helper\AbstractHelper
         $modContract = $this->getStoreConfig('payment/vbhex_checkout/mod_contract');
         $funcSelector = "0x22ae6f1b";
             $data = $funcSelector;
-            // $data =  "0x0000000000000000000000000000000000000000000000000000000000000000".$funcSelector;
             $method  = "eth_call";
             $param1 = [
                 "data"  => $data,

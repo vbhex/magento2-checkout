@@ -17,8 +17,9 @@ $chain = $this->helper(\Vbhex\Checkout\Helper\Chain::class);
 
 $bsc_wallet_address = $partner['bsc_wallet_address'] ?? "";
 $eth_wallet_address = $partner['eth_wallet_address'] ?? "";
+$seller_mod_id      = $partner['seller_mod_id'] ?? "";
 
-$rpc = $chain->getMaxModId();
+$maxModId = $chain->getMaxModId();
 ?>
 <form id="seller_form" action="<?= $block->escapeUrl($block->getUrl('vc/account/settingsPost', ["_secure" => $this->getRequest()->isSecure()])) ?>"  enctype="multipart/form-data" method="post" data-role="form-profile-validate" data-mage-init='{"validation":{}}'>
     <div class="wk-mp-design">
@@ -44,11 +45,17 @@ $rpc = $chain->getMaxModId();
                      <input type="text" id="eth_wallet_address" name="eth_wallet_address" value="<?= $block->escapeHtml($eth_wallet_address); ?>" title="ethwalletaddress" class="input-text" />
                 </div>
             </div>
+            <div class="field profile">
+                <label for="sellermodid"><?= /* @noEscape */ __('Seller Mod ID') ?> </label>
+                <div class="control">
+                     <input type="number" id="seller_mod_id" name="seller_mod_id" value="<?= $block->escapeHtml($seller_mod_id); ?>" title="sellermodid" class="input-text" />
+                </div>
+            </div>
         </fieldset>
     </div>
     <div>
-        <p>RPC :</p>
-        <?=$rpc ?>
+        <p>Max Mod ID :</p>
+        <?=$maxModId ?>
     </div>
 </form>
 <script type="text/javascript">

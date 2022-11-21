@@ -19,7 +19,7 @@ class Seller extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
      */
     protected function _construct()
     {
-        $this->_init('vc_user_wallets', 'entity_id');
+        $this->_init('vc_user_settings', 'entity_id');
     }
 
     /**

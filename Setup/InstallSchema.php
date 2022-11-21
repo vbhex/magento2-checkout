@@ -684,9 +684,9 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 			);
 		}
 
-		if (!$installer->tableExists('vc_user_wallets')) {
+		if (!$installer->tableExists('vc_user_settings')) {
 			$table = $installer->getConnection()->newTable(
-				$installer->getTable('vc_user_wallets')
+				$installer->getTable('vc_user_settings')
 			)
 				->addColumn(
 					'entity_id',
@@ -714,6 +714,13 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 					['nullable' => false,'default'=>0],
 					'Store Id'
 				)
+                ->addColumn(
+					'seller_mod_id',
+					\Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+					null,
+					['nullable' => false,'default'=>0],
+					'Seller Mod Id'
+				)
 				->addColumn(
 					'bsc_wallet_address',
 					\Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
@@ -728,13 +735,13 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 					['nullable => false'],
 					'eth wallet address'
 				)
-				->setComment('VbhexCheckout User Wallets Table');
+				->setComment('VbhexCheckout User Settings Table');
 			$installer->getConnection()->createTable($table);
 
 			$installer->getConnection()->addIndex(
-				$installer->getTable('vc_user_wallets'),
+				$installer->getTable('vc_user_settings'),
 				$setup->getIdxName(
-					$installer->getTable('vc_user_wallets'),
+					$installer->getTable('vc_user_settings'),
 					['bsc_wallet_address','eth_wallet_address'],
 					\Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_FULLTEXT
 				),
