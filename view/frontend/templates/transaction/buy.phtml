@@ -7,6 +7,7 @@ $app_id = $customParameter['app_id'] ?? 0;
 $voteCoinDecm = $customParameter['vote_coin_decm'] ?? 0;
 $entity_id = $customParameter['entity_id'] ?? 0;
 $seller_wallet = $customParameter['seller_wallet'] ?? "";
+$moda_id = $customParameter['moda_id'] ?? "";
 $coin = $customParameter['coin'] ?? "";
 $coin_symbol = $customParameter['coin_symbol'] ?? "";
 $coin_decm = $customParameter['coin_decm'] ?? 0;
@@ -49,6 +50,8 @@ $modBVote = $voteArr[$customParameter['modb_vote']];
 $refundTime = $customParameter['refund_time'] ?? 0;
 $disputeHash = $customParameter['dispute_hash'] ?? "No Transaction Yet";
 $dispute_status = $customParameter['dispute_status'] ?? 0;
+$chain = $this->helper(\Vbhex\Checkout\Helper\Chain::class);
+$maxModId = $chain->getMaxModId();
 //coin logs
 $coinLogs = $customParameter['coinLogs'];
 ?>
@@ -181,7 +184,7 @@ $coinLogs = $customParameter['coinLogs'];
                                             <span>Amount : Paid Amount</span>
                                             <p><?php echo $totalAmount; ?> <?php echo $coin_symbol; ?> : <?php echo $paidAmount; ?> <?php echo $coin_symbol; ?></p>
                                             <?php if ($order_status == 0) : ?>
-                                                <input class="btn_order_on_vc" type="button" value="Pay Via VbhexCheckout" />
+                                                <input class="btn_pay_via_vbhex" type="button" value="Pay Via VBHex" />
                                             <?php elseif (($order_status == 1)&&($dispute_status==0||$dispute_status==1||$dispute_status==5)) : ?>
                                                 <input class="btn_confirm_done" type="button" value="Confirm Order Done" />
                                                     <p style="color:red; font-size:12px">(Once confirmed, seller will receive money immediately)</p>
@@ -213,6 +216,7 @@ $coinLogs = $customParameter['coinLogs'];
                                         <?php if (($dispute_status == 0) && ($order_status == 1) && ($agree + $disagree == 0)) : ?>
                                             <li>
                                                 <input type="number" step="0.00001" placeholder="put refund amount here" style="width:80%;" id="refund_amount" /><?php echo $coin_symbol; ?><br />
+                                                <input type="number"  placeholder="choose modB ID between 1 and <?php echo $maxModId; ?>" style="width:80%;" id="modb_id" /><br />
                                                 <input style="margin-left:0px" class="btn_ask_refund" type="button" value="Request Refund" />
                                             </li>
                                             <li>
@@ -231,7 +235,7 @@ $coinLogs = $customParameter['coinLogs'];
                                             </li>
                                             <li>
                                                 <span>Cash Out</span>
-                                                <div class="cashout_label"></div>
+                                                <div class="claim_label"></div>
                                             </li>
                                             <li>
                                                 <form action="<?= $block->escapeUrl($block->getUrl('vc/transaction/buyerPost', ["app_order_id" => $order_id, "_secure" => $this->getRequest()->isSecure()])) ?>" enctype="multipart/form-data" method="post" data-role="form-profile-validate" data-mage-init='{"validation":{}}'>
@@ -259,7 +263,7 @@ $coinLogs = $customParameter['coinLogs'];
                                             <li>
                                             <input style="margin-left:0px" class="btn_cancel_refund" type="button" value="Cancel Refund" />
                                             <p style="color:red; font-size:12px">(You can ask refund after cancellation before refund end time)</p><br/>
-                                            <input style="margin-left:0px; background-color: yellow" class="btn_appeal_dispute" type="button" value="Appeal" />
+                                            <input style="margin-left:0px; background-color: yellow" class="btn_escalate_dispute" type="button" value="Appeal" />
                                             </li>
                                             <li>
                                                 <form action="<?= $block->escapeUrl($block->getUrl('vc/transaction/buyerPost', ["app_order_id" => $order_id, "_secure" => $this->getRequest()->isSecure()])) ?>" enctype="multipart/form-data" method="post" data-role="form-profile-validate" data-mage-init='{"validation":{}}'>
@@ -364,7 +368,7 @@ $coinLogs = $customParameter['coinLogs'];
                 const theAccount = window.web3.utils.toChecksumAddress(accounts[0]);
                 $('.connected_wallet').html("<p>Wallet Address :" + theAccount + "</p>");
                 const mainContractAddress = window.web3.utils.toChecksumAddress(v_mainContract);
-                const mainContract = new window.web3.eth.Contract(abiJson, mainContractAddress);
+                const mainContract = new window.web3.eth.Contract(escrowAbiJson, mainContractAddress);
                 var seller_wallet = v_defaultSeller;
                 if (!web3.utils.isAddress("<?php echo strval($seller_wallet); ?>")){
                         alert("Seller wallet is not correct!");
@@ -376,30 +380,32 @@ $coinLogs = $customParameter['coinLogs'];
                 var coin_amount = parseInt(<?php echo $coinAmount; ?>);
                 var order_id = <?php echo $order_id; ?>;
                 var entity_id = <?php echo $entity_id; ?>;
+                var max_mod_id = <?php echo $maxModId; ?>;
+                var moda_id  = <?php echo $moda_id; ?>;
                 var app_id = <?php echo $app_id; ?>;
                 var chain_order_id = <?php echo $chainOrderId; ?>;
-                //init cash out div
+                //init claim div
                 window.web3.eth.getBlockNumber().then(function(bestBlock) {
                     window.web3.eth.getBlock(bestBlock).then(function(theBlock) {
                         var current_timestamp = theBlock.timestamp;
-                        mainContract.methods.refuseExpired(app_id, chain_order_id).call().then(function(expired_timestamp) {
-                            var expired_timestamp = expired_timestamp;
+                        mainContract.methods.disputeBook(chain_order_id).call().then(function(dispute_struct) {
+                            var expired_timestamp = dispute_struct.refuseExpired;
                             if (window.web3.utils.toBN(current_timestamp).lt(window.web3.utils.toBN(expired_timestamp))) {
-                                // can not cash out, time countdown
+                                // can not claim, time countdown
                                 timer(expired_timestamp - current_timestamp);
                             } else {
-                                // show cash out button
-                                var button = '<input type="button" style="margin-left:0px" value="Cash Out" class="btn_cash_out" />';
-                                $('.cashout_label').html(button);
+                                // show claim button
+                                var button = '<input type="button" style="margin-left:0px" value="Claim" class="btn_claim" />';
+                                $('.claim_label').html(button);
                                 // cash out
-                                $('.btn_cash_out').click(function() {
-                                    cashOut();
+                                $('.btn_claim').click(function() {
+                                    claim();
                                 });
                             }
                         });
                     });
                 });
-                $('.btn_order_on_vc').click(function() {
+                $('.btn_pay_via_vbhex').click(function() {
                     //check if the seller wallet correct
                     if (!web3.utils.isAddress("<?php echo strval($seller_wallet); ?>")){
                         alert("Seller wallet is not correct!");
@@ -417,11 +423,11 @@ $coinLogs = $customParameter['coinLogs'];
                                     .then(function(receipt) {
                                         if (receipt.status) {
                                             // create order on blockchain
-                                            createOrder(1);
+                                            payOrder(1);
                                         }
                                     });
                             } else {
-                                createOrder(1);
+                                payOrder(1);
                             }
                         });
                     } else {
@@ -429,7 +435,7 @@ $coinLogs = $customParameter['coinLogs'];
                             if (window.web3.utils.toBN(balance).lt(window.web3.utils.toBN(coin_amount))) {
                                 alert("balance is insuffient");
                             } else {
-                                createOrder(0);
+                                payOrder(0);
                             }
                         });
                     }
@@ -449,15 +455,15 @@ $coinLogs = $customParameter['coinLogs'];
                     cancelRefund();
                 });
 
-                $('.btn_appeal_dispute').click(function() {
-                    appeal();
+                $('.btn_escalate_dispute').click(function() {
+                    escalate();
                 });
 
-                var createOrder = function(type) {
+                var payOrder = function(type) {
 
                     if (type > 0) {
                         // pay via ERC20 coin
-                        mainContract.methods.createOrder(app_id, window.web3.utils.toBN(coin_amount), coin_address, seller_wallet, order_id, entity_id).send({
+                        mainContract.methods.payOrder(app_id, window.web3.utils.toBN(coin_amount), coin_address, seller_wallet, entity_id, moda_id).send({
                             from: theAccount
                         }).then(function(receipt) {
                             console.log(receipt);
@@ -468,7 +474,7 @@ $coinLogs = $customParameter['coinLogs'];
                         });
                     } else {
                         // pay via ETH
-                        mainContract.methods.createOrder(app_id, window.web3.utils.toBN(coin_amount), coin_address, seller_wallet, order_id, entity_id).send({
+                        mainContract.methods.payOrder(app_id, window.web3.utils.toBN(coin_amount), coin_address, seller_wallet, entity_id, moda_id).send({
                             from: theAccount,
                             value: window.web3.utils.toBN(coin_amount)
                         }).then(function(receipt) {
@@ -484,7 +490,13 @@ $coinLogs = $customParameter['coinLogs'];
                 var askRefund = function() {
 
                     var refund_amount = parseFloat($('#refund_amount').val()).toFixed(6);
+                    var modb_id =   parseInt($('#modb_id').val());
                     var paid_amount = parseFloat(<?php echo $paidAmount; ?>).toFixed(6);
+
+                    if (modb_id > max_mod_id) {
+                        alert('modB ID out of the max ID');
+                        return false;
+                    }
 
                     if (refund_amount == "" || refund_amount == "NaN" || typeof(refund_amount) == undefined || refund_amount == null) {
                         alert('Please input refund amount');
@@ -499,7 +511,7 @@ $coinLogs = $customParameter['coinLogs'];
                     var refund_amount_int = parseInt(refund_amount * 1000000);
                     var refund_amount_in_wei = window.web3.utils.toBN(refund_amount_int).mul(window.web3.utils.toBN(10).pow(window.web3.utils.toBN(coin_decm).sub(window.web3.utils.toBN(6))));
                     // ask refund on blockchain
-                    mainContract.methods.askRefund(app_id, chain_order_id, refund_amount_in_wei).send({
+                    mainContract.methods.askRefund(chain_order_id, refund_amount_in_wei, modb_id).send({
                         from: theAccount
                     }).then(function(receipt) {
                         console.log(receipt);
@@ -511,7 +523,7 @@ $coinLogs = $customParameter['coinLogs'];
 
                 var confirmDone = function() {
                     // confirm order done by buyer on blockchain
-                    mainContract.methods.confirmDone(app_id, chain_order_id).send({
+                    mainContract.methods.confirmDone(chain_order_id).send({
                         from: theAccount
                     }).then(function(receipt) {
                         console.log(receipt);
@@ -521,9 +533,9 @@ $coinLogs = $customParameter['coinLogs'];
                     });
                 }
 
-                var appeal = function() {
-                    // appeal dispute on blockchain
-                    mainContract.methods.appeal(app_id, chain_order_id).send({
+                var escalate = function() {
+                    // escalate dispute on blockchain
+                    mainContract.methods.escalate(chain_order_id).send({
                         from: theAccount
                     }).then(function(receipt) {
                         console.log(receipt);
@@ -535,7 +547,7 @@ $coinLogs = $customParameter['coinLogs'];
 
                 var cancelRefund = function() {
                     // cancel refund on blockchain
-                    mainContract.methods.cancelRefund(app_id, chain_order_id).send({
+                    mainContract.methods.cancelRefund(chain_order_id).send({
                         from: theAccount
                     }).then(function(receipt) {
                         console.log(receipt);
@@ -545,9 +557,9 @@ $coinLogs = $customParameter['coinLogs'];
                     });
                 }
 
-                var cashOut = function() {
+                var claim = function() {
                     // cancel refund on blockchain
-                    mainContract.methods.cashOut(app_id, chain_order_id).send({
+                    mainContract.methods.claim(chain_order_id).send({
                         from: theAccount
                     }).then(function(receipt) {
                         console.log(receipt);
@@ -593,11 +605,11 @@ $coinLogs = $customParameter['coinLogs'];
                 });
             } else {
                 alert("Please install MetaMask to use this dApp!");
-                $('.btn_cash_out').click(function() {
+                $('.btn_claim').click(function() {
                     alert("Please install MetaMask to use this dApp!");
                 });
 
-                $('.btn_order_on_vc').click(function() {
+                $('.btn_pay_via_vbhex').click(function() {
                     alert("Please install MetaMask to use this dApp!");
                 });
 
@@ -643,7 +655,7 @@ $coinLogs = $customParameter['coinLogs'];
                 if (minute <= 9) minute = '0' + minute;
                 if (second <= 9) second = '0' + second;
                 var time = day + ' day(s) ' + hour + ' : ' + minute + ' : ' + second;
-                $('.cashout_label').html("You can cash out in : <b>" + time + "</b> if seller does not response");
+                $('.claim_label').html("You can cash out in : <b>" + time + "</b> if seller does not response");
                 intDiff--;
             }, 1000);
         }

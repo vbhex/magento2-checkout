@@ -7,6 +7,7 @@ const v_decimals = 18;
 const v_rpcUrl = "https://goerli.infura.io/v3/f03238993cab4562a75f1567f95bcd84";
 const v_explorerUrl = "https://goerli.etherscan.io/";
 const v_modContract = "0x50a61B63cf8C050411EA96c67B68c952F1E177aE";
+const v_mainContract = "0x7d5Ca31eB5FD96d53201e57C0eD7b21C45Fb28C8";
 const v_defaultSeller = "0xd4EB3281677A87d7F6d03c81d3555de1c6C7616e";
 // const v_buyVoteChainId = 1;
 // const v_buyVoteChainName = "Ethereum Mainnet";
