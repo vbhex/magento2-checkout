@@ -50,6 +50,7 @@ class Detail extends \Magento\Framework\View\Element\Template
          $sql = "SELECT
          do.entity_id,
          do.seller_wallet,
+         do.moda_id,
          do.coin_amount,
          do.paid_amount,
          do.coin_symbol,
@@ -84,6 +85,7 @@ class Detail extends \Magento\Framework\View\Element\Template
 
             $resultData['entity_id'] = $orderData['entity_id'];
             $resultData['seller_wallet'] = $orderData['seller_wallet'];
+            $resultData['moda_id']  =   $orderData['moda_id'];
             $resultData['totalAmount'] = $orderData['coin_amount'];
             $resultData['paidAmount'] = $orderData['paid_amount'];
             $resultData['coin'] = $selectcoin;
@@ -100,12 +102,11 @@ class Detail extends \Magento\Framework\View\Element\Template
             $sql_dispute = "SELECT
             dd.entity_id,
             dd.order_refund,
-            dd.vote_price,
-            dd.min_votes,
-            dd.min_vote_diff,
+            dd.moda_id,
+            dd.modb_id,
+            dd.moda_vote,
+            dd.modb_vote,
             dd.refund_time,
-            dd.agree,
-            dd.disagree,
             dd.tx_hash,
             dd.last_tx_hash,
             dd.status
@@ -114,12 +115,10 @@ class Detail extends \Magento\Framework\View\Element\Template
             if(!empty($result_dispute)) {
                 $orderDispute = $result_dispute[0];
                 $resultData['refund'] = $orderDispute['order_refund'];
-                $resultData['vote_price'] = $orderDispute['vote_price'];
-                $resultData['min_votes'] = $orderDispute['min_votes'];
-                $resultData['min_vote_diff'] = $orderDispute['min_vote_diff'];
+                $resultData['modb_id'] = $orderDispute['modb_id'];
                 $resultData['refund_time'] = $orderDispute['refund_time'];
-                $resultData['agree'] = $orderDispute['agree'];
-                $resultData['disagree'] = $orderDispute['disagree'];
+                $resultData['moda_vote'] = $orderDispute['moda_vote'];
+                $resultData['modb_vote'] = $orderDispute['modb_vote'];
                 $resultData['dispute_hash'] = $orderDispute['tx_hash'];
                 $resultData['last_tx_hash'] = $orderDispute['last_tx_hash'];
                 $resultData['dispute_status'] = $orderDispute['status'];
@@ -138,12 +137,10 @@ class Detail extends \Magento\Framework\View\Element\Template
                     $resultData['dispute_discuss'] = $result_dispute_discuss;
             } else {
                 $resultData['refund'] = 0;
-                $resultData['vote_price'] = 0;
-                $resultData['min_votes'] = 0;
-                $resultData['min_vote_diff'] = 0;
+                $resultData['modb_id'] = 0;
+                $resultData['moda_vote'] = 0;
+                $resultData['modb_vote'] = 0;
                 $resultData['refund_time'] = 0;
-                $resultData['agree'] = 0;
-                $resultData['disagree'] = 0;
                 $resultData['dispute_hash'] = "No Transaction Yet";
                 $resultData['dispute_status'] = 0;
             }

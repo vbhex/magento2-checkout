@@ -24,16 +24,19 @@ $paidAmount = $customParameter['paidAmount'] ?? 0;
 $pendingAmount = bcsub($totalAmount, $paidAmount, 6);
 $coinAmount = bcmul($totalAmount, pow(10, intval($coin_decm)));
 //dispute
+$voteArr = [
+    0   =>  "Not Voted Yet",
+    1   =>  "Agree Refund",
+    2   =>  "Disagree Refund"
+];
+$modAId = $customParameter['moda_id'] ?? 0;
+$modBId = ($customParameter['modb_id']==0)?"Not chosen yet":"#".$customParameter['modb_id'];
+$modAVote = $voteArr[$customParameter['moda_vote']];
+$modBVote = $voteArr[$customParameter['modb_vote']];
 $refundAmount = $customParameter['refund'] ?? 0;
 $disputeDiscuss = $customParameter['dispute_discuss'] ?? "";
 $refundAmountDec = bcdiv($refundAmount, pow(10, intval($coin_decm)), 4);
-$votePrice = $customParameter['vote_price'] ?? 0;
-$votePriceDec = bcdiv($votePrice, pow(10, intval($voteCoinDecm)), 4);
-$minVotes = $customParameter['min_votes'] ?? 0;
-$minVoteDiff = $customParameter['min_vote_diff'] ?? 0;
 $refundTime = $customParameter['refund_time'] ?? 0;
-$agree = $customParameter['agree'] ?? 0;
-$disagree = $customParameter['disagree'] ?? 0;
 $disputeHash = $customParameter['dispute_hash'] ?? "No Transaction Yet";
 $lastTxHash = $customParameter['last_tx_hash'] ?? "No Transaction Yet";
 $dispute_status = $customParameter['dispute_status'] ?? 0;
@@ -54,14 +57,14 @@ $coinLogs = $customParameter['coinLogs'];
                 <div class="cr-plugin-main-box clearfix">
                     <div class="cr-plugin-left">
                         <div class="cr-plugin-billing-main cr-plugin-shadow">
-                            <h3 class="cr-plugin-title">Vote Information</h3>
+                            <h3 class="cr-plugin-title">Mod Information</h3>
                             <div class="cr-plugin-timer" id="timerStatus"></div>
                             <div class="cr-plugin-billing-box">
                                 <div class="cr-plugin-billing-amount">
                                     <ul>
                                         <li>
-                                            <span> Vote Price : Min Votes : Min Vote Difference </span>
-                                             <p><?php echo $votePriceDec; ?> VOTE : <?php echo $minVotes; ?> votes : <?php echo $minVoteDiff; ?> votes</p>
+                                            <span> ModA Id : ModB Id : ModA Vote : ModB Vote</span>
+                                             <p><?php echo "#".$modAId; ?> : <?php echo $modBId; ?> : <?php echo $modAVote; ?> : <?php echo $modBVote; ?> </p>
                                          </li>
                                         <li>
                                             <span>

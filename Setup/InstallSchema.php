@@ -241,25 +241,32 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 					'Order Refund Amount'
 				)
                 ->addColumn(
-					'vote_price',
-					\Magento\Framework\DB\Ddl\Table::TYPE_BIGINT,
-					20,
-					['nullable' => true, 'default' => 0],
-					'Vote Price'
-				)
-				->addColumn(
-					'min_votes',
+					'moda_id',
 					\Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
 					null,
 					['nullable' => true, 'default' => 0],
-					'Min Votes'
+					'ModA Id'
 				)
-				->addColumn(
-					'min_vote_diff',
+                ->addColumn(
+					'modb_id',
 					\Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
 					null,
 					['nullable' => true, 'default' => 0],
-					'Min Vote Diffirence'
+					'ModB Id'
+				)
+				->addColumn(
+					'moda_vote',
+					\Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
+					null,
+					['nullable' => false,'default' => 0],
+					'ModA Vote, 0 not vote; 1 agree; 2 disagree'
+				)
+				->addColumn(
+					'modb_vote',
+					\Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
+					null,
+					['nullable' => false,'default' => 0],
+					'ModB Vote, 0 not vote; 1 agree; 2 disagree'
 				)
 				->addColumn(
 					'refund_time',
@@ -267,20 +274,6 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 					null,
 					['nullable' => true, 'default' => 0],
 					'Refund End Time On Chain'
-				)
-				->addColumn(
-					'agree',
-					\Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
-					null,
-					['nullable' => false,'default' => 0],
-					'Agree Voters Count'
-				)
-				->addColumn(
-					'disagree',
-					\Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
-					null,
-					['nullable' => false,'default' => 0],
-					'Disagree Voters Count'
 				)
                 ->addColumn(
 					'tx_hash',
@@ -434,6 +427,13 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 					55,
 					['nullable => false'],
 					'Buyer Wallet'
+				)
+                ->addColumn(
+					'moda_id',
+					\Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+					null,
+					['nullable' => false, 'default' =>0],
+					'ModA Id'
 				)
 				->addColumn(
 					'fiat_symbol',

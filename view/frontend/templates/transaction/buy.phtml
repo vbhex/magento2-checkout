@@ -34,16 +34,19 @@ $paidAmount = $customParameter['paidAmount'] ?? 0;
 $pendingAmount = bcsub($totalAmount, $paidAmount, 6);
 $coinAmount = bcmul($totalAmount, pow(10, intval($coin_decm)));
 //dispute
+$voteArr = [
+    0   =>  "Not Voted Yet",
+    1   =>  "Agree Refund",
+    2   =>  "Disagree Refund"
+];
 $refundAmount = $customParameter['refund'] ?? 0;
 $disputeDiscuss = $customParameter['dispute_discuss'] ?? "";
 $refundAmountDec = bcdiv($refundAmount, pow(10, intval($coin_decm)), 4);
-$votePrice = $customParameter['vote_price'] ?? 0;
-$votePriceDec = bcdiv($votePrice, pow(10, intval($voteCoinDecm)), 4);
-$minVotes = $customParameter['min_votes'] ?? 0;
-$minVoteDiff = $customParameter['min_vote_diff'] ?? 0;
+$modAId = $customParameter['moda_id'] ?? 0;
+$modBId = ($customParameter['modb_id']==0)?"Not chosen yet":"#".$customParameter['modb_id'];
+$modAVote = $voteArr[$customParameter['moda_vote']];
+$modBVote = $voteArr[$customParameter['modb_vote']];
 $refundTime = $customParameter['refund_time'] ?? 0;
-$agree = $customParameter['agree'] ?? 0;
-$disagree = $customParameter['disagree'] ?? 0;
 $disputeHash = $customParameter['dispute_hash'] ?? "No Transaction Yet";
 $dispute_status = $customParameter['dispute_status'] ?? 0;
 //coin logs
@@ -63,12 +66,12 @@ $coinLogs = $customParameter['coinLogs'];
                     <div class="cr-plugin-left">
                         <div class="cr-plugin-shipping cr-plugin-shadow cr-plugin-mr-top clearfix">
                             <div class="cr-plugin-shipping-address">
-                                <h3 class="cr-plugin-title">Vote Information</h3>
+                                <h3 class="cr-plugin-title">Mod Information</h3>
                                 <p>
-                                Vote Price : <b><?php echo $votePriceDec; ?> VOTE</b> <br>
-                                Min Votes  : <b><?php echo $minVotes; ?> votes</b> <br>
-                                Min Vote Diffirence : <b><?php echo $minVoteDiff; ?> votes</b> <br>
-                                Agree / Disgree : <b><?php echo $agree; ?> / <?php echo $disagree; ?></b>
+                                ModA ID : <b>#<?php echo $modAId; ?> </b> <br>
+                                ModB ID  : <b><?php echo $modBId; ?> </b> <br>
+                                ModA VOTE : <b><?php echo $modAVote; ?></b> <br>
+                                ModB VOTE : <b><?php echo $modBVote; ?> </b>
                                 </p>
                             </div>
                             <?php if ($show_shipping) { ?>

@@ -61,6 +61,7 @@ class VbhexCheckoutRedirect implements ObserverInterface
             }
             $partner = $this->helper->getVbhexCheckoutSettingsBySellerId($seller_id);
             $seller_address = $partner["eth_wallet_address"] ?? "";
+            $moda_id        = $partner["seller_mod_id"] ?? 0;
 
 
          $selectcoin = $order->getPayment()->getAdditionalInformation('selected_coin');
@@ -100,6 +101,7 @@ class VbhexCheckoutRedirect implements ObserverInterface
                         'seller_id'         =>  $seller_id,
                         'buyer_id'          =>  $buyer_id,
                         'seller_wallet'     =>  $seller_address,
+                        'moda_id'           =>  $moda_id,
                         'fiat_amount'       =>  $amount,
                         'fiat_symbol'       =>  $currencyCode,
                         'selected_coin'     =>  $selectcoin,
