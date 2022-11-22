@@ -52,7 +52,7 @@ class Sell extends \Magento\Framework\App\Action\Action{
 
                   $resultPage = $this->resultPageFactory->create();
                   $resultPage->getConfig()->getTitle()->prepend(__('Seller Transaction #'.$order->getIncrementId()));
-                  $block = $resultPage->getLayout()->getBlock('vc_transaction_sell');
+                  $block = $resultPage->getLayout()->getBlock('vbhex_transaction_sell');
                   $block->setData('order_id', $order_id);
                   return $resultPage;
                }

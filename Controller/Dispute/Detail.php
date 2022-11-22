@@ -45,7 +45,7 @@ class Detail extends Action
                 ) {
                   $resultPage = $this->_resultPageFactory->create();
                   $resultPage->getConfig()->getTitle()->prepend(__('Dispute Detail #'.$order->getIncrementId()));
-                  $block = $resultPage->getLayout()->getBlock('vc_dispute_detail');
+                  $block = $resultPage->getLayout()->getBlock('vbhex_dispute_detail');
                   $block->setData('order_id', $order_id);
                   return $resultPage;
                }

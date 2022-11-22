@@ -16,7 +16,7 @@
     </head>
     <body>
         <referenceContainer name="content">
-            <block class="Vbhex\Checkout\Block\Dispute\Lists" name="vc_dispute_lists" template="Vbhex_Checkout::dispute/lists.phtml" cacheable="false"/>
+            <block class="Vbhex\Checkout\Block\Dispute\Lists" name="vbhex_dispute_lists" template="Vbhex_Checkout::dispute/lists.phtml" cacheable="false"/>
         </referenceContainer>
     </body>
 </page>

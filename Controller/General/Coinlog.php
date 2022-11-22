@@ -41,7 +41,7 @@ class Coinlog extends Action
         try {
             $resultPage = $this->_resultPageFactory->create();
             $resultPage->getConfig()->getTitle()->set(__('Coin Logs'));
-            $block = $resultPage->getLayout()->getBlock('vc_general_coinlog');
+            $block = $resultPage->getLayout()->getBlock('vbhex_general_coinlog');
             if(!empty($order_id)) {
                 $block->setData('order_id', $order_id);
             }

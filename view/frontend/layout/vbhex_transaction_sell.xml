@@ -5,7 +5,7 @@
 	</head>
     <body>
         <referenceContainer name="content">
-            <block class="Vbhex\Checkout\Block\Transaction\Sell" name="vc_transaction_sell" template="transaction/sell.phtml" cacheable="false"></block>
+            <block class="Vbhex\Checkout\Block\Transaction\Sell" name="vbhex_transaction_sell" template="transaction/sell.phtml" cacheable="false"></block>
         </referenceContainer>
     </body>
 </page>

@@ -52,7 +52,7 @@ class Buy extends \Magento\Framework\App\Action\Action{
 
                   $resultPage = $this->resultPageFactory->create();
                   $resultPage->getConfig()->getTitle()->prepend(__('Buyer Transaction #'.$order->getIncrementId()));
-                  $block = $resultPage->getLayout()->getBlock('vc_transaction_buy');
+                  $block = $resultPage->getLayout()->getBlock('vbhex_transaction_buy');
                   $block->setData('order_id', $order_id);
                   return $resultPage;
                }
