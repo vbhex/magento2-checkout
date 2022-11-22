@@ -89,7 +89,7 @@ class SellerTrxs extends \Magento\Customer\Controller\AbstractAccount
     {
         /** @var \Magento\Framework\View\Result\Page $resultPage */
         $resultPage = $this->_resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->set(__('VbhexCheckout Seller Transactions List Page'));
+        $resultPage->getConfig()->getTitle()->set(__('Vbhex Seller Transactions List Page'));
 
         return $resultPage;
     }

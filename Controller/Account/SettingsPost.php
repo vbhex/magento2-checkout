@@ -282,8 +282,8 @@ class SettingsPost extends Action
                     }
                     break;
                 case 'seller_mod_id':
-                    if(intval($value)>$max_mod_id) {
-                        $errors[] = __('Mod Id should be integer and not bigger than max mod id');
+                    if(intval($value)>$max_mod_id||intval($value)<1) {
+                        $errors[] = __('Mod Id should between 1 and max mod ID');
                     } else {
                         $fields[$code] = intval($value);
                     }

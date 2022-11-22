@@ -6,7 +6,7 @@ define(
         'use strict';
         return Component.extend({
             defaults: {
-                template: 'Vbhex_Checkout/payment/vc',
+                template: 'Vbhex_Checkout/payment/vbhex',
                 selectedCoin: ''
             },
             /** Returns send check to info */

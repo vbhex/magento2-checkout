@@ -60,7 +60,7 @@ class VbhexCheckoutRedirect implements ObserverInterface
                 $seller_id = $info['seller_id'];
             }
             $partner = $this->helper->getVbhexCheckoutSettingsBySellerId($seller_id);
-            $seller_address = $partner["bsc_wallet_address"] ?? "";
+            $seller_address = $partner["eth_wallet_address"] ?? "";
 
 
          $selectcoin = $order->getPayment()->getAdditionalInformation('selected_coin');
