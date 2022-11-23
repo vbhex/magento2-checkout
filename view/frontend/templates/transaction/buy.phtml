@@ -213,7 +213,7 @@ $coinLogs = $customParameter['coinLogs'];
                                             <span>Requested Amount : Refund End Time</span>
                                             <p class="refund_amount"><?php echo $refundAmountDec; ?> <?php echo $coin_symbol; ?> : <?php echo date('Y-m-d h:i:s', $refundTime); ?></p>
                                         </li>
-                                        <?php if (($dispute_status == 0) && ($order_status == 1) && ($agree + $disagree == 0)) : ?>
+                                        <?php if (($dispute_status == 0) && ($order_status == 1)) : ?>
                                             <li>
                                                 <input type="number" step="0.00001" placeholder="put refund amount here" style="width:80%;" id="refund_amount" /><?php echo $coin_symbol; ?><br />
                                                 <input type="number"  placeholder="choose modB ID between 1 and <?php echo $maxModId; ?>" style="width:80%;" id="modb_id" /><br />
@@ -227,7 +227,7 @@ $coinLogs = $customParameter['coinLogs'];
                                                     <input style="margin-left:0px" type="submit" value="Submit Reason" />
                                                 </form>
                                             </li>
-                                        <?php elseif (($dispute_status == 1) && ($order_status == 1) && ($agree + $disagree == 0)) : ?>
+                                        <?php elseif (($dispute_status == 1) && ($order_status == 1) ) : ?>
                                             <li>
                                                 <input type="number" step="0.00001" placeholder="put refund amount here" style="width:80%;" id="refund_amount" /><?php echo $coin_symbol; ?><br />
                                                 <input style="margin-left:0px" class="btn_ask_refund" type="button" value="Request Refund" />

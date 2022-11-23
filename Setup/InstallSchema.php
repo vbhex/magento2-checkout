@@ -520,11 +520,11 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 					'Transaction Hash'
 				)
 				->addColumn(
-					'cash_out_time',
+					'claim_time',
 					\Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
 					null,
 					['nullable' => false, 'default' =>0],
-					'Cash Out timestamp'
+					'Claim timestamp'
 				)
 				->addColumn(
 					'status',
