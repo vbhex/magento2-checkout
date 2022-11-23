@@ -73,12 +73,6 @@ class Sell extends \Magento\Framework\View\Element\Template
             $resultData['totalQtyOrdered'] = $order->getTotalQtyOrdered();
             $resultData['orderCurrencyCode'] = $order->getOrderCurrencyCode();
             $resultData['orderCurrencySymbol'] = $this->getCurrencySymbol($order->getOrderCurrencyCode());
-
-            // $resultData['expire_on'] = $orderData['expire_on'];
-            // $resultData['order_address'] = $orderData['address'];
-            // $resultData['qr_code'] = $orderData['address_qrcode'];
-            // $resultData['totalAmount'] = $orderData['crp_amount'];
-            // $resultData['coin'] = $selectcoin;
             $resultData['entity_id'] = $orderData['entity_id'];
             $resultData['seller_wallet'] = $orderData['seller_wallet'];
             $resultData['moda_id'] = $orderData['moda_id'];

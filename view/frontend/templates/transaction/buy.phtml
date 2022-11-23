@@ -4,7 +4,6 @@ $author_type_name = ["Unkonw","Buyer","Seller","Voter"];
 $order_id = $block->getData('order_id');
 $customParameter = $block->getDetail();
 $app_id = $customParameter['app_id'] ?? 0;
-$voteCoinDecm = $customParameter['vote_coin_decm'] ?? 0;
 $entity_id = $customParameter['entity_id'] ?? 0;
 $seller_wallet = $customParameter['seller_wallet'] ?? "";
 $moda_id = $customParameter['moda_id'] ?? "";
@@ -263,7 +262,7 @@ $coinLogs = $customParameter['coinLogs'];
                                             <li>
                                             <input style="margin-left:0px" class="btn_cancel_refund" type="button" value="Cancel Refund" />
                                             <p style="color:red; font-size:12px">(You can ask refund after cancellation before refund end time)</p><br/>
-                                            <input style="margin-left:0px; background-color: yellow" class="btn_escalate_dispute" type="button" value="Appeal" />
+                                            <input style="margin-left:0px; background-color: yellow" class="btn_escalate_dispute" type="button" value="Escalate" />
                                             </li>
                                             <li>
                                                 <form action="<?= $block->escapeUrl($block->getUrl('vc/transaction/buyerPost', ["app_order_id" => $order_id, "_secure" => $this->getRequest()->isSecure()])) ?>" enctype="multipart/form-data" method="post" data-role="form-profile-validate" data-mage-init='{"validation":{}}'>
@@ -276,7 +275,7 @@ $coinLogs = $customParameter['coinLogs'];
                                         <?php elseif ($dispute_status == 7 && $order_status == 1) : ?>
                                             <li>
                                                 <span>Status</span>
-                                                <p><?php echo __("Dispute is Under Appealing"); ?></p>
+                                                <p><?php echo __("Dispute is Under Resolving"); ?></p>
                                             </li>
                                             <li>
                                                 <form action="<?= $block->escapeUrl($block->getUrl('vc/transaction/buyerPost', ["app_order_id" => $order_id, "_secure" => $this->getRequest()->isSecure()])) ?>" enctype="multipart/form-data" method="post" data-role="form-profile-validate" data-mage-init='{"validation":{}}'>

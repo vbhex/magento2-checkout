@@ -276,6 +276,13 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 					'Refund End Time On Chain'
 				)
                 ->addColumn(
+					'refuse_expired',
+					\Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+					null,
+					['nullable' => true, 'default' => 0],
+					'Refuse Expired Timestamp On Chain'
+				)
+                ->addColumn(
 					'tx_hash',
 					\Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
 					77,

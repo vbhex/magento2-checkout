@@ -7,6 +7,7 @@ $app_id = $customParameter['app_id'] ?? 0;
 $voteCoinDecm = $customParameter['vote_coin_decm'] ?? 0;
 $entity_id = $customParameter['entity_id'] ?? 0;
 $seller_wallet = $customParameter['seller_wallet'] ?? "";
+$moda_id = $customParameter['moda_id'] ?? "";
 $coin = $customParameter['coin'] ?? "";
 $coin_symbol = $customParameter['coin_symbol'] ?? "";
 $coin_decm = $customParameter['coin_decm'] ?? 0;
@@ -240,7 +241,7 @@ $coinLogs = $customParameter['coinLogs'];
                                                     <ul>
                                                         <li>
                                                             <input style="margin-right:100px; background-color: green" class="btn_refund_now" type="button" value="Refund Now" />
-                                                            <input style="margin-right:100px; background-color: yellow" class="btn_appeal_dispute" type="button" value="Appeal" />
+                                                            <input style="margin-right:100px; background-color: yellow" class="btn_escalate_dispute" type="button" value="Escalate" />
                                                         </li>
                                                         <li>
                                                             <textarea id="seller_reason" name="seller_reason" placeholder="put seller reason here" style="width:80%"></textarea>
@@ -255,7 +256,7 @@ $coinLogs = $customParameter['coinLogs'];
                                         <?php elseif (($dispute_status == 7) && ($order_status == 1)) : ?>
                                             <li>
                                                 <span>Status</span>
-                                                <p>Dispute Appealed to Vote</p>
+                                                <p>Dispute Escalated to Resolve</p>
                                             </li>
                                             <li>
                                             <span>Action</span>
@@ -280,8 +281,8 @@ $coinLogs = $customParameter['coinLogs'];
                                                 <p><?php echo __("Order Paid & No Dispute"); ?></p>
                                             </li>
                                             <li>
-                                                <span>Cash Out</span>
-                                                <div class="cashout_label"></div>
+                                                <span>Claim</span>
+                                                <div class="claim_label"></div>
                                             </li>
                                         <?php elseif ($dispute_status == 3 && $order_status == 2) : ?>
                                             <li>
@@ -375,7 +376,7 @@ $coinLogs = $customParameter['coinLogs'];
                 }
                 const theAccount = window.web3.utils.toChecksumAddress(accounts[0]);
                 const mainContractAddress = window.web3.utils.toChecksumAddress(v_mainContract);
-                const mainContract = new window.web3.eth.Contract(abiJson, mainContractAddress);
+                const mainContract = new window.web3.eth.Contract(escrowAbiJson, mainContractAddress);
                 var app_id = <?php echo $app_id; ?>;
                 var chain_order_id = <?php echo $chainOrderId; ?>;
                 var dispute_status = <?php echo $dispute_status; ?>;
@@ -386,33 +387,33 @@ $coinLogs = $customParameter['coinLogs'];
                         var current_timestamp = theBlock.timestamp;
                         //init refuse expired div
                         if(dispute_status==1&&order_status==1){
-                            mainContract.methods.refuseExpired(app_id, chain_order_id).call().then(function(expired_timestamp) {
-                            var expired_timestamp = expired_timestamp;
+                            mainContract.methods.disputeBook(chain_order_id).call().then(function(dispute_struct) {
+                            var expired_timestamp = dispute_struct.refuseExpired;
                             if (window.web3.utils.toBN(current_timestamp).lt(window.web3.utils.toBN(expired_timestamp))) {
-                                // can not cash out, time countdown
+                                // can not claim, time countdown
                                 timer2(expired_timestamp - current_timestamp);
                             } else {
                                 // do nothing
-                                $('.refuse_expired_div').html('<p>Buyer could cash out according to the dispute amount</p>');
+                                $('.refuse_expired_div').html('<p>Buyer could claim according to the dispute amount</p>');
                             }
                         });
                         }
 
-                        //init cash out div
+                        //init claim div
                         if(dispute_status==0&&order_status==1){
                             mainContract.methods.orderBook(app_id, chain_order_id).call().then(function(orderBook) {
-                            var cashout_timestamp = orderBook.cashOutTime;
-                            console.log("cashout_timestamp : " + cashout_timestamp);
-                            if (window.web3.utils.toBN(current_timestamp).lt(window.web3.utils.toBN(cashout_timestamp))) {
+                            var claim_timestamp = orderBook.claimTime;
+                            console.log("claim_timestamp : " + claim_timestamp);
+                            if (window.web3.utils.toBN(current_timestamp).lt(window.web3.utils.toBN(claim_timestamp))) {
                                 // can not cash out, time countdown
-                                timer(cashout_timestamp - current_timestamp);
+                                timer(claim_timestamp - current_timestamp);
                             } else {
                                 // show cash out button
-                                var button = '<input type="button" style="margin-left:0px" value="Cash Out" class="btn_cash_out" />';
-                                $('.cashout_label').html(button);
+                                var button = '<input type="button" style="margin-left:0px" value="Claim" class="btn_claim" />';
+                                $('.claim_label').html(button);
                                 // cash out
-                                $('.btn_cash_out').click(function() {
-                                    cashOut();
+                                $('.btn_claim').click(function() {
+                                    claim();
                                 });
                             }
                         });
@@ -428,8 +429,8 @@ $coinLogs = $customParameter['coinLogs'];
                     refuseRefund();
                 });
 
-                $('.btn_appeal_dispute').click(function() {
-                    appeal();
+                $('.btn_escalate_dispute').click(function() {
+                    escalate();
                 });
 
                 var refundNow = function() {
@@ -440,7 +441,7 @@ $coinLogs = $customParameter['coinLogs'];
                         return false;
                     }
                     // Refund now on blockchain
-                    mainContract.methods.agreeRefund(app_id, chain_order_id).send({
+                    mainContract.methods.agreeRefund(chain_order_id).send({
                         from: theAccount
                     }).then(function(receipt) {
                         console.log(receipt);
@@ -458,7 +459,7 @@ $coinLogs = $customParameter['coinLogs'];
                         return false;
                     }
                     // Refuse refund on blockchain
-                    mainContract.methods.refuseRefund(app_id, chain_order_id).send({
+                    mainContract.methods.refuseRefund(chain_order_id).send({
                         from: theAccount
                     }).then(function(receipt) {
                         console.log(receipt);
@@ -468,9 +469,9 @@ $coinLogs = $customParameter['coinLogs'];
                     });
                 }
 
-                var appeal = function() {
-                    // appeal dispute on blockchain
-                    mainContract.methods.appeal(app_id, chain_order_id).send({
+                var escalate = function() {
+                    // escalate dispute on blockchain
+                    mainContract.methods.escalate(chain_order_id).send({
                         from: theAccount
                     }).then(function(receipt) {
                         console.log(receipt);
@@ -480,8 +481,8 @@ $coinLogs = $customParameter['coinLogs'];
                     });
                 }
 
-                var cashOut = function() {
-                    mainContract.methods.cashOut(app_id, chain_order_id).send({
+                var claim = function() {
+                    mainContract.methods.claim(chain_order_id).send({
                         from: theAccount
                     }).then(function(receipt) {
                         console.log(receipt);
@@ -524,7 +525,7 @@ $coinLogs = $customParameter['coinLogs'];
                 });
             } else {
                 alert("Please install MetaMask to use this dApp!");
-                $('.btn_cash_out').click(function() {
+                $('.btn_claim').click(function() {
                     alert("Please install MetaMask to use this dApp!");
                 });
 
@@ -555,7 +556,7 @@ $coinLogs = $customParameter['coinLogs'];
                 if (minute <= 9) minute = '0' + minute;
                 if (second <= 9) second = '0' + second;
                 var time = day + ' day(s) ' + hour + ' : ' + minute + ' : ' + second;
-                $('.cashout_label').html("You can cash out in : <b>" + time + "</b>  if buyer make no dispute");
+                $('.claim_label').html("You can cash out in : <b>" + time + "</b>  if buyer make no dispute");
                 intDiff--;
             }, 1000);
         }

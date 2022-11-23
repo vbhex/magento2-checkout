@@ -6,6 +6,7 @@ $customParameter = $block->getDetail();
 $app_id = $customParameter['app_id'] ?? 0;
 $voteCoinDecm = $customParameter['vote_coin_decm'] ?? 0;
 $seller_wallet = $customParameter['seller_wallet'] ?? "";
+$moda_id = $customParameter['moda_id'] ?? "";
 $coin = $customParameter['coin'] ?? "";
 $coin_symbol = $customParameter['coin_symbol'] ?? "";
 $coin_decm = $customParameter['coin_decm'] ?? 0;
@@ -40,6 +41,10 @@ $refundTime = $customParameter['refund_time'] ?? 0;
 $disputeHash = $customParameter['dispute_hash'] ?? "No Transaction Yet";
 $lastTxHash = $customParameter['last_tx_hash'] ?? "No Transaction Yet";
 $dispute_status = $customParameter['dispute_status'] ?? 0;
+$chain = $this->helper(\Vbhex\Checkout\Helper\Chain::class);
+$modAOwner = $chain->getModOwner($customParameter['moda_id']);
+$modBOwner = $chain->getModOwner($customParameter['modb_id']);
+$appOwner = $chain->getAppOwner($customParameter['app_id']);
 //coin logs
 $coinLogs = $customParameter['coinLogs'];
 ?>
@@ -110,7 +115,7 @@ $coinLogs = $customParameter['coinLogs'];
                                                     <tr>
                                                         <td style="width: 300px;">
                                                             <div class="cr-plugin-cart-img">
-                                                                <img src="<?php echo $product['productImage']; ?>" align="">
+                                                                <img src="<?php echo $product['productImage']; ?>" >
                                                             </div>
                                                             <div class="cr-plugin-cart-des">
                                                                 <p><?php echo $product['productName']; ?> <?php echo $product['productOptions']; ?></p>
@@ -283,52 +288,54 @@ $coinLogs = $customParameter['coinLogs'];
                 }
                 const theAccount = window.web3.utils.toChecksumAddress(accounts[0]);
                 const mainContractAddress = window.web3.utils.toChecksumAddress(v_mainContract);
-                const mainContract = new window.web3.eth.Contract(abiJson, mainContractAddress);
-                const voteCoinContractAddress = window.web3.utils.toChecksumAddress(v_voteCoinContract);
-                const voteCoinContract = new window.web3.eth.Contract(erc20AbiJson, voteCoinContractAddress);
+                const mainContract = new window.web3.eth.Contract(escrowAbiJson, mainContractAddress);
+                const modContractAddress = window.web3.utils.toChecksumAddress(v_modContract);
+                const modContract = new window.web3.eth.Contract(modAbiJson, modContractAddress);
                 var app_id = <?php echo $app_id; ?>;
                 var chain_order_id = <?php echo $chainOrderId; ?>;
-                var vote_price = <?php echo $votePrice; ?>;
+                var modAOwner = <?php echo $modAOwner; ?>;
+                modAOwner = window.web3.utils.toChecksumAddress(modAOwner);
+                var modBOwner = <?php echo $modBOwner; ?>;
+                modBOwner = window.web3.utils.toChecksumAddress(modBOwner);
+                var appOwner = <?php echo $appOwner; ?>;
+                appOwner = window.web3.utils.toChecksumAddress(appOwner);
+                var modAVote  = <?php echo intval($customParameter['moda_vote']); ?>
+                var modBVote  = <?php echo intval($customParameter['modb_vote']); ?>
+                var dispute_status = <?php echo $dispute_status; ?>
+                var isResolveAccount = false;
+                if(theAccount==modAOwner&&modAVote==0){
+                    isResolveAccount = true;
+                }
+                if(theAccount==modBOwner&&modBVote==0){
+                    isResolveAccount = true;
+                }
+                if(theAccount==appOwner&&modAVote!=modBVote&&modAVote>0&&modBVote>0){
+                    isResolveAccount = true;
+                }
                 $('.btn_agree').click(function() {
-                    voteCoinContract.methods.allowance(theAccount, mainContractAddress).call().then(function(result) {
-                        if (window.web3.utils.toBN(result).lt(window.web3.utils.toBN(vote_price))) {
-                            // approve allowance
-                            voteCoinContract.methods.approve(mainContractAddress, 10 * window.web3.utils.toBN(vote_price)).send({
-                                    from: theAccount
-                                })
-                                .then(function(receipt) {
-                                    if (receipt.status) {
-                                        agreeRefund();
-                                    }
-                                });
-                        } else {
-                            agreeRefund();
-                        }
-                    });
+                    if(dispute_status!=7){
+                        alert("Dispute can not be resolved now!");
+                    } else if(!isResolveAccount) {
+                        alert("Dispute can not be resolved by the account address!");
+                    } else {
+                        agreeRefund();
+                    }
                 });
 
 
                 $('.btn_disagree').click(function() {
-                    voteCoinContract.methods.allowance(theAccount, mainContractAddress).call().then(function(result) {
-                        if (window.web3.utils.toBN(result).lt(window.web3.utils.toBN(vote_price))) {
-                            // approve allowance
-                            voteCoinContract.methods.approve(mainContractAddress, 10 * window.web3.utils.toBN(vote_price)).send({
-                                    from: theAccount
-                                })
-                                .then(function(receipt) {
-                                    if (receipt.status) {
-                                        disagreeRefund();
-                                    }
-                                });
-                        } else {
-                            disagreeRefund();
-                        }
-                    });
+                    if(dispute_status!=7){
+                        alert("Dispute can not be resolved now!");
+                    } else if(!isResolveAccount) {
+                        alert("Dispute can not be resolved by the account address!");
+                    } else {
+                        disagreeRefund();
+                    }
                 });
 
                 var agreeRefund = function() {
                     // Refund now on blockchain
-                    mainContract.methods.agreeRefund(app_id, chain_order_id).send({
+                    mainContract.methods.agreeRefund(chain_order_id).send({
                         from: theAccount
                     }).then(function(receipt) {
                         console.log(receipt);
@@ -340,7 +347,7 @@ $coinLogs = $customParameter['coinLogs'];
 
                 var disagreeRefund = function() {
                     // Refund now on blockchain
-                    mainContract.methods.disagreeRefund(app_id, chain_order_id).send({
+                    mainContract.methods.disagreeRefund(chain_order_id).send({
                         from: theAccount,
                     }).then(function(receipt) {
                         console.log(receipt);
