@@ -1,5 +1,20 @@
 <?php
     $_topDispute = $block->getTopDisputes();
+    $voteStr = [
+        0   =>  "Not Voted",
+        1   =>  "Agree Refund",
+        2   =>  "Disagree Refund"
+    ];
+    $statusStr = [
+        0   =>  "Refund Not Asked",
+        1   =>  "Refund Just Asked",
+        2   =>  "Mods Agree Refund",
+        3   =>  "Seller Agree Refund",
+        4   =>  "Mods Disagree Refund",
+        5   =>  "Refund Refused by Seller(Can Be Escalated)",
+        6   =>  "Seller Not Refuse in time(Buyer Can Claim Fund)",
+        7   =>  "Escalated to Resolve"
+    ];
 ?>
 <div class="kg-main-page-btn">
 	<p class="kg_wallet_address">
@@ -83,11 +98,11 @@
       <tr>
         <th scope="col" class="col amount"><?= $block->escapeHtml(_('Refund Asked')) ?></th>
         <th scope="col" class="col amount"><?= $block->escapeHtml(_('Paid Amount')) ?></th>
-        <th scope="col" class="col id"><?= $block->escapeHtml(_('Agree')) ?></th>
-        <th scope="col" class="col id"><?= $block->escapeHtml(_('Disagree')) ?></th>
-        <th scope="col" class="col amount"><?= $block->escapeHtml(_('Vote Price')) ?></th>
-        <th scope="col" class="col id"><?= $block->escapeHtml(_('Min Votes')) ?></th>
-        <th scope="col" class="col id"><?= $block->escapeHtml(_('Min Vote Diff')) ?></th>
+        <th scope="col" class="col id"><?= $block->escapeHtml(_('ModA ID')) ?></th>
+        <th scope="col" class="col id"><?= $block->escapeHtml(_('ModB ID')) ?></th>
+        <th scope="col" class="col amount"><?= $block->escapeHtml(_('ModA Vote')) ?></th>
+        <th scope="col" class="col id"><?= $block->escapeHtml(_('ModB Vote')) ?></th>
+        <th scope="col" class="col id"><?= $block->escapeHtml(_('Dispute Status')) ?></th>
         <th scope="col" class="col action"><?= $block->escapeHtml(_('Action')) ?></th>
       </tr>
     </thead>
@@ -98,14 +113,11 @@
           <?=$_dispute['coin_symbol'] ?></td>
         <td class="col amount"><?= $_dispute['paid_amount'] ?>
           <?=$_dispute['coin_symbol'] ?></td>
-        <td class="col id"><?= $_dispute['agree'] ?></td>
-        <td class="col id"><?= $_dispute['disagree'] ?></td>
-        <td class="col amount"><?= $_dispute['vote_price']/1000000 ?>
-          VOTE</td>
-        <td class="col id"><?= $_dispute['min_votes'] ?>
-          votes</td>
-        <td class="col id"><?= $_dispute['min_vote_diff'] ?>
-          votes</td>
+        <td class="col id"><?= $_dispute['moda_id'] ?></td>
+        <td class="col id"><?= $_dispute['modb_id'] ?></td>
+        <td class="col amount"><?= $voteStr[$_dispute['moda_vote']] ?></td>
+        <td class="col amount"><?= $voteStr[$_dispute['modb_vote']] ?></td>
+        <td class="col amount"><?= $statusStr[$_dispute['status']] ?></td>
         <td class="col action"><a href="<?= $block->escapeUrl($block->getDetailUrl($_dispute['app_order_id'])) ?>">View Detail</a></td>
       </tr>
       <?php endforeach; ?>
@@ -173,7 +185,7 @@ function selectbalance(id)
 				$('.kg_wallet_address').html("<p><strong>Wallet Address:</strong> :" + hideAddress(theAccount) + "</p>");
                 window.web3 = new web3(window.ethereum);
                 const mainContractAddress = window.web3.utils.toChecksumAddress(v_mainContract);
-                const mainContract = new window.web3.eth.Contract(abiJson, mainContractAddress);
+                const mainContract = new window.web3.eth.Contract(escrowAbiJson, mainContractAddress);
                 // get coin list
                 $.ajax({
                     url: window.location.origin + "/rest/V1/vc/coin/list",
@@ -236,7 +248,7 @@ function selectbalance(id)
 
                                     var balance_decm = window.web3.utils.toBN(balance).div(window.web3.utils.toBN(10).pow(window.web3.utils.toBN(item.decm)));
                                     var balance_str = balance_decm.toString()+" "+item.symbol;
-                                    var balance_pro_d = "VbhexCheckout:"+balance_decm.toString();
+                                    var balance_pro_d = "Vbhex:"+balance_decm.toString();
 
                                     $(id).html(balance_str);
                                     $(pro_d_id).html(balance_pro_d);

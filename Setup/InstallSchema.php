@@ -301,7 +301,16 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 					\Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
 					2,
 					['nullable' => false,'default' => 0],
-					'0 refund not asked;1 refund asked;2 refund permitted by voters; 3 refund permitted by sellers; 4 refund denied by voters;5 refund refused by seller (Can vote);6 seller not responsed in time & buyer cashout;7 dispute in appealing.'
+					'
+                    0-Refund Not Asked,
+                    1-Refund Just Asked,
+                    2-Mods Agree Refund,
+                    3-Seller Agree Refund,
+                    4-Mods Disagree Refund,
+                    5-Refund Refused by Seller(Can Be Escalated),
+                    6-Seller Not Refuse in time(Buyer Can Claim Fund),
+                    7-Escalated to Resolve
+                    '
 				)
 				->setComment('VbhexCheckout Dispute Table');
 			$installer->getConnection()->createTable($table);
@@ -757,9 +766,9 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 			);
 		}
 
-		if (!$installer->tableExists('vc_vote')) {
+		if (!$installer->tableExists('vc_resolve')) {
 			$table = $installer->getConnection()->newTable(
-				$installer->getTable('vc_vote')
+				$installer->getTable('vc_resolve')
 			)
 				->addColumn(
 					'entity_id',
@@ -795,11 +804,11 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 					'Voter Address'
 				)
 				->addColumn(
-					'vote_price',
-					\Magento\Framework\DB\Ddl\Table::TYPE_BIGINT,
+					'mod_type',
+					\Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
 					null,
 					['nullable' => false,'default'=>0],
-					'Vote Price'
+					'0 both modA&modB, 1 modA, 2 modB, 3 app Owner '
 				)
 				->addColumn(
 					'is_agree',
@@ -833,9 +842,9 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 			$installer->getConnection()->createTable($table);
 
 			$installer->getConnection()->addIndex(
-				$installer->getTable('vc_vote'),
+				$installer->getTable('vc_resolve'),
 				$setup->getIdxName(
-					$installer->getTable('vc_vote'),
+					$installer->getTable('vc_resolve'),
 					['tx_hash'],
 					\Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_FULLTEXT
 				),

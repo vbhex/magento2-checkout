@@ -68,8 +68,12 @@ $coinLogs = $customParameter['coinLogs'];
                                 <div class="cr-plugin-billing-amount">
                                     <ul>
                                         <li>
-                                            <span> ModA Id : ModB Id : ModA Vote : ModB Vote</span>
-                                             <p><?php echo "#".$modAId; ?> : <?php echo $modBId; ?> : <?php echo $modAVote; ?> : <?php echo $modBVote; ?> </p>
+                                            <span> ModA Id : ModB Id </span>
+                                             <p><?php echo "#".$modAId; ?> : <?php echo $modBId; ?></p>
+                                         </li>
+                                         <li>
+                                            <span>ModA Vote : ModB Vote</span>
+                                             <p><?php echo $modAVote; ?> : <?php echo $modBVote; ?> </p>
                                          </li>
                                         <li>
                                             <span>
@@ -77,7 +81,7 @@ $coinLogs = $customParameter['coinLogs'];
                                                     <input type="button" class="btn_agree" style="background-color:green" value="Agree" /> :
                                                     <input type="button" class="btn_disagree" style="background-color:red" value="Disgree" />
                                                 <?php elseif ($dispute_status == 2) : ?>
-                                                    <p><?php echo __("Refund Permitted By Voters"); ?></p>
+                                                    <p><?php echo __("Refund Permitted By Mods"); ?></p>
                                                     <p class="copyToClipboard" style="font-size:12px;" title="click to copy" data-copy-detail="<?php echo $lastTxHash; ?>"><a class="last_tx_hash_link"></a> <img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/copy.png'); ?>"></p>
                                                 <?php elseif ($dispute_status == 3) : ?>
                                                     <p><?php echo __("Refund Permitted By Seller"); ?></p>
@@ -89,7 +93,6 @@ $coinLogs = $customParameter['coinLogs'];
                                                     <p><?php echo __("No Transaction Yet"); ?></p>
                                                 <?php endif ?>
                                             </span>
-                                            <p class="agree"><?php echo $agree; ?> : <?php echo $disagree; ?></p>
                                         </li>
                                     </ul>
                                 </div>
@@ -293,15 +296,15 @@ $coinLogs = $customParameter['coinLogs'];
                 const modContract = new window.web3.eth.Contract(modAbiJson, modContractAddress);
                 var app_id = <?php echo $app_id; ?>;
                 var chain_order_id = <?php echo $chainOrderId; ?>;
-                var modAOwner = <?php echo $modAOwner; ?>;
+                var modAOwner = "<?php echo $modAOwner; ?>";
+                var modBOwner = "<?php echo $modBOwner; ?>";
+                var appOwner = "<?php echo $appOwner; ?>";
                 modAOwner = window.web3.utils.toChecksumAddress(modAOwner);
-                var modBOwner = <?php echo $modBOwner; ?>;
                 modBOwner = window.web3.utils.toChecksumAddress(modBOwner);
-                var appOwner = <?php echo $appOwner; ?>;
                 appOwner = window.web3.utils.toChecksumAddress(appOwner);
-                var modAVote  = <?php echo intval($customParameter['moda_vote']); ?>
-                var modBVote  = <?php echo intval($customParameter['modb_vote']); ?>
-                var dispute_status = <?php echo $dispute_status; ?>
+                var modAVote  = <?php echo intval($customParameter['moda_vote']); ?>;
+                var modBVote  = <?php echo intval($customParameter['modb_vote']); ?>;
+                var dispute_status = <?php echo $dispute_status; ?>;
                 var isResolveAccount = false;
                 if(theAccount==modAOwner&&modAVote==0){
                     isResolveAccount = true;

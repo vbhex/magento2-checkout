@@ -85,7 +85,7 @@ class Chain extends \Magento\Framework\App\Helper\AbstractHelper
 		$params  = [$param1, "latest"];
 		$result = $this->call($method, $params);
 
-        return $result;
+        return strval("0x" . substr($result, 26));
     }
 
     public function getAppOwner($appId){
@@ -93,7 +93,7 @@ class Chain extends \Magento\Framework\App\Helper\AbstractHelper
         if(!is_numeric($appId)||$appId==0) {
             return "0x0000000000000000000000000000000000000000";
         }
-        $funcSelector = "5765183e";
+        $funcSelector = "42f94ed9";
 		$app_id_hex = dechex($appId);
 		if (substr($app_id_hex, 0, 2) == "0x") {
 			$app_id_hex = substr($app_id_hex, 2);
@@ -111,7 +111,7 @@ class Chain extends \Magento\Framework\App\Helper\AbstractHelper
 		$params  = [$param1, "latest"];
 		$result = $this->call($method, $params);
 
-        return $result;
+        return strval("0x" . substr($result, 26));
     }
 
     function commit_curl($url,$get=true,$header=0,$odata=null,$user=null,$pass=null,$apikey=null) {
