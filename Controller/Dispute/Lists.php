@@ -45,7 +45,7 @@ class Lists extends Action
     {
         /** @var \Magento\Framework\View\Result\Page $resultPage */
         $resultPage = $this->_resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->set(__('VbhexCheckout Public Dispute Lists Page'));
+        $resultPage->getConfig()->getTitle()->set(__('Vbhex Public Dispute Lists Page'));
 
         return $resultPage;
     }

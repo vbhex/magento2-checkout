@@ -36,7 +36,7 @@ class Index extends Action
     public function execute()
     {
         $resultPage = $this->_resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->set('VbhexCheckout Landing Page');
+        $resultPage->getConfig()->getTitle()->set('Vbhex Landing Page');
 
         return $resultPage;
     }
