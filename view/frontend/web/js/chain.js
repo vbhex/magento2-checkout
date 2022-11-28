@@ -1,14 +1,14 @@
 ///////////////////The following config is for Ethereum Goerli Testnet//////////////////////////////
-const v_chainId = 5;
-const v_chainName = "Ethereum Goerli";
-const v_currencyName = "gETH";
-const v_currencySymbol = "gETH";
+const v_chainId = 1;
+const v_chainName = "Ethereum Mainnet";
+const v_currencyName = "ETH";
+const v_currencySymbol = "ETH";
 const v_decimals = 18;
-const v_rpcUrl = "https://goerli.infura.io/v3/f03238993cab4562a75f1567f95bcd84";
-const v_explorerUrl = "https://goerli.etherscan.io/";
-const v_modContract = "0x50a61B63cf8C050411EA96c67B68c952F1E177aE";
-const v_mainContract = "0x7d5Ca31eB5FD96d53201e57C0eD7b21C45Fb28C8";
-const v_defaultSeller = "0xd4EB3281677A87d7F6d03c81d3555de1c6C7616e";
+const v_rpcUrl = "https://mainnet.infura.io/v3/f03238993cab4562a75f1567f95bcd84";
+const v_explorerUrl = "https://www.etherscan.io/";
+const v_modContract = "0x89E9eB1B423705DC5aDC1FCF09d03612B62af4b6";
+const v_mainContract = "0x1B22E49674e5b471CE202fb11518FAD560929f76";
+const v_defaultSeller = "0xA5eE78320B9bc5128442B656DB42238017C7E701";
 // const v_buyVoteChainId = 1;
 // const v_buyVoteChainName = "Ethereum Mainnet";
 // const v_buyVoteCurrencyName = "ETH";
