@@ -20,8 +20,10 @@ interface ProductRepositoryInterface
      *
      * @api
      * @param int $id
+     * @param string $ali
+     * @param string $url_key
      * @return string
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function delProduct($id);
+    public function delProduct($id, $ali, $url_key);
 }
