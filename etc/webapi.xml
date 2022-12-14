@@ -24,4 +24,10 @@
             <resource ref="anonymous" />
         </resources>
     </route>
+    <route url="/V1/vc/delproduct/id/:id/ali/:ali/url_key/:url_key" method="GET">
+        <service class="Vbhex\Checkout\Api\ProductRepositoryInterface" method="delProduct"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
 </routes>

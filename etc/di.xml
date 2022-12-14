@@ -4,4 +4,5 @@
     <preference for="Vbhex\Checkout\Api\Data\OrderInterface" type="Vbhex\Checkout\Model\Order"></preference>
     <preference for="Vbhex\Checkout\Api\CoinRepositoryInterface" type="Vbhex\Checkout\Model\CoinRepository"></preference>
     <preference for="Vbhex\Checkout\Api\ModRepositoryInterface" type="Vbhex\Checkout\Model\ModRepository"></preference>
+    <preference for="Vbhex\Checkout\Api\ProductRepositoryInterface" type="Vbhex\Checkout\Model\ProductRepository"></preference>
 </config>
