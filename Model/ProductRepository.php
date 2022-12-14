@@ -96,11 +96,7 @@ class ProductRepository implements ProductRepositoryInterface
         } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
             $product = false;
         }
-        if ($product) {
-            $productRepository->delete($product);
-        }
-        $sql0 = "delete from catalog_product_entity where sku like '".$ali."%'";
-        $connection->query($sql0);
+
         //delete all the attributes in table catalog_product_entity_int
         $sql1 = "delete from catalog_product_entity_int
         where entity_id = $id ";
@@ -123,9 +119,9 @@ class ProductRepository implements ProductRepositoryInterface
 //         }
 
         if ($url_key !== "") {
-            $sub = substr($url_key, 0, -1);
+            $sub = $url_key;
             $sql3b = "delete from url_rewrite
-   where request_path like '".$sub."%' ";
+   where request_path like '%".$sub."%' ";
             $connection->query($sql3b);
         }
 
@@ -135,5 +131,10 @@ class ProductRepository implements ProductRepositoryInterface
             $sql4 = "delete from mp_aliexpress_products where aliexpress_product_id like '" . $ali . "' ";
             $connection->query($sql4);
         }
+        if ($product) {
+            $productRepository->delete($product);
+        }
+        $sql0 = "delete from catalog_product_entity where sku like '".$ali."%'";
+        $connection->query($sql0);
     }
 }
