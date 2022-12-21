@@ -1,10 +1,29 @@
 <?php
 ?>
 <div class="kg-main-page">
+    <section class="kg-contentarea_02">
+        <div class="kg-inner-wrap">
+
+            <?php
+            echo $this->getLayout()
+                ->createBlock('Magento\Cms\Block\Block')
+                ->setBlockId('no_dispute')
+                ->toHtml();
+
+
+            echo $this->getLayout()
+                ->createBlock('Magento\Cms\Block\Block')
+                ->setBlockId('with_dispute')
+                ->toHtml();
+
+            ?>
+
+        </div>
+    </section>
     <section class="kg-contentarea_04">
         <div class="kg-inner-wrap">
             <div class="kg-top-title">
-                <h3>want to resolve a dispute?</h3>
+                <h3>want to get a dejob?</h3>
             </div>
             <div class="kg-content-wrap">
                 <div class="kg-row-wrap">
@@ -37,7 +56,7 @@
                     <div class="kg-Vote-coins-wrap">
                         <div class="kg-vote-titles">
                             <div class="kg-inner-vote">
-                                <h2>HOW TO EARN FROM A MOD<img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/pay_with.png'); ?>" /></h2>
+                                <h2>HOW TO EARN FROM A MOD DEJOB<img src="<?php echo $this->getViewFileUrl('Vbhex_Checkout::images/pay_with.png'); ?>" /></h2>
                                 <p><span>Step 1 :</span>Buy a VBHex mod from 3rd party </p>
                                 <p> marketplace like opensea.</p>
                                 <p><span>Step 2 :</span> Improve your mod scores,</p>
@@ -55,25 +74,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <section class="kg-contentarea_02">
-        <div class="kg-inner-wrap">
-
-            <?php
-            echo $this->getLayout()
-                ->createBlock('Magento\Cms\Block\Block')
-                ->setBlockId('no_dispute')
-                ->toHtml();
-
-
-            echo $this->getLayout()
-                ->createBlock('Magento\Cms\Block\Block')
-                ->setBlockId('with_dispute')
-                ->toHtml();
-
-            ?>
-
         </div>
     </section>
 </div>

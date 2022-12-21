@@ -5,7 +5,7 @@ var config = {
         }
     },
     paths: {
-        'web3' : ['Vbhex_Checkout/js/web3.min'],
+        'web3' : ['Vbhex_Checkout/js/web3_min'],
         'constvar'  : ['Vbhex_Checkout/js/var'],
         'chainvar'  : ['Vbhex_Checkout/js/chain']
     },

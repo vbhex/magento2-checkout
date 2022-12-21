@@ -2,7 +2,7 @@
 <page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceBlock name="product.info.details">
-                <block class="Magento\Catalog\Block\Product\View" name="vc.tab" as="productvc" template="Vbhex_Checkout::product/vc.phtml"  group="detailed_info" cacheable="false" >
+                <block class="Magento\Catalog\Block\Product\View" name="vc.tab" as="productvc" template="Vbhex_Checkout::product/vc.phtml"  group="detailed_info" cacheable="true" >
                    <arguments>
                       <argument translate="true" name="title" xsi:type="string">VBHex</argument>
                        <argument name="sort_order" xsi:type="string">30</argument>
